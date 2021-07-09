@@ -1,0 +1,8 @@
+**/bin
+**/obj
+
+# Temp:
+RLEngine/Actions
+RLEngine/Controllers
+RLEngine/Generation
+RLEngine/Turns

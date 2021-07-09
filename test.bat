@@ -1,0 +1,1 @@
+dotnet test --nologo -v q -l:"console;verbosity=minimal"
