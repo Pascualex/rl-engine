@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace RLEngineTests.Utils
+namespace RLEngine.Tests.Utils
 {
     public static class ObjectExtension
     {

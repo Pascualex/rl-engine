@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 using RLEngine.Entities;
 
-namespace  RLEngine.Boards
+namespace RLEngine.Boards
 {
-    public interface IReadOnlyTile
+    public interface ITile
     {
         IReadOnlyCollection<Entity> Entities { get; }
         ITileType Type { get; }

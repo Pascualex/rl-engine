@@ -1,24 +1,22 @@
-using System;
-using System.Collections.Generic;
-
 using RLEngine.Entities;
 using RLEngine.Utils;
 
-namespace  RLEngine.Boards
+using System;
+using System.Collections.Generic;
+
+namespace RLEngine.Boards
 {
-    public class Board : IReadOnlyBoard
+    public class Board : IBoard
     {
         public Size Size { get; }
 
         private readonly Tile[][] tiles;
         private readonly Dictionary<Entity, Coords> entities = new();
-        private readonly IBoardView view;
 
-        public Board(Size size, ITileType defaultTileType, IBoardView view)
+        public Board(Size size, ITileType defaultTileType)
         {
             Size = size;
             tiles = new Tile[Size.Y][];
-            this.view = view;
 
             for (var i = 0; i < Size.Y; i++)
             {
@@ -26,7 +24,6 @@ namespace  RLEngine.Boards
                 for (var j = 0; j < Size.X; j++)
                 {
                     tiles[i][j] = new Tile(defaultTileType);
-                    view.Modify(new Coords(j, i), defaultTileType);
                 }
             }
         }
@@ -38,7 +35,6 @@ namespace  RLEngine.Boards
 
             if (!tiles[at.Y][at.X].Add(entity)) return false;
             entities.Add(entity, at);
-            view.Add(entity, at);
 
             return true;
         }
@@ -53,7 +49,6 @@ namespace  RLEngine.Boards
             if (!tiles[to.Y][to.X].Add(entity)) return false;
             tiles[from.Y][from.X].Remove(entity);
             entities[entity] = to;
-            view.Move(entity, to);
 
             return true;
         }
@@ -64,7 +59,6 @@ namespace  RLEngine.Boards
 
             tiles[at.Y][at.X].Remove(entity);
             entities.Remove(entity);
-            view.Remove(entity);
 
             return true;
         }
@@ -73,25 +67,22 @@ namespace  RLEngine.Boards
         {
             if (!Size.Contains(at)) return false;
 
-            if (!tiles[at.Y][at.X].ChangeType(tileType)) return false;
-            view.Modify(at, tileType);
-
-            return true;
+            return tiles[at.Y][at.X].ChangeType(tileType);
         }
 
-        public IReadOnlyTile? GetTile(Coords at)
+        public ITile? GetTile(Coords at)
         {
             if (!Size.Contains(at)) return null;
 
             return tiles[at.Y][at.X];
         }
 
-        public IEnumerable<IReadOnlyTile> GetTiles()
+        public IEnumerable<ITile> GetTiles()
         {
             return GetTiles(Coords.Zero, new Coords(Size.X - 1, Size.Y - 1));
         }
 
-        public IEnumerable<IReadOnlyTile> GetTiles(Coords from, Coords to)
+        public IEnumerable<ITile> GetTiles(Coords from, Coords to)
         {
             var lower = new Coords(Math.Min(from.X, to.X), Math.Min(from.Y, to.Y));
             var higher = new Coords(Math.Max(from.X, to.X), Math.Max(from.Y, to.Y));

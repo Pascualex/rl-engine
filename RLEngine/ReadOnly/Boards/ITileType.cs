@@ -1,4 +1,4 @@
-namespace  RLEngine.Boards
+namespace RLEngine.Boards
 {
     public interface ITileType
     {

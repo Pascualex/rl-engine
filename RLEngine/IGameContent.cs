@@ -2,7 +2,7 @@
 using RLEngine.Entities;
 using RLEngine.Utils;
 
-namespace  RLEngine
+namespace RLEngine
 {
     public interface IGameContent
     {

@@ -2,11 +2,11 @@
 using RLEngine.Entities;
 using RLEngine.Utils;
 
-namespace  RLEngine
+namespace RLEngine
 {
-    public class Game : IReadOnlyGame
+    public class Game : IGame
     {
-        public IReadOnlyBoard Board => board;
+        public IBoard Board => board;
         // public readonly PlayerController PlayerController;
         // public readonly AIController AIController;
         // public readonly Pathfinder Pathfinder;
@@ -19,7 +19,7 @@ namespace  RLEngine
         private readonly Board board;
         private readonly IGameContent content;
 
-        public Game(IGameContent content, IBoardView boardView)
+        public Game(IGameContent content)
         {
             // var defaultMovement = gameSO.DefaultMovement;
             // var testAbilitySO = gameSO.TestAbilitySO.Value();
@@ -28,7 +28,7 @@ namespace  RLEngine
             // Pathfinder = new Pathfinder();
             // DungeonGenerator = new DungeonGenerator();
             // TurnManager = new TurnManager();
-            board = new(content.BoardSize, content.FloorType, boardView);
+            board = new(content.BoardSize, content.FloorType);
             // var agentPrefab = gameSO.AgentPrefab.Value();
             // var entityPrefab = gameSO.EntityPrefab.Value();
             // Ctx = new Action.Context(TurnManager, Board, agentPrefab, entityPrefab);

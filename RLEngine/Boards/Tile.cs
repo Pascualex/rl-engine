@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-
 using RLEngine.Entities;
 
-namespace  RLEngine.Boards
+using System.Collections.Generic;
+
+namespace RLEngine.Boards
 {
-    public class Tile : IReadOnlyTile
+    public class Tile : ITile
     {
         public IReadOnlyCollection<Entity> Entities => entities;
         public ITileType Type { get; private set; }

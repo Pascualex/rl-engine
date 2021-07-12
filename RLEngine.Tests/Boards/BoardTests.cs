@@ -1,19 +1,17 @@
 using NUnit.Framework;
-using NSubstitute;
 
 using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
-using RLEngineTests.Utils;
+using RLEngine.Tests.Utils;
 
-namespace RLEngineTests.Engine
+namespace RLEngine.Tests.Engine
 {
     [TestFixture]
     public class BoardsTests
     {
         private class Fixture
         {
-            public IBoardView DumbBoardView { get; }
             public IEntityType GroundEntityType { get; }
             public IEntityType GhostAgentType { get; }
             public ITileType FloorTileType { get; }
@@ -21,17 +19,10 @@ namespace RLEngineTests.Engine
 
             public Fixture()
             {
-                DumbBoardView = Substitute.For<IBoardView>();
-                GroundEntityType = Substitute.For<IEntityType>();
-                GroundEntityType.BlocksGround.Returns(true);
-                GhostAgentType = Substitute.For<IEntityType>();
-                GhostAgentType.IsAgent.Returns(true);
-                GhostAgentType.BlocksGround.Returns(true);
-                GhostAgentType.IsGhost.Returns(true);
-                FloorTileType = Substitute.For<ITileType>();
-                WallTileType = Substitute.For<ITileType>();
-                WallTileType.BlocksGround.Returns(true);
-                WallTileType.BlocksAir.Returns(true);
+                GroundEntityType = new EntityType();
+                GhostAgentType = new EntityType { IsGhost = true, IsAgent = true };
+                FloorTileType = new TileType();
+                WallTileType = new TileType { BlocksGround = true, BlocksAir = true };
             }
         }
 
@@ -44,7 +35,7 @@ namespace RLEngineTests.Engine
             var f = new Fixture();
 
             var size = new Size(width, height);
-            var board = new Board(size, f.FloorTileType, f.DumbBoardView);
+            var board = new Board(size, f.FloorTileType);
 
             Assert.That(board.Size, Is.EqualTo(size));
             foreach (var tile in board.GetTiles())
@@ -59,7 +50,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
 
             var position = new Coords(x, y);
@@ -78,7 +69,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
 
             var position = new Coords(x, y);
@@ -91,7 +82,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
             var entityB = new Entity(f.GhostAgentType);
 
@@ -110,7 +101,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
             var entityB = new Entity(f.GroundEntityType);
 
@@ -129,7 +120,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.WallTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.WallTileType);
             var entity = new Entity(f.GroundEntityType);
 
             var position = new Coords(1, 1);
@@ -148,7 +139,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
 
             var initialPosition = new Coords(ix, iy);
@@ -176,7 +167,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
 
             var initialPosition = new Coords(ix, iy);
@@ -195,7 +186,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
 
             var finalPosition = new Coords(1, 1);
@@ -211,7 +202,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
             var entityB = new Entity(f.GhostAgentType);
 
@@ -236,7 +227,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
             var entityB = new Entity(f.GroundEntityType);
 
@@ -261,7 +252,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
 
             var initialPosition = new Coords(0, 1);
@@ -284,7 +275,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
 
             var position = new Coords(1, 1);
@@ -302,7 +293,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
 
             var removed = board.Remove(entity);
@@ -317,7 +308,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
 
             var position = new Coords(x, y);
             var changed = board.ChangeTileType(f.WallTileType, position);
@@ -336,7 +327,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
 
             var position = new Coords(x, y);
             var changed = board.ChangeTileType(f.WallTileType, position);
@@ -351,7 +342,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
 
             var position = new Coords(x, y);
             var tile = board.GetTile(position);
@@ -366,7 +357,7 @@ namespace RLEngineTests.Engine
         {
             var f = new Fixture();
 
-            var board = new Board(new Size(3, 3), f.FloorTileType, f.DumbBoardView);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
 
             var position = new Coords(x, y);
             var tile = board.GetTile(position);

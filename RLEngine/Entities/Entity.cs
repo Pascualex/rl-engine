@@ -1,6 +1,4 @@
-﻿using RLEngine.Utils;
-
-namespace  RLEngine.Entities
+﻿namespace RLEngine.Entities
 {
     public class Entity
     {
