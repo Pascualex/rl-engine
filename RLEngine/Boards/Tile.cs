@@ -6,15 +6,15 @@ namespace RLEngine.Boards
 {
     public class Tile : ITile
     {
-        public IReadOnlyCollection<Entity> Entities => entities;
-        public ITileType Type { get; private set; }
-
         private readonly HashSet<Entity> entities = new();
 
         public Tile(ITileType type)
         {
             Type = type;
         }
+
+        public IReadOnlyCollection<Entity> Entities => entities;
+        public ITileType Type { get; private set; }
 
         public bool Add(Entity entity)
         {

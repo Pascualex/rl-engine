@@ -132,10 +132,13 @@ namespace RLEngine.Tests.Engine
         }
 
         [Test]
-        [TestCase(0, 1, 2, 1)]
-        [TestCase(0, 0, 2, 2)]
-        [TestCase(1, 1, 1, 1)]
-        public void MovePasses(int ix, int iy, int fx, int fy)
+        [TestCase(0, 1, 2,  0, false)]
+        [TestCase(0, 1, 2, -1, true)]
+        [TestCase(0, 0, 2,  2, false)]
+        [TestCase(0, 0, 2,  2,  true)]
+        [TestCase(1, 1, 1,  1, false)]
+        [TestCase(1, 1, 0,  0, true)]
+        public void MovePasses(int ix, int iy, int fx, int fy, bool relative)
         {
             var f = new Fixture();
 
@@ -146,9 +149,10 @@ namespace RLEngine.Tests.Engine
             board.Add(entity, initialPosition);
 
             var finalPosition = new Coords(fx, fy);
-            var moved = board.Move(entity, finalPosition);
+            var moved = board.Move(entity, finalPosition, relative);
             Assert.That(moved, Is.True);
 
+            if (relative) finalPosition += initialPosition;
             if (initialPosition != finalPosition)
             {
                 var initialTile = board.GetTile(initialPosition).FailIfNull();
@@ -160,10 +164,13 @@ namespace RLEngine.Tests.Engine
         }
 
         [Test]
-        [TestCase(0, 0, 0, -1)]
-        [TestCase(1, 1, -1, -1)]
-        [TestCase(1, 2, 3, 0)]
-        public void MoveFailsOutOfBounds(int ix, int iy, int fx, int fy)
+        [TestCase(0, 0,  0, -1, false)]
+        [TestCase(0, 0,  0, -1,  true)]
+        [TestCase(1, 1, -1, -1, false)]
+        [TestCase(1, 1, -2, -2,  true)]
+        [TestCase(1, 2,  3,  0, false)]
+        [TestCase(1, 2,  2,  0,  true)]
+        public void MoveFailsOutOfBounds(int ix, int iy, int fx, int fy, bool relative)
         {
             var f = new Fixture();
 
@@ -174,7 +181,7 @@ namespace RLEngine.Tests.Engine
             board.Add(entity, initialPosition);
 
             var finalPosition = new Coords(fx, fy);
-            var moved = board.Add(entity, finalPosition);
+            var moved = board.Move(entity, finalPosition, relative);
             Assert.That(moved, Is.False);
 
             var initialTile = board.GetTile(initialPosition).FailIfNull();
@@ -190,7 +197,7 @@ namespace RLEngine.Tests.Engine
             var entity = new Entity(f.GroundEntityType);
 
             var finalPosition = new Coords(1, 1);
-            var moved = board.Move(entity, finalPosition);
+            var moved = board.Move(entity, finalPosition, false);
             Assert.That(moved, Is.False);
 
             var finalTile = board.GetTile(finalPosition).FailIfNull();
@@ -211,7 +218,7 @@ namespace RLEngine.Tests.Engine
 
             var finalPosition = new Coords(2, 1);
             board.Add(entityB, finalPosition);
-            var moved = board.Move(entityA, finalPosition);
+            var moved = board.Move(entityA, finalPosition, false);
             Assert.That(moved, Is.True);
 
             var initialTile = board.GetTile(initialPosition).FailIfNull();
@@ -236,7 +243,7 @@ namespace RLEngine.Tests.Engine
 
             var finalPosition = new Coords(2, 1);
             board.Add(entityB, finalPosition);
-            var moved = board.Move(entityA, finalPosition);
+            var moved = board.Move(entityA, finalPosition, false);
             Assert.That(moved, Is.False);
 
             var initialTile = board.GetTile(initialPosition).FailIfNull();
@@ -260,7 +267,7 @@ namespace RLEngine.Tests.Engine
 
             var finalPosition = new Coords(2, 1);
             board.ChangeTileType(f.WallTileType, finalPosition);
-            var moved = board.Move(entity, finalPosition);
+            var moved = board.Move(entity, finalPosition, false);
             Assert.That(moved, Is.False);
 
             var initialTile = board.GetTile(initialPosition).FailIfNull();

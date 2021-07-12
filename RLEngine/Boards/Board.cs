@@ -8,8 +8,6 @@ namespace RLEngine.Boards
 {
     public class Board : IBoard
     {
-        public Size Size { get; }
-
         private readonly Tile[][] tiles;
         private readonly Dictionary<Entity, Coords> entities = new();
 
@@ -28,6 +26,8 @@ namespace RLEngine.Boards
             }
         }
 
+        public Size Size { get; }
+
         public bool Add(Entity entity, Coords at)
         {
             if (entities.ContainsKey(entity)) return false;
@@ -39,9 +39,10 @@ namespace RLEngine.Boards
             return true;
         }
 
-        public bool Move(Entity entity, Coords to)
+        public bool Move(Entity entity, Coords to, bool relative)
         {
             if (!entities.TryGetValue(entity, out var from)) return false;
+            if (relative) to += from;
             if (!Size.Contains(to)) return false;
 
             if (to == from) return true;
