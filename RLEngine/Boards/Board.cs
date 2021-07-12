@@ -71,9 +71,23 @@ namespace RLEngine.Boards
             return tiles[at.Y][at.X].ChangeType(tileType);
         }
 
+        public Coords? GetCoords(Entity entity)
+        {
+            if (!entities.TryGetValue(entity, out var at)) return null;
+
+            return at;
+        }
+
         public ITile? GetTile(Coords at)
         {
             if (!Size.Contains(at)) return null;
+
+            return tiles[at.Y][at.X];
+        }
+
+        public ITile? GetTile(Entity entity)
+        {
+            if (!entities.TryGetValue(entity, out var at)) return null;
 
             return tiles[at.Y][at.X];
         }

@@ -11,6 +11,7 @@ namespace RLEngine.Actions
         Entity entity, Coords to, bool relative)
         {
             if (!state.Board.Move(entity, to, relative)) return null;
+            to = (Coords)state.Board.GetCoords(entity)!;
             return new MoveLog(entity, to);
         }
     }

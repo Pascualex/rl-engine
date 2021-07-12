@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Tests", "RLEngine.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Serialization", "RLEngine.Serialization\RLEngine.Serialization.csproj", "{6632BB3A-B682-4CC2-B599-EEA13B3D2D57}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Runner", "RLEngine.Runner\RLEngine.Runner.csproj", "{E3656781-FE04-4925-BBA1-818A8BD18341}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{6632BB3A-B682-4CC2-B599-EEA13B3D2D57}.Release|x64.Build.0 = Release|Any CPU
 		{6632BB3A-B682-4CC2-B599-EEA13B3D2D57}.Release|x86.ActiveCfg = Release|Any CPU
 		{6632BB3A-B682-4CC2-B599-EEA13B3D2D57}.Release|x86.Build.0 = Release|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Debug|x64.Build.0 = Debug|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Debug|x86.Build.0 = Debug|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Release|x64.ActiveCfg = Release|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Release|x64.Build.0 = Release|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Release|x86.ActiveCfg = Release|Any CPU
+		{E3656781-FE04-4925-BBA1-818A8BD18341}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
