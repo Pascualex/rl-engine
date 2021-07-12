@@ -4,6 +4,7 @@ namespace RLEngine.Entities
 {
     public class EntityType : IEntityType
     {
+        public string Name { get; set; } = "NO_NAME";
         public bool IsAgent { get; set; } = false;
         public bool BlocksGround { get; set; } = true;
         public bool BlocksAir { get; set; } = false;

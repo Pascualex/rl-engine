@@ -10,7 +10,7 @@ namespace RLEngine.Actions
         public static DestroyLog? Destroy(this GameState state,
         Entity entity)
         {
-            if (state.Board.Remove(entity)) return null;
+            if (!state.Board.Remove(entity)) return null;
             return new DestroyLog(entity);
         }
     }

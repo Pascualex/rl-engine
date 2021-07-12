@@ -25,7 +25,8 @@ namespace RLEngine
             var log = new CombinedLog();
 
             var spawnLog = state.Spawn(content.PlayerType, new Coords(1, 1));
-            if (spawnLog == null) return log;
+            if (spawnLog is null) return log;
+            log.Add(spawnLog);
 
             var entity = spawnLog.Entity;
             log.Add(state.Move(entity, new Coords(1, 0), true));
