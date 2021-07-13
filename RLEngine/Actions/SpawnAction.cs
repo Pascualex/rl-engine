@@ -7,11 +7,15 @@ namespace RLEngine.Actions
 {
     public static class SpawnAction
     {
-        public static SpawnLog? Spawn(this GameState state,
-        IEntityType entityType, Coords at)
+        public static Log? Spawn(this GameState state,
+        IEntityType entityType, Coords at, out Entity? entity)
         {
-            var entity = new Entity(entityType);
-            if (!state.Board.Add(entity, at)) return null;
+            entity = new Entity(entityType);
+            if (!state.Board.Add(entity, at))
+            {
+                entity = null;
+                return null;
+            }
             return new SpawnLog(entity, at);
         }
     }

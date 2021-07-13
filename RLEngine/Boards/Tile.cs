@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace RLEngine.Boards
 {
-    public class Tile : ITile
+    public class Tile
     {
         private readonly HashSet<Entity> entities = new();
 
@@ -13,7 +13,7 @@ namespace RLEngine.Boards
             Type = type;
         }
 
-        public IReadOnlyCollection<Entity> Entities => entities;
+        public IEnumerable<Entity> Entities => entities;
         public ITileType Type { get; private set; }
 
         public bool Add(Entity entity)
@@ -28,9 +28,9 @@ namespace RLEngine.Boards
             entities.Remove(entity);
         }
 
-        public bool ChangeType(ITileType type)
+        public bool Modify(ITileType type)
         {
-            if (!CanChangeType(type)) return false;
+            if (!CanModify(type)) return false;
             Type = type;
             return true;
         }
@@ -38,30 +38,30 @@ namespace RLEngine.Boards
         public bool CanAdd(Entity entity)
         {
             if (entities.Contains(entity)) return false;
-
             foreach (var other in entities)
+            {
                 if (!AreCompatible(entity, other)) return false;
-            if (!AreCompatible(entity, Type)) return false;
-
-            return true;
+            }
+            return AreCompatible(entity, Type);
         }
 
-        public bool CanChangeType(ITileType type)
+        public bool CanModify(ITileType type)
         {
             foreach (var entity in entities)
+            {
                 if (!AreCompatible(entity, type)) return false;
-
+            }
             return true;
         }
 
         private static bool AreCompatible(Entity entityA, Entity entityB)
         {
-            var shareIsAgent = entityA.Type.IsAgent == entityB.Type.IsAgent;
-            var shareIsGhost = entityA.Type.IsGhost == entityB.Type.IsGhost;
+            var shareIsAgent = entityA.IsAgent == entityB.IsAgent;
+            var shareIsGhost = entityA.IsGhost == entityB.IsGhost;
             if (!shareIsAgent && !shareIsGhost) return true;
 
-            if (entityA.Type.BlocksGround && entityB.Type.BlocksGround) return false;
-            if (entityA.Type.BlocksAir && entityB.Type.BlocksAir) return false;
+            if (entityA.BlocksGround && entityB.BlocksGround) return false;
+            if (entityA.BlocksAir && entityB.BlocksAir) return false;
 
             return true;
         }
@@ -70,8 +70,8 @@ namespace RLEngine.Boards
         {
             if (entity.Type.IsGhost) return true;
 
-            if (entity.Type.BlocksGround && tileType.BlocksGround) return false;
-            if (entity.Type.BlocksAir && tileType.BlocksAir) return false;
+            if (entity.BlocksGround && tileType.BlocksGround) return false;
+            if (entity.BlocksAir && tileType.BlocksAir) return false;
 
             return true;
         }

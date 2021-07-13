@@ -1,12 +1,12 @@
 using RLEngine.Entities;
 using RLEngine.Utils;
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RLEngine.Boards
 {
-    public class Board : IBoard
+    public class Board
     {
         private readonly Tile[][] tiles;
         private readonly Dictionary<Entity, Coords> entities = new();
@@ -64,11 +64,11 @@ namespace RLEngine.Boards
             return true;
         }
 
-        public bool ChangeTileType(ITileType tileType, Coords at)
+        public bool Modify(ITileType tileType, Coords at)
         {
             if (!Size.Contains(at)) return false;
 
-            return tiles[at.Y][at.X].ChangeType(tileType);
+            return tiles[at.Y][at.X].Modify(tileType);
         }
 
         public Coords? GetCoords(Entity entity)
@@ -78,37 +78,18 @@ namespace RLEngine.Boards
             return at;
         }
 
-        public ITile? GetTile(Coords at)
+        public IEnumerable<Entity> GetEntities(Coords at)
+        {
+            if (!Size.Contains(at)) return Enumerable.Empty<Entity>();
+
+            return tiles[at.Y][at.X].Entities;
+        }
+
+        public ITileType? GetTileType(Coords at)
         {
             if (!Size.Contains(at)) return null;
 
-            return tiles[at.Y][at.X];
-        }
-
-        public ITile? GetTile(Entity entity)
-        {
-            if (!entities.TryGetValue(entity, out var at)) return null;
-
-            return tiles[at.Y][at.X];
-        }
-
-        public IEnumerable<ITile> GetTiles()
-        {
-            return GetTiles(Coords.Zero, new Coords(Size.X - 1, Size.Y - 1));
-        }
-
-        public IEnumerable<ITile> GetTiles(Coords from, Coords to)
-        {
-            var lower = new Coords(Math.Min(from.X, to.X), Math.Min(from.Y, to.Y));
-            var higher = new Coords(Math.Max(from.X, to.X), Math.Max(from.Y, to.Y));
-            for (var i = lower.Y; i <= higher.Y; i++)
-            {
-                for (var j = lower.X; j <= higher.Y; j++)
-                {
-                    var tile = GetTile(new Coords(j, i));
-                    if (tile is not null) yield return tile;
-                }
-            }
+            return tiles[at.Y][at.X].Type;
         }
     }
 }

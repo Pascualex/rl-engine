@@ -7,7 +7,7 @@ using RLEngine.Utils;
 
 namespace RLEngine
 {
-    public class Game : IGame
+    public class Game
     {
         private readonly GameState state;
         private readonly IGameContent content;
@@ -18,19 +18,25 @@ namespace RLEngine
             this.content = content;
         }
 
-        public IBoard Board => state.Board;
-
         public CombinedLog SetupExample()
         {
             var log = new CombinedLog();
 
-            var spawnLog = state.Spawn(content.PlayerType, new Coords(1, 1));
-            if (spawnLog is null) return log;
-            log.Add(spawnLog);
+            log.Add(state.Spawn(content.PlayerType, new Coords(1, 1), out var player));
+            if (player is null) return log;
 
-            var entity = spawnLog.Entity;
-            log.Add(state.Move(entity, new Coords(1, 0), true));
-            log.Add(state.Destroy(entity));
+            log.Add(state.Move(player, new Coords(1, 0), true));
+            log.Add(state.Move(player, new Coords(1, 0), true));
+            log.Add(state.Modify(content.WallType, new Coords(4, 1)));
+
+            log.Add(state.Spawn(content.GoblinType, new Coords(3, 2), out var goblin));
+            if (goblin is null) return log;
+
+            log.Add(state.Damage(player, goblin, new ActionAmount() { Base = 8 }));
+            log.Add(state.Heal(player, player, new ActionAmount() { Base = 5 }));
+            log.Add(state.Heal(player, player, new ActionAmount() { Base = 5 }));
+            log.Add(state.Damage(goblin, player, new ActionAmount() { Base = 6 }));
+            log.Add(state.Damage(goblin, player, new ActionAmount() { Base = 6 }));
 
             return log;
         }

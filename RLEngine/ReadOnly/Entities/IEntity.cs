@@ -1,6 +1,6 @@
 namespace RLEngine.Entities
 {
-    public interface IEntityType
+    public interface IEntity
     {
         string Name { get; }
         bool IsAgent { get; }
@@ -9,6 +9,6 @@ namespace RLEngine.Entities
         bool BlocksAir { get; }
         bool IsGhost { get; }
         object? Visuals { get; }
-        IEntityType? Parent { get; }
+        IEntityType Type { get; }
     }
 }
