@@ -25,7 +25,7 @@ namespace RLEngine.Runner
                 else if (currentLog is MoveLog moveLog) Write(moveLog);
                 else if (currentLog is DestroyLog destroyLog) Write(destroyLog);
                 else Write(currentLog);
-                System.Threading.Thread.Sleep(delayMS);
+                if (delayMS > 0) System.Threading.Thread.Sleep(delayMS);
             }
         }
 

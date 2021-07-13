@@ -12,7 +12,7 @@ namespace RLEngine.Runner
             var boardSize = new Size(10, 10);
             var floorType = new TileType();
             var wallType = new TileType { BlocksGround = true, BlocksAir = true };
-            var playerType = new EntityType { Name = "Player" };
+            var playerType = new EntityType { Name = "Goblin" };
             var content = new GameContent(boardSize, floorType, wallType, playerType);
 
             var game = new Game(content);
