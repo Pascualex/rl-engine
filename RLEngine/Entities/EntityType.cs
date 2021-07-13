@@ -6,9 +6,11 @@ namespace RLEngine.Entities
     {
         public string Name { get; set; } = "NO_NAME";
         public bool IsAgent { get; set; } = false;
+        public int MaxHealth { get; } = 10;
         public bool BlocksGround { get; set; } = true;
         public bool BlocksAir { get; set; } = false;
         public bool IsGhost { get; set; } = false;
         public object? Visuals { get; set; } = null;
+        public IEntityType? Parent { get; set; } = null;
     }
 }

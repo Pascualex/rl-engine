@@ -10,5 +10,6 @@ namespace RLEngine
         ITileType FloorType { get; }
         ITileType WallType { get; }
         IEntityType PlayerType { get; }
+        IEntityType GoblinType { get; }
     }
 }

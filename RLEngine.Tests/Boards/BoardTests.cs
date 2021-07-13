@@ -38,8 +38,14 @@ namespace RLEngine.Tests.Engine
             var board = new Board(size, f.FloorTileType);
 
             Assert.That(board.Size, Is.EqualTo(size));
-            foreach (var tile in board.GetTiles())
-                Assert.That(tile.FailIfNull().Type, Is.SameAs(f.FloorTileType));
+            for (var i = 0; i < board.Size.Y; i++)
+            {
+                for (var j = 0; j < board.Size.X; j++)
+                {
+                    var tileType = board.GetTileType(new Coords(j, i)).FailIfNull();
+                    Assert.That(tileType, Is.SameAs(f.FloorTileType));
+                }
+            }
         }
 
         [Test]
@@ -57,8 +63,8 @@ namespace RLEngine.Tests.Engine
             var added = board.Add(entity, position);
             Assert.That(added, Is.True);
 
-            var tile = board.GetTile(position).FailIfNull();
-            Assert.That(tile.Entities, Has.Member(entity));
+            var entities = board.GetEntities(position);
+            Assert.That(entities, Has.Member(entity));
         }
 
         [Test]
@@ -91,9 +97,9 @@ namespace RLEngine.Tests.Engine
             var added = board.Add(entityB, position);
             Assert.That(added, Is.True);
 
-            var tile = board.GetTile(position).FailIfNull();
-            Assert.That(tile.Entities, Has.Member(entityA));
-            Assert.That(tile.Entities, Has.Member(entityB));
+            var entities = board.GetEntities(position);
+            Assert.That(entities, Has.Member(entityA));
+            Assert.That(entities, Has.Member(entityB));
         }
 
         [Test]
@@ -110,9 +116,9 @@ namespace RLEngine.Tests.Engine
             var added = board.Add(entityB, position);
             Assert.That(added, Is.False);
 
-            var tile = board.GetTile(position).FailIfNull();
-            Assert.That(tile.Entities, Has.Member(entityA));
-            Assert.That(tile.Entities, Has.No.Member(entityB));
+            var entities = board.GetEntities(position);
+            Assert.That(entities, Has.Member(entityA));
+            Assert.That(entities, Has.No.Member(entityB));
         }
 
         [Test]
@@ -127,8 +133,8 @@ namespace RLEngine.Tests.Engine
             var added = board.Add(entity, position);
             Assert.That(added, Is.False);
 
-            var tile = board.GetTile(position).FailIfNull();
-            Assert.That(tile.Entities, Has.No.Member(entity));
+            var entities = board.GetEntities(position);
+            Assert.That(entities, Has.No.Member(entity));
         }
 
         [Test]
@@ -155,12 +161,12 @@ namespace RLEngine.Tests.Engine
             if (relative) finalPosition += initialPosition;
             if (initialPosition != finalPosition)
             {
-                var initialTile = board.GetTile(initialPosition).FailIfNull();
-                Assert.That(initialTile.Entities, Has.No.Member(entity));
+                var initialEntities = board.GetEntities(initialPosition);
+                Assert.That(initialEntities, Has.No.Member(entity));
             }
 
-            var finalTile = board.GetTile(finalPosition).FailIfNull();
-            Assert.That(finalTile.Entities, Has.Member(entity));
+            var finalEntities = board.GetEntities(finalPosition);
+            Assert.That(finalEntities, Has.Member(entity));
         }
 
         [Test]
@@ -184,8 +190,8 @@ namespace RLEngine.Tests.Engine
             var moved = board.Move(entity, finalPosition, relative);
             Assert.That(moved, Is.False);
 
-            var initialTile = board.GetTile(initialPosition).FailIfNull();
-            Assert.That(initialTile.Entities, Has.Member(entity));
+            var initialEntities = board.GetEntities(initialPosition);
+            Assert.That(initialEntities, Has.Member(entity));
         }
 
         [Test]
@@ -200,8 +206,8 @@ namespace RLEngine.Tests.Engine
             var moved = board.Move(entity, finalPosition, false);
             Assert.That(moved, Is.False);
 
-            var finalTile = board.GetTile(finalPosition).FailIfNull();
-            Assert.That(finalTile.Entities, Has.No.Member(entity));
+            var finalTile = board.GetEntities(finalPosition);
+            Assert.That(finalTile, Has.No.Member(entity));
         }
 
         [Test]
@@ -221,12 +227,12 @@ namespace RLEngine.Tests.Engine
             var moved = board.Move(entityA, finalPosition, false);
             Assert.That(moved, Is.True);
 
-            var initialTile = board.GetTile(initialPosition).FailIfNull();
-            Assert.That(initialTile.Entities, Has.No.Member(entityA));
+            var initialEntities = board.GetEntities(initialPosition);
+            Assert.That(initialEntities, Has.No.Member(entityA));
 
-            var finalTile = board.GetTile(finalPosition).FailIfNull();
-            Assert.That(finalTile.Entities, Has.Member(entityA));
-            Assert.That(finalTile.Entities, Has.Member(entityB));
+            var finalEntities = board.GetEntities(finalPosition);
+            Assert.That(finalEntities, Has.Member(entityA));
+            Assert.That(finalEntities, Has.Member(entityB));
         }
 
         [Test]
@@ -246,12 +252,12 @@ namespace RLEngine.Tests.Engine
             var moved = board.Move(entityA, finalPosition, false);
             Assert.That(moved, Is.False);
 
-            var initialTile = board.GetTile(initialPosition).FailIfNull();
-            Assert.That(initialTile.Entities, Has.Member(entityA));
+            var initialEntities = board.GetEntities(initialPosition);
+            Assert.That(initialEntities, Has.Member(entityA));
 
-            var finalTile = board.GetTile(finalPosition).FailIfNull();
-            Assert.That(finalTile.Entities, Has.No.Member(entityA));
-            Assert.That(finalTile.Entities, Has.Member(entityB));
+            var finalEntities = board.GetEntities(finalPosition);
+            Assert.That(finalEntities, Has.No.Member(entityA));
+            Assert.That(finalEntities, Has.Member(entityB));
         }
 
         [Test]
@@ -266,15 +272,15 @@ namespace RLEngine.Tests.Engine
             board.Add(entity, initialPosition);
 
             var finalPosition = new Coords(2, 1);
-            board.ChangeTileType(f.WallTileType, finalPosition);
+            board.Modify(f.WallTileType, finalPosition);
             var moved = board.Move(entity, finalPosition, false);
             Assert.That(moved, Is.False);
 
-            var initialTile = board.GetTile(initialPosition).FailIfNull();
-            Assert.That(initialTile.Entities, Has.Member(entity));
+            var initialEntities = board.GetEntities(initialPosition);
+            Assert.That(initialEntities, Has.Member(entity));
 
-            var finalTile = board.GetTile(finalPosition).FailIfNull();
-            Assert.That(finalTile.Entities, Has.No.Member(entity));
+            var finalEntities = board.GetEntities(finalPosition);
+            Assert.That(finalEntities, Has.No.Member(entity));
         }
 
         [Test]
@@ -291,8 +297,8 @@ namespace RLEngine.Tests.Engine
             var removed = board.Remove(entity);
             Assert.That(removed, Is.True);
 
-            var tile = board.GetTile(position).FailIfNull();
-            Assert.That(tile.Entities, Has.No.Member(entity));
+            var entities = board.GetEntities(position);
+            Assert.That(entities, Has.No.Member(entity));
         }
 
         [Test]
@@ -318,11 +324,11 @@ namespace RLEngine.Tests.Engine
             var board = new Board(new Size(3, 3), f.FloorTileType);
 
             var position = new Coords(x, y);
-            var changed = board.ChangeTileType(f.WallTileType, position);
+            var changed = board.Modify(f.WallTileType, position);
             Assert.That(changed, Is.True);
 
-            var tile = board.GetTile(position).FailIfNull();
-            Assert.That(tile.Type, Is.SameAs(f.WallTileType));
+            var tileType = board.GetTileType(position);
+            Assert.That(tileType, Is.SameAs(f.WallTileType));
         }
 
         [Test]
@@ -337,38 +343,8 @@ namespace RLEngine.Tests.Engine
             var board = new Board(new Size(3, 3), f.FloorTileType);
 
             var position = new Coords(x, y);
-            var changed = board.ChangeTileType(f.WallTileType, position);
+            var changed = board.Modify(f.WallTileType, position);
             Assert.That(changed, Is.False);
-        }
-
-        [Test]
-        [TestCase(0, 0)]
-        [TestCase(0, 1)]
-        [TestCase(2, 2)]
-        public void GetTilePasses(int x, int y)
-        {
-            var f = new Fixture();
-
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-
-            var position = new Coords(x, y);
-            var tile = board.GetTile(position);
-            Assert.That(tile, Is.Not.Null);
-        }
-
-        [Test]
-        [TestCase(0, -1)]
-        [TestCase(-1, -1)]
-        [TestCase(3, 0)]
-        public void GetTileFailsOutOfBounds(int x, int y)
-        {
-            var f = new Fixture();
-
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-
-            var position = new Coords(x, y);
-            var tile = board.GetTile(position);
-            Assert.That(tile, Is.Null);
         }
     }
 }
