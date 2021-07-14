@@ -100,7 +100,7 @@ namespace RLEngine.Runner
             Console.WriteLine($"] {log.GetType().Name} is not supported.");
         }
 
-        private static void Write(IEntity entity)
+        private static void Write(IROEntity entity)
         {
             Write(entity.Name, ConsoleColor.Yellow);
         }

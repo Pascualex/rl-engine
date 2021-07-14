@@ -9,7 +9,7 @@ namespace RLEngine.Actions
     public static class HealAction
     {
         public static Log? Heal(this GameState state,
-        Entity entity, Entity? healer, IActionAmount amount)
+        Entity entity, Entity? healer, ActionAmount amount)
         {
             if (entity.IsDead) return null;
             if (healer?.IsDead ?? false) return null;
@@ -19,7 +19,7 @@ namespace RLEngine.Actions
         }
 
         public static Log? Heal(this GameState state,
-        Entity entity, IActionAmount amount)
+        Entity entity, ActionAmount amount)
         {
             return Heal(state, entity, null, amount);
         }

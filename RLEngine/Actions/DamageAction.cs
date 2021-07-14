@@ -9,7 +9,7 @@ namespace RLEngine.Actions
     public static class DamageAction
     {
         public static Log? Damage(this GameState state,
-        Entity target, Entity? attacker, IActionAmount amount)
+        Entity target, Entity? attacker, ActionAmount amount)
         {
             if (target.IsDead) return null;
             if (attacker?.IsDead ?? false) return null;
@@ -25,7 +25,7 @@ namespace RLEngine.Actions
             return new DamageLog(target, attacker, damage, actualDamage);
         }
         public static Log? Damage(this GameState state,
-        Entity target, IActionAmount amount)
+        Entity target, ActionAmount amount)
         {
             return Damage(state, target, null, amount);
         }
