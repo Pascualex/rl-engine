@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using NSubstitute;
 
 using RLEngine.Boards;
 using RLEngine.Entities;
@@ -19,10 +20,16 @@ namespace RLEngine.Tests.Engine
 
             public Fixture()
             {
-                GroundEntityType = new EntityType();
-                GhostAgentType = new EntityType { IsGhost = true, IsAgent = true };
-                FloorTileType = new TileType();
-                WallTileType = new TileType { BlocksGround = true, BlocksAir = true };
+                GroundEntityType = Substitute.For<IEntityType>();
+                GroundEntityType.BlocksGround.Returns(true);
+                GhostAgentType = Substitute.For<IEntityType>();
+                GhostAgentType.IsAgent.Returns(true);
+                GhostAgentType.BlocksGround.Returns(true);
+                GhostAgentType.IsGhost.Returns(true);
+                FloorTileType = Substitute.For<ITileType>();
+                WallTileType = Substitute.For<ITileType>();
+                WallTileType.BlocksGround.Returns(true);
+                WallTileType.BlocksAir.Returns(true);
             }
         }
 

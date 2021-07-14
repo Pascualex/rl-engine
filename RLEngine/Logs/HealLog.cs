@@ -4,7 +4,7 @@ namespace RLEngine.Logs
 {
     public class HealLog : Log
     {
-        public HealLog(IEntity target, IEntity? healer, int heal, int actualHeal)
+        public HealLog(IROEntity target, IROEntity? healer, int heal, int actualHeal)
         {
             Target = target;
             Healer = healer;
@@ -12,8 +12,8 @@ namespace RLEngine.Logs
             ActualHeal = actualHeal;
         }
 
-        public IEntity Target { get; }
-        public IEntity? Healer { get; }
+        public IROEntity Target { get; }
+        public IROEntity? Healer { get; }
         public int Heal { get; }
         public int ActualHeal { get; }
     }

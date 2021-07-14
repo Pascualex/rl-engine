@@ -2,7 +2,7 @@
 
 namespace RLEngine.Entities
 {
-    public class Entity : IEntity
+    public class Entity : IROEntity
     {
         public Entity(IEntityType type)
         {

@@ -45,29 +45,29 @@ namespace RLEngine
         {
             var combinedLog = new CombinedLog();
             return combinedLog;
-        //     var turnAction = new ParallelAction();
-        //     var processed = new HashSet<Agent>();
+            //     var turnAction = new ParallelAction();
+            //     var processed = new HashSet<Agent>();
 
-        //     Agent? agent;
-        //     while (((agent = TurnManager.GetCurrent()) != null) && !processed.Contains(agent))
-        //     {
-        //         if (agent.IsPlayer) LastPlayer = agent;
-        //         Controller controller = agent.IsPlayer ? PlayerController : AIController;
-        //         var agentAction = controller.ProduceAction(agent, Ctx);
+            //     Agent? agent;
+            //     while (((agent = TurnManager.GetCurrent()) != null) && !processed.Contains(agent))
+            //     {
+            //         if (agent.IsPlayer) LastPlayer = agent;
+            //         Controller controller = agent.IsPlayer ? PlayerController : AIController;
+            //         var agentAction = controller.ProduceAction(agent, Ctx);
 
-        //         if (agentAction == null) break;
+            //         if (agentAction == null) break;
 
-        //         agentAction.Execute();
+            //         agentAction.Execute();
 
-        //         if (!agentAction.IsCompleted) turnAction.Add(agentAction);
+            //         if (!agentAction.IsCompleted) turnAction.Add(agentAction);
 
-        //         processed.Add(agent);
-        //         TurnManager.Next();
+            //         processed.Add(agent);
+            //         TurnManager.Next();
 
-        //         if (agentAction is not MoveAction and not NullAction) break;
-        //     }
+            //         if (agentAction is not MoveAction and not NullAction) break;
+            //     }
 
-        //     return turnAction;
+            //     return turnAction;
         }
     }
 }
