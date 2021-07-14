@@ -1,5 +1,3 @@
-using System;
-
 namespace RLEngine.Boards
 {
     public class TileType : ITileType

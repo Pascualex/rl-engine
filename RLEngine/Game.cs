@@ -1,8 +1,6 @@
 ﻿using RLEngine.Actions;
 using RLEngine.Logs;
 using RLEngine.State;
-using RLEngine.Boards;
-using RLEngine.Entities;
 using RLEngine.Utils;
 
 namespace RLEngine
@@ -31,12 +29,6 @@ namespace RLEngine
 
             log.Add(state.Spawn(content.GoblinType, new Coords(3, 2), out var goblin));
             if (goblin is null) return log;
-
-            log.Add(state.Damage(player, goblin, new ActionAmount() { Base = 8 }));
-            log.Add(state.Heal(player, player, new ActionAmount() { Base = 5 }));
-            log.Add(state.Heal(player, player, new ActionAmount() { Base = 5 }));
-            log.Add(state.Damage(goblin, player, new ActionAmount() { Base = 6 }));
-            log.Add(state.Damage(goblin, player, new ActionAmount() { Base = 6 }));
 
             return log;
         }
