@@ -1,5 +1,4 @@
 ﻿using RLEngine.Entities;
-using RLEngine.Utils;
 
 namespace RLEngine.Logs
 {

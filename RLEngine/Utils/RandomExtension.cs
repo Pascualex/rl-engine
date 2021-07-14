@@ -1,6 +1,4 @@
-﻿using System;
-
-using Random = System.Random;
+﻿using Random = System.Random;
 
 namespace RLEngine.Utils
 {
