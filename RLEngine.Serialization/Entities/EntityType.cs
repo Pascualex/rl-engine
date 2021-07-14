@@ -1,4 +1,6 @@
-namespace RLEngine.Entities
+using RLEngine.Entities;
+
+namespace RLEngine.Serialization.Entities
 {
     public class EntityType : IEntityType
     {

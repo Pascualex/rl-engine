@@ -1,5 +1,5 @@
-﻿using RLEngine.Boards;
-using RLEngine.Entities;
+﻿using RLEngine.Serialization.Boards;
+using RLEngine.Serialization.Entities;
 using RLEngine.Utils;
 
 namespace RLEngine.Runner
