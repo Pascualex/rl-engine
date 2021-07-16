@@ -1,45 +1,22 @@
-using NUnit.Framework;
-using NSubstitute;
-
 using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
 using RLEngine.Tests.Utils;
+
+using NUnit.Framework;
 
 namespace RLEngine.Tests.Boards
 {
     [TestFixture]
     public class BoardsTests
     {
-        private class Fixture
-        {
-            public IEntityType GroundEntityType { get; }
-            public IEntityType GhostAgentType { get; }
-            public ITileType FloorTileType { get; }
-            public ITileType WallTileType { get; }
-
-            public Fixture()
-            {
-                GroundEntityType = Substitute.For<IEntityType>();
-                GroundEntityType.BlocksGround.Returns(true);
-                GhostAgentType = Substitute.For<IEntityType>();
-                GhostAgentType.IsAgent.Returns(true);
-                GhostAgentType.BlocksGround.Returns(true);
-                GhostAgentType.IsGhost.Returns(true);
-                FloorTileType = Substitute.For<ITileType>();
-                WallTileType = Substitute.For<ITileType>();
-                WallTileType.BlocksGround.Returns(true);
-                WallTileType.BlocksAir.Returns(true);
-            }
-        }
-
         [Test]
         [TestCase(0, 0)]
         [TestCase(1, 1)]
         [TestCase(2, 4)]
         public void BoardCreatedPasses(int width, int height)
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var size = new Size(width, height);
             var board = new Board(size, f.FloorTileType);
@@ -61,7 +38,7 @@ namespace RLEngine.Tests.Boards
         [TestCase(2, 2)]
         public void AddPasses(int x, int y)
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
@@ -83,7 +60,7 @@ namespace RLEngine.Tests.Boards
         [TestCase(3, 0)]
         public void AddFailsOutOfBounds(int x, int y)
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
@@ -102,7 +79,7 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void AddPassesWithCompatibleEntity()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
@@ -127,7 +104,7 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void AddFailsWithIncompatibleEntity()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
@@ -152,7 +129,7 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void AddFailsWithIncompatibleTile()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.WallTileType);
             var entity = new Entity(f.GroundEntityType);
@@ -177,7 +154,7 @@ namespace RLEngine.Tests.Boards
         [TestCase(1, 1, 0,  0, true)]
         public void MovePasses(int ix, int iy, int fx, int fy, bool relative)
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
@@ -213,7 +190,7 @@ namespace RLEngine.Tests.Boards
         [TestCase(1, 2,  2,  0,  true)]
         public void MoveFailsOutOfBounds(int ix, int iy, int fx, int fy, bool relative)
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
@@ -238,7 +215,7 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void MoveFailsWhenEntityIsNotAdded()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
@@ -257,7 +234,7 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void MovePassesWithCompatibleEntity()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
@@ -288,7 +265,7 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void MoveFailsWithIncompatibleEntity()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
@@ -319,7 +296,7 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void MoveFailsWithIncompatibleTile()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
@@ -345,7 +322,7 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void RemovePasses()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
@@ -366,7 +343,7 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void RemoveFailsWhenEntityIsNotAdded()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
@@ -384,7 +361,7 @@ namespace RLEngine.Tests.Boards
         [TestCase(2, 2)]
         public void ChangeTileTypePasses(int x, int y)
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
 
@@ -403,7 +380,7 @@ namespace RLEngine.Tests.Boards
         [TestCase(20, 30)]
         public void ChangeTileTypeFailsOutOfBounds(int x, int y)
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var board = new Board(new Size(3, 3), f.FloorTileType);
 
