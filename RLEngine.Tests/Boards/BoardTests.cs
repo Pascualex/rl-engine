@@ -6,7 +6,7 @@ using RLEngine.Entities;
 using RLEngine.Utils;
 using RLEngine.Tests.Utils;
 
-namespace RLEngine.Tests.Engine
+namespace RLEngine.Tests.Boards
 {
     [TestFixture]
     public class BoardsTests
