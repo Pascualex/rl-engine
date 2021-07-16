@@ -6,6 +6,7 @@ namespace RLEngine.Serialization.Entities
     {
         public string Name { get; set; } = "NO_NAME";
         public bool IsAgent { get; set; } = false;
+        public int Speed { get; set; } = 100;
         public bool BlocksGround { get; set; } = true;
         public bool BlocksAir { get; set; } = false;
         public bool IsGhost { get; set; } = false;
