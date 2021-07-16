@@ -1,13 +1,10 @@
-using NUnit.Framework;
-using NSubstitute;
-
 using RLEngine.Actions;
 using RLEngine.Logs;
 using RLEngine.State;
-using RLEngine.Boards;
-using RLEngine.Entities;
 using RLEngine.Utils;
 using RLEngine.Tests.Utils;
+
+using NUnit.Framework;
 
 namespace RLEngine.Tests.Actions
 {
