@@ -16,11 +16,14 @@ namespace RLEngine.Tests.Boards
         [TestCase(2, 4)]
         public void BoardCreatedPasses(int width, int height)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var size = new Size(width, height);
+
+            // Act
             var board = new Board(size, f.FloorTileType);
 
+            // Assert
             Assert.That(board.Size, Is.EqualTo(size));
             for (var i = 0; i < board.Size.Y; i++)
             {
@@ -38,18 +41,19 @@ namespace RLEngine.Tests.Boards
         [TestCase(2, 2)]
         public void AddPasses(int x, int y)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
-
             var position = new Coords(x, y);
-            var added = board.Add(entity, position);
-            Assert.That(added, Is.True);
 
+            // Act
+            var added = board.Add(entity, position);
+
+            // Assert
+            Assert.That(added, Is.True);
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.EqualTo(position));
-
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.Member(entity));
         }
@@ -60,18 +64,19 @@ namespace RLEngine.Tests.Boards
         [TestCase(3, 0)]
         public void AddFailsOutOfBounds(int x, int y)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
-
             var position = new Coords(x, y);
-            var added = board.Add(entity, position);
-            Assert.That(added, Is.False);
 
+            // Act
+            var added = board.Add(entity, position);
+
+            // Assert
+            Assert.That(added, Is.False);
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.Null);
-
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.No.Member(entity));
         }
@@ -79,23 +84,23 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void AddPassesWithCompatibleEntity()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
             var entityB = new Entity(f.GhostAgentType);
-
             var position = new Coords(1, 1);
             board.Add(entityA, position);
-            var added = board.Add(entityB, position);
-            Assert.That(added, Is.True);
 
+            // Act
+            var added = board.Add(entityB, position);
+
+            // Assert
+            Assert.That(added, Is.True);
             var entityAPosition = board.GetCoords(entityA);
             Assert.That(entityAPosition, Is.EqualTo(position));
-
             var entityBPosition = board.GetCoords(entityB);
             Assert.That(entityBPosition, Is.EqualTo(position));
-
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.Member(entityA));
             Assert.That(entities, Has.Member(entityB));
@@ -104,23 +109,23 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void AddFailsWithIncompatibleEntity()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
             var entityB = new Entity(f.GroundEntityType);
-
             var position = new Coords(1, 1);
             board.Add(entityA, position);
-            var added = board.Add(entityB, position);
-            Assert.That(added, Is.False);
 
+            // Act
+            var added = board.Add(entityB, position);
+
+            // Assert
+            Assert.That(added, Is.False);
             var entityAPosition = board.GetCoords(entityA);
             Assert.That(entityAPosition, Is.EqualTo(position));
-
             var entityBPosition = board.GetCoords(entityB);
             Assert.That(entityBPosition, Is.Null);
-
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.Member(entityA));
             Assert.That(entities, Has.No.Member(entityB));
@@ -129,85 +134,83 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void AddFailsWithIncompatibleTile()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.WallTileType);
             var entity = new Entity(f.GroundEntityType);
-
             var position = new Coords(1, 1);
-            var added = board.Add(entity, position);
-            Assert.That(added, Is.False);
 
+            // Act
+            var added = board.Add(entity, position);
+
+            // Assert
+            Assert.That(added, Is.False);
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.Null);
-
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.No.Member(entity));
         }
 
         [Test]
-        [TestCase(0, 1, 2,  0, false)]
+        [TestCase(0, 1, 2, 0, false)]
         [TestCase(0, 1, 2, -1, true)]
-        [TestCase(0, 0, 2,  2, false)]
-        [TestCase(0, 0, 2,  2,  true)]
-        [TestCase(1, 1, 1,  1, false)]
-        [TestCase(1, 1, 0,  0, true)]
+        [TestCase(0, 0, 2, 2, false)]
+        [TestCase(0, 0, 2, 2, true)]
+        [TestCase(1, 1, 1, 1, false)]
+        [TestCase(1, 1, 0, 0, true)]
         public void MovePasses(int ix, int iy, int fx, int fy, bool relative)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
-
             var initialPosition = new Coords(ix, iy);
+            var finalPosition = new Coords(fx, fy);
             board.Add(entity, initialPosition);
 
-            var finalPosition = new Coords(fx, fy);
+            // Act
             var moved = board.Move(entity, finalPosition, relative);
-            Assert.That(moved, Is.True);
 
+            // Assert
             if (relative) finalPosition += initialPosition;
-
+            Assert.That(moved, Is.True);
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.EqualTo(finalPosition));
-
             if (initialPosition != finalPosition)
             {
                 var initialEntities = board.GetEntities(initialPosition);
                 Assert.That(initialEntities, Has.No.Member(entity));
             }
-
             var finalEntities = board.GetEntities(finalPosition);
             Assert.That(finalEntities, Has.Member(entity));
         }
 
         [Test]
-        [TestCase(0, 0,  0, -1, false)]
-        [TestCase(0, 0,  0, -1,  true)]
+        [TestCase(0, 0, 0, -1, false)]
+        [TestCase(0, 0, 0, -1, true)]
         [TestCase(1, 1, -1, -1, false)]
-        [TestCase(1, 1, -2, -2,  true)]
-        [TestCase(1, 2,  3,  0, false)]
-        [TestCase(1, 2,  2,  0,  true)]
+        [TestCase(1, 1, -2, -2, true)]
+        [TestCase(1, 2, 3, 0, false)]
+        [TestCase(1, 2, 2, 0, true)]
         public void MoveFailsOutOfBounds(int ix, int iy, int fx, int fy, bool relative)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
-
             var initialPosition = new Coords(ix, iy);
+            var finalPosition = new Coords(fx, fy);
             board.Add(entity, initialPosition);
 
-            var finalPosition = new Coords(fx, fy);
+            // Act
             var moved = board.Move(entity, finalPosition, relative);
-            Assert.That(moved, Is.False);
 
+            // Assert
+            Assert.That(moved, Is.False);
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.EqualTo(initialPosition));
-
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.Member(entity));
-
             var finalEntities = board.GetEntities(finalPosition);
             Assert.That(finalEntities, Has.No.Member(entity));
         }
@@ -215,18 +218,19 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void MoveFailsWhenEntityIsNotAdded()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
-
             var finalPosition = new Coords(1, 1);
-            var moved = board.Move(entity, finalPosition, false);
-            Assert.That(moved, Is.False);
 
+            // Act
+            var moved = board.Move(entity, finalPosition, false);
+
+            // Assert
+            Assert.That(moved, Is.False);
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.Null);
-
             var finalEntities = board.GetEntities(finalPosition);
             Assert.That(finalEntities, Has.No.Member(entity));
         }
@@ -234,29 +238,27 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void MovePassesWithCompatibleEntity()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
             var entityB = new Entity(f.GhostAgentType);
-
+            var initialPosition = new Coords(0, 1);
             var finalPosition = new Coords(2, 1);
             board.Add(entityA, finalPosition);
-
-            var initialPosition = new Coords(0, 1);
             board.Add(entityB, initialPosition);
-            var moved = board.Move(entityB, finalPosition, false);
-            Assert.That(moved, Is.True);
 
+            // Act
+            var moved = board.Move(entityB, finalPosition, false);
+
+            // Assert
+            Assert.That(moved, Is.True);
             var entityAPosition = board.GetCoords(entityA);
             Assert.That(entityAPosition, Is.EqualTo(finalPosition));
-
             var entityBPosition = board.GetCoords(entityB);
             Assert.That(entityBPosition, Is.EqualTo(finalPosition));
-
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.No.Member(entityB));
-
             var finalEntities = board.GetEntities(finalPosition);
             Assert.That(finalEntities, Has.Member(entityA));
             Assert.That(finalEntities, Has.Member(entityB));
@@ -265,29 +267,27 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void MoveFailsWithIncompatibleEntity()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entityA = new Entity(f.GroundEntityType);
             var entityB = new Entity(f.GroundEntityType);
-
+            var initialPosition = new Coords(0, 1);
             var finalPosition = new Coords(2, 1);
             board.Add(entityA, finalPosition);
-
-            var initialPosition = new Coords(0, 1);
             board.Add(entityB, initialPosition);
-            var moved = board.Move(entityB, finalPosition, false);
-            Assert.That(moved, Is.False);
 
+            // Act
+            var moved = board.Move(entityB, finalPosition, false);
+
+            // Assert
+            Assert.That(moved, Is.False);
             var entityAPosition = board.GetCoords(entityA);
             Assert.That(entityAPosition, Is.EqualTo(finalPosition));
-
             var entityBPosition = board.GetCoords(entityB);
             Assert.That(entityBPosition, Is.EqualTo(initialPosition));
-
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.Member(entityB));
-
             var finalEntities = board.GetEntities(finalPosition);
             Assert.That(finalEntities, Has.Member(entityA));
             Assert.That(finalEntities, Has.No.Member(entityB));
@@ -296,25 +296,24 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void MoveFailsWithIncompatibleTile()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
-
             var initialPosition = new Coords(0, 1);
-            board.Add(entity, initialPosition);
-
             var finalPosition = new Coords(2, 1);
+            board.Add(entity, initialPosition);
             board.Modify(f.WallTileType, finalPosition);
-            var moved = board.Move(entity, finalPosition, false);
-            Assert.That(moved, Is.False);
 
+            // Act
+            var moved = board.Move(entity, finalPosition, false);
+
+            // Assert
+            Assert.That(moved, Is.False);
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.EqualTo(initialPosition));
-
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.Member(entity));
-
             var finalEntities = board.GetEntities(finalPosition);
             Assert.That(finalEntities, Has.No.Member(entity));
         }
@@ -322,20 +321,20 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void RemovePasses()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
-
             var position = new Coords(1, 1);
             board.Add(entity, position);
 
+            // Act
             var removed = board.Remove(entity);
-            Assert.That(removed, Is.True);
 
+            // Assert
+            Assert.That(removed, Is.True);
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.Null);
-
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.No.Member(entity));
         }
@@ -343,14 +342,16 @@ namespace RLEngine.Tests.Boards
         [Test]
         public void RemoveFailsWhenEntityIsNotAdded()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
             var entity = new Entity(f.GroundEntityType);
 
+            // Act
             var removed = board.Remove(entity);
-            Assert.That(removed, Is.False);
 
+            // Assert
+            Assert.That(removed, Is.False);
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.Null);
         }
@@ -361,14 +362,16 @@ namespace RLEngine.Tests.Boards
         [TestCase(2, 2)]
         public void ModifyPasses(int x, int y)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
-
             var position = new Coords(x, y);
-            var changed = board.Modify(f.WallTileType, position);
-            Assert.That(changed, Is.True);
 
+            // Act
+            var changed = board.Modify(f.WallTileType, position);
+
+            // Assert
+            Assert.That(changed, Is.True);
             var tileType = board.GetTileType(position);
             Assert.That(tileType, Is.SameAs(f.WallTileType));
         }
@@ -380,14 +383,16 @@ namespace RLEngine.Tests.Boards
         [TestCase(20, 30)]
         public void ModifyFailsOutOfBounds(int x, int y)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var board = new Board(new Size(3, 3), f.FloorTileType);
-
             var position = new Coords(x, y);
-            var changed = board.Modify(f.WallTileType, position);
-            Assert.That(changed, Is.False);
 
+            // Act
+            var changed = board.Modify(f.WallTileType, position);
+
+            // Assert
+            Assert.That(changed, Is.False);
             var tileType = board.GetTileType(position);
             Assert.That(tileType, Is.Null);
         }
