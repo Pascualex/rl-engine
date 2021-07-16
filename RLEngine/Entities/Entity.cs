@@ -9,6 +9,7 @@
 
         public string Name => Type.Name;
         public bool IsAgent => Type.IsAgent;
+        public int Speed => Type.Speed;
         public bool BlocksGround => Type.BlocksGround;
         public bool BlocksAir => Type.BlocksAir;
         public bool IsGhost => Type.IsGhost;
