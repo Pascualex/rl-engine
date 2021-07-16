@@ -24,9 +24,11 @@ namespace RLEngine.Turns
 
         public int CompareTo(Turn other)
         {
-            var comparison = Tick.CompareTo(other.Tick);
-            if (comparison != 0) return comparison;
-            return -EntityId.CompareTo(other.EntityId);
+            var tickComparison = Tick.CompareTo(other.Tick);
+            if (tickComparison != 0) return tickComparison;
+            var speedComparison = Entity.Speed.CompareTo(other.Entity.Speed);
+            if (speedComparison != 0) return -speedComparison;
+            return EntityId.CompareTo(other.EntityId);
         }
     }
 }

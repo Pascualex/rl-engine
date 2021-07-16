@@ -15,6 +15,7 @@ namespace RLEngine.Turns
 
         public bool Add(Entity entity)
         {
+            if (!entity.IsAgent) return false;
             if (entities.ContainsKey(entity)) return false;
 
             var currentTick = turns.Count > 0 ? turns.Min.Tick : 0;
@@ -36,7 +37,7 @@ namespace RLEngine.Turns
             return true;
         }
 
-        public void NextTurn(int actionCost)
+        public void Next(int actionCost)
         {
             if (actionCost <= 0) return;
             if (turns.Count == 0) return;
@@ -48,6 +49,10 @@ namespace RLEngine.Turns
             turns.Remove(turn);
             turns.Add(nextTurn);
             entities[nextTurn.Entity] = nextTurn;
+
+            var nextEntity = Current;
+            if (nextEntity is null) return;
+            if (!nextEntity.IsAgent) Remove(nextEntity);
         }
     }
 }
