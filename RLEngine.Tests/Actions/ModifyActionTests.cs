@@ -19,17 +19,19 @@ namespace RLEngine.Tests.Actions
         [TestCase(2, 2)]
         public void ModifyPasses(int x, int y)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var state = new GameState(new Size(3, 3), f.FloorTileType);
-
             var position = new Coords(x, y);
+
+            // Act
             var log = state.Modify(f.WallTileType, position);
+
+            // Assert
             var modifyLog = (ModifyLog)log.FailIfNull();
             Assert.That(modifyLog.NewType, Is.SameAs(f.WallTileType));
             Assert.That(modifyLog.PreviousType, Is.SameAs(f.FloorTileType));
             Assert.That(modifyLog.At, Is.EqualTo(position));
-
             var tileType = state.Board.GetTileType(position);
             Assert.That(tileType, Is.SameAs(f.WallTileType));
         }
@@ -41,14 +43,16 @@ namespace RLEngine.Tests.Actions
         [TestCase(20, 30)]
         public void ModifyFailsOutOfBounds(int x, int y)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var state = new GameState(new Size(3, 3), f.FloorTileType);
-
             var position = new Coords(x, y);
-            var log = state.Modify(f.WallTileType, position);
-            Assert.That(log, Is.Null);
 
+            // Act
+            var log = state.Modify(f.WallTileType, position);
+
+            // Assert
+            Assert.That(log, Is.Null);
             var tileType = state.Board.GetTileType(position);
             Assert.That(tileType, Is.Null);
         }

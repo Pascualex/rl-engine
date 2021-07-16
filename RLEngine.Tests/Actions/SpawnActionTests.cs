@@ -17,16 +17,18 @@ namespace RLEngine.Tests.Actions
         [TestCase(2, 2)]
         public void SpawnPasses(int x, int y)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var state = new GameState(new Size(3, 3), f.FloorTileType);
-
             var position = new Coords(x, y);
+
+            // Act
             var log = state.Spawn(f.GroundEntityType, position, out var entity);
+
+            // Assert
             var spawnLog = (SpawnLog)log.FailIfNull();
             Assert.That(spawnLog.Entity, Is.SameAs(entity));
             Assert.That(spawnLog.At, Is.EqualTo(position));
-
             entity = entity.FailIfNull();
             var entityPosition = state.Board.GetCoords(entity);
             Assert.That(entityPosition, Is.EqualTo(position));
@@ -38,15 +40,17 @@ namespace RLEngine.Tests.Actions
         [TestCase(3, 0)]
         public void SpawnFailsOutOfBounds(int x, int y)
         {
+            // Arrange
             var f = new ContentFixture();
-
             var state = new GameState(new Size(3, 3), f.FloorTileType);
-
             var position = new Coords(x, y);
+
+            // Act
             var log = state.Spawn(f.GroundEntityType, position, out var entity);
+
+            // Assert
             Assert.That(log, Is.Null);
             Assert.That(entity, Is.Null);
-
             var entities = state.Board.GetEntities(position);
             Assert.That(entities, Is.Empty);
         }
@@ -54,21 +58,22 @@ namespace RLEngine.Tests.Actions
         [Test]
         public void SpawnPassesWithCompatibleEntity()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var state = new GameState(new Size(3, 3), f.FloorTileType);
-
             var position = new Coords(1, 1);
             state.Spawn(f.GroundEntityType, position, out var entityA);
+            entityA = entityA.FailIfNull();
+
+            // Act
             var log = state.Spawn(f.GhostAgentType, position, out var entityB);
+
+            // Assert
             var spawnLog = (SpawnLog)log.FailIfNull();
             Assert.That(spawnLog.Entity, Is.SameAs(entityB));
             Assert.That(spawnLog.At, Is.EqualTo(position));
-
-            entityA = entityA.FailIfNull();
             var entityAPosition = state.Board.GetCoords(entityA);
             Assert.That(entityAPosition, Is.EqualTo(position));
-
             entityB = entityB.FailIfNull();
             var entityBPosition = state.Board.GetCoords(entityB);
             Assert.That(entityBPosition, Is.EqualTo(position));
@@ -77,17 +82,19 @@ namespace RLEngine.Tests.Actions
         [Test]
         public void SpawnFailsWithIncompatibleEntity()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var state = new GameState(new Size(3, 3), f.FloorTileType);
-
             var position = new Coords(1, 1);
             state.Spawn(f.GroundEntityType, position, out var entityA);
+            entityA = entityA.FailIfNull();
+
+            // Act
             var log = state.Spawn(f.GroundEntityType, position, out var entityB);
+
+            // Assert
             Assert.That(log, Is.Null);
             Assert.That(entityB, Is.Null);
-
-            entityA = entityA.FailIfNull();
             var entityAPosition = state.Board.GetCoords(entityA);
             Assert.That(entityAPosition, Is.EqualTo(position));
         }
@@ -95,12 +102,15 @@ namespace RLEngine.Tests.Actions
         [Test]
         public void SpawnFailsWithIncompatibleTile()
         {
+            // Arrange
             var f = new ContentFixture();
-
             var state = new GameState(new Size(3, 3), f.WallTileType);
-
             var position = new Coords(1, 1);
+
+            // Act
             var log = state.Spawn(f.GroundEntityType, position, out var entity);
+
+            // Assert
             Assert.That(log, Is.Null);
             Assert.That(entity, Is.Null);
         }

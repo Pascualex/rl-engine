@@ -11,9 +11,13 @@ namespace RLEngine.Tests.Entities
         [Test]
         public void InheritUnparentedEntityTypeAttributesPasses()
         {
+            // Arrange
             var f = new ContentFixture();
 
+            // Act
             var entity = new Entity(f.UnparentedEntityType);
+
+            // Assert
             Assert.That(entity.Name, Is.EqualTo("Unparented entity type"));
             Assert.That(entity.IsAgent, Is.True);
             Assert.That(entity.Speed, Is.EqualTo(120));
