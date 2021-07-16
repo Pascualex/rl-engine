@@ -70,6 +70,9 @@ namespace RLEngine.Tests.Engine
             var added = board.Add(entity, position);
             Assert.That(added, Is.True);
 
+            var entityPosition = board.GetCoords(entity);
+            Assert.That(entityPosition, Is.EqualTo(position));
+
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.Member(entity));
         }
@@ -88,6 +91,12 @@ namespace RLEngine.Tests.Engine
             var position = new Coords(x, y);
             var added = board.Add(entity, position);
             Assert.That(added, Is.False);
+
+            var entityPosition = board.GetCoords(entity);
+            Assert.That(entityPosition, Is.Null);
+
+            var entities = board.GetEntities(position);
+            Assert.That(entities, Has.No.Member(entity));
         }
 
         [Test]
@@ -103,6 +112,12 @@ namespace RLEngine.Tests.Engine
             board.Add(entityA, position);
             var added = board.Add(entityB, position);
             Assert.That(added, Is.True);
+
+            var entityAPosition = board.GetCoords(entityA);
+            Assert.That(entityAPosition, Is.EqualTo(position));
+
+            var entityBPosition = board.GetCoords(entityB);
+            Assert.That(entityBPosition, Is.EqualTo(position));
 
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.Member(entityA));
@@ -123,6 +138,12 @@ namespace RLEngine.Tests.Engine
             var added = board.Add(entityB, position);
             Assert.That(added, Is.False);
 
+            var entityAPosition = board.GetCoords(entityA);
+            Assert.That(entityAPosition, Is.EqualTo(position));
+
+            var entityBPosition = board.GetCoords(entityB);
+            Assert.That(entityBPosition, Is.Null);
+
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.Member(entityA));
             Assert.That(entities, Has.No.Member(entityB));
@@ -139,6 +160,9 @@ namespace RLEngine.Tests.Engine
             var position = new Coords(1, 1);
             var added = board.Add(entity, position);
             Assert.That(added, Is.False);
+
+            var entityPosition = board.GetCoords(entity);
+            Assert.That(entityPosition, Is.Null);
 
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.No.Member(entity));
@@ -166,6 +190,10 @@ namespace RLEngine.Tests.Engine
             Assert.That(moved, Is.True);
 
             if (relative) finalPosition += initialPosition;
+
+            var entityPosition = board.GetCoords(entity);
+            Assert.That(entityPosition, Is.EqualTo(finalPosition));
+
             if (initialPosition != finalPosition)
             {
                 var initialEntities = board.GetEntities(initialPosition);
@@ -197,8 +225,14 @@ namespace RLEngine.Tests.Engine
             var moved = board.Move(entity, finalPosition, relative);
             Assert.That(moved, Is.False);
 
+            var entityPosition = board.GetCoords(entity);
+            Assert.That(entityPosition, Is.EqualTo(initialPosition));
+
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.Member(entity));
+
+            var finalEntities = board.GetEntities(finalPosition);
+            Assert.That(finalEntities, Has.No.Member(entity));
         }
 
         [Test]
@@ -212,6 +246,9 @@ namespace RLEngine.Tests.Engine
             var finalPosition = new Coords(1, 1);
             var moved = board.Move(entity, finalPosition, false);
             Assert.That(moved, Is.False);
+
+            var entityPosition = board.GetCoords(entity);
+            Assert.That(entityPosition, Is.Null);
 
             var finalTile = board.GetEntities(finalPosition);
             Assert.That(finalTile, Has.No.Member(entity));
@@ -233,6 +270,12 @@ namespace RLEngine.Tests.Engine
             board.Add(entityB, finalPosition);
             var moved = board.Move(entityA, finalPosition, false);
             Assert.That(moved, Is.True);
+
+            var entityAPosition = board.GetCoords(entityA);
+            Assert.That(entityAPosition, Is.EqualTo(finalPosition));
+
+            var entityBPosition = board.GetCoords(entityB);
+            Assert.That(entityBPosition, Is.EqualTo(finalPosition));
 
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.No.Member(entityA));
@@ -259,6 +302,12 @@ namespace RLEngine.Tests.Engine
             var moved = board.Move(entityA, finalPosition, false);
             Assert.That(moved, Is.False);
 
+            var entityAPosition = board.GetCoords(entityA);
+            Assert.That(entityAPosition, Is.EqualTo(initialPosition));
+
+            var entityBPosition = board.GetCoords(entityB);
+            Assert.That(entityBPosition, Is.EqualTo(finalPosition));
+
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.Member(entityA));
 
@@ -283,6 +332,9 @@ namespace RLEngine.Tests.Engine
             var moved = board.Move(entity, finalPosition, false);
             Assert.That(moved, Is.False);
 
+            var entityPosition = board.GetCoords(entity);
+            Assert.That(entityPosition, Is.EqualTo(initialPosition));
+
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.Member(entity));
 
@@ -304,6 +356,9 @@ namespace RLEngine.Tests.Engine
             var removed = board.Remove(entity);
             Assert.That(removed, Is.True);
 
+            var entityPosition = board.GetCoords(entity);
+            Assert.That(entityPosition, Is.Null);
+
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.No.Member(entity));
         }
@@ -318,6 +373,9 @@ namespace RLEngine.Tests.Engine
 
             var removed = board.Remove(entity);
             Assert.That(removed, Is.False);
+
+            var entityPosition = board.GetCoords(entity);
+            Assert.That(entityPosition, Is.Null);
         }
 
         [Test]
@@ -352,6 +410,9 @@ namespace RLEngine.Tests.Engine
             var position = new Coords(x, y);
             var changed = board.Modify(f.WallTileType, position);
             Assert.That(changed, Is.False);
+
+            var tileType = board.GetTileType(position);
+            Assert.That(tileType, Is.Null);
         }
     }
 }
