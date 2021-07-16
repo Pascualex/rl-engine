@@ -14,35 +14,13 @@ namespace RLEngine.Tests.Actions
     [TestFixture]
     public class SpawnActionTests
     {
-        private class Fixture
-        {
-            public IEntityType GroundEntityType { get; }
-            public IEntityType GhostAgentType { get; }
-            public ITileType FloorTileType { get; }
-            public ITileType WallTileType { get; }
-
-            public Fixture()
-            {
-                GroundEntityType = Substitute.For<IEntityType>();
-                GroundEntityType.BlocksGround.Returns(true);
-                GhostAgentType = Substitute.For<IEntityType>();
-                GhostAgentType.IsAgent.Returns(true);
-                GhostAgentType.BlocksGround.Returns(true);
-                GhostAgentType.IsGhost.Returns(true);
-                FloorTileType = Substitute.For<ITileType>();
-                WallTileType = Substitute.For<ITileType>();
-                WallTileType.BlocksGround.Returns(true);
-                WallTileType.BlocksAir.Returns(true);
-            }
-        }
-
         [Test]
         [TestCase(0, 0)]
         [TestCase(0, 1)]
         [TestCase(2, 2)]
         public void SpawnPasses(int x, int y)
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var state = new GameState(new Size(3, 3), f.FloorTileType);
 
@@ -66,7 +44,7 @@ namespace RLEngine.Tests.Actions
         [TestCase(3, 0)]
         public void SpawnFailsOutOfBounds(int x, int y)
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var state = new GameState(new Size(3, 3), f.FloorTileType);
 
@@ -82,7 +60,7 @@ namespace RLEngine.Tests.Actions
         [Test]
         public void SpawnPassesWithCompatibleEntity()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var state = new GameState(new Size(3, 3), f.FloorTileType);
 
@@ -109,7 +87,7 @@ namespace RLEngine.Tests.Actions
         [Test]
         public void SpawnFailsWithIncompatibleEntity()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var state = new GameState(new Size(3, 3), f.FloorTileType);
 
@@ -130,7 +108,7 @@ namespace RLEngine.Tests.Actions
         [Test]
         public void SpawnFailsWithIncompatibleTile()
         {
-            var f = new Fixture();
+            var f = new ContentFixture();
 
             var state = new GameState(new Size(3, 3), f.WallTileType);
 
