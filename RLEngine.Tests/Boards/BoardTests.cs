@@ -359,7 +359,7 @@ namespace RLEngine.Tests.Boards
         [TestCase(0, 0)]
         [TestCase(0, 1)]
         [TestCase(2, 2)]
-        public void ChangeTileTypePasses(int x, int y)
+        public void ModifyPasses(int x, int y)
         {
             var f = new ContentFixture();
 
@@ -378,7 +378,7 @@ namespace RLEngine.Tests.Boards
         [TestCase(-1, -1)]
         [TestCase(3, 0)]
         [TestCase(20, 30)]
-        public void ChangeTileTypeFailsOutOfBounds(int x, int y)
+        public void ModifyFailsOutOfBounds(int x, int y)
         {
             var f = new ContentFixture();
 
