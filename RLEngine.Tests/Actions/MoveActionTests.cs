@@ -39,15 +39,6 @@ namespace RLEngine.Tests.Actions
 
             var entityPosition = state.Board.GetCoords(entity);
             Assert.That(entityPosition, Is.EqualTo(finalPosition));
-
-            if (initialPosition != finalPosition)
-            {
-                var initialEntities = state.Board.GetEntities(initialPosition);
-                Assert.That(initialEntities, Has.No.Member(entity));
-            }
-
-            var finalEntities = state.Board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.Member(entity));
         }
 
         [Test]
@@ -73,12 +64,6 @@ namespace RLEngine.Tests.Actions
 
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.EqualTo(initialPosition));
-
-            var initialEntities = board.GetEntities(initialPosition);
-            Assert.That(initialEntities, Has.Member(entity));
-
-            var finalEntities = board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.No.Member(entity));
         }
 
         [Test]
@@ -95,9 +80,6 @@ namespace RLEngine.Tests.Actions
 
             var entityPosition = state.Board.GetCoords(entity);
             Assert.That(entityPosition, Is.Null);
-
-            var finalEntities = state.Board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.No.Member(entity));
         }
 
         [Test]
@@ -124,13 +106,6 @@ namespace RLEngine.Tests.Actions
 
             var entityBPosition = state.Board.GetCoords(entityB);
             Assert.That(entityBPosition, Is.EqualTo(finalPosition));
-
-            var initialEntities = state.Board.GetEntities(initialPosition);
-            Assert.That(initialEntities, Has.No.Member(entityB));
-
-            var finalEntities = state.Board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.Member(entityA));
-            Assert.That(finalEntities, Has.Member(entityB));
         }
 
         [Test]
@@ -155,13 +130,6 @@ namespace RLEngine.Tests.Actions
 
             var entityBPosition = state.Board.GetCoords(entityB);
             Assert.That(entityBPosition, Is.EqualTo(initialPosition));
-
-            var initialEntities = state.Board.GetEntities(initialPosition);
-            Assert.That(initialEntities, Has.Member(entityB));
-
-            var finalEntities = state.Board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.Member(entityA));
-            Assert.That(finalEntities, Has.No.Member(entityB));
         }
 
         [Test]
@@ -182,12 +150,6 @@ namespace RLEngine.Tests.Actions
 
             var entityPosition = state.Board.GetCoords(entity);
             Assert.That(entityPosition, Is.EqualTo(initialPosition));
-
-            var initialEntities = state.Board.GetEntities(initialPosition);
-            Assert.That(initialEntities, Has.Member(entity));
-
-            var finalEntities = state.Board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.No.Member(entity));
         }
     }
 }

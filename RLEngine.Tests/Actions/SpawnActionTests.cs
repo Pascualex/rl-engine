@@ -30,9 +30,6 @@ namespace RLEngine.Tests.Actions
             entity = entity.FailIfNull();
             var entityPosition = state.Board.GetCoords(entity);
             Assert.That(entityPosition, Is.EqualTo(position));
-
-            var entities = state.Board.GetEntities(position);
-            Assert.That(entities, Has.Member(entity));
         }
 
         [Test]
@@ -75,10 +72,6 @@ namespace RLEngine.Tests.Actions
             entityB = entityB.FailIfNull();
             var entityBPosition = state.Board.GetCoords(entityB);
             Assert.That(entityBPosition, Is.EqualTo(position));
-
-            var entities = state.Board.GetEntities(position);
-            Assert.That(entities, Has.Member(entityA));
-            Assert.That(entities, Has.Member(entityB));
         }
 
         [Test]
@@ -97,9 +90,6 @@ namespace RLEngine.Tests.Actions
             entityA = entityA.FailIfNull();
             var entityAPosition = state.Board.GetCoords(entityA);
             Assert.That(entityAPosition, Is.EqualTo(position));
-
-            var entities = state.Board.GetEntities(position);
-            Assert.That(entities, Is.All.SameAs(entityA));
         }
 
         [Test]
@@ -113,9 +103,6 @@ namespace RLEngine.Tests.Actions
             var log = state.Spawn(f.GroundEntityType, position, out var entity);
             Assert.That(log, Is.Null);
             Assert.That(entity, Is.Null);
-
-            var entities = state.Board.GetEntities(position);
-            Assert.That(entities, Is.Empty);
         }
     }
 }
