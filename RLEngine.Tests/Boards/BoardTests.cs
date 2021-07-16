@@ -227,8 +227,8 @@ namespace RLEngine.Tests.Boards
             var entityPosition = board.GetCoords(entity);
             Assert.That(entityPosition, Is.Null);
 
-            var finalTile = board.GetEntities(finalPosition);
-            Assert.That(finalTile, Has.No.Member(entity));
+            var finalEntities = board.GetEntities(finalPosition);
+            Assert.That(finalEntities, Has.No.Member(entity));
         }
 
         [Test]
@@ -240,12 +240,12 @@ namespace RLEngine.Tests.Boards
             var entityA = new Entity(f.GroundEntityType);
             var entityB = new Entity(f.GhostAgentType);
 
-            var initialPosition = new Coords(0, 1);
-            board.Add(entityA, initialPosition);
-
             var finalPosition = new Coords(2, 1);
-            board.Add(entityB, finalPosition);
-            var moved = board.Move(entityA, finalPosition, false);
+            board.Add(entityA, finalPosition);
+
+            var initialPosition = new Coords(0, 1);
+            board.Add(entityB, initialPosition);
+            var moved = board.Move(entityB, finalPosition, false);
             Assert.That(moved, Is.True);
 
             var entityAPosition = board.GetCoords(entityA);
@@ -255,7 +255,7 @@ namespace RLEngine.Tests.Boards
             Assert.That(entityBPosition, Is.EqualTo(finalPosition));
 
             var initialEntities = board.GetEntities(initialPosition);
-            Assert.That(initialEntities, Has.No.Member(entityA));
+            Assert.That(initialEntities, Has.No.Member(entityB));
 
             var finalEntities = board.GetEntities(finalPosition);
             Assert.That(finalEntities, Has.Member(entityA));
@@ -271,26 +271,26 @@ namespace RLEngine.Tests.Boards
             var entityA = new Entity(f.GroundEntityType);
             var entityB = new Entity(f.GroundEntityType);
 
-            var initialPosition = new Coords(0, 1);
-            board.Add(entityA, initialPosition);
-
             var finalPosition = new Coords(2, 1);
-            board.Add(entityB, finalPosition);
-            var moved = board.Move(entityA, finalPosition, false);
+            board.Add(entityA, finalPosition);
+
+            var initialPosition = new Coords(0, 1);
+            board.Add(entityB, initialPosition);
+            var moved = board.Move(entityB, finalPosition, false);
             Assert.That(moved, Is.False);
 
             var entityAPosition = board.GetCoords(entityA);
-            Assert.That(entityAPosition, Is.EqualTo(initialPosition));
+            Assert.That(entityAPosition, Is.EqualTo(finalPosition));
 
             var entityBPosition = board.GetCoords(entityB);
-            Assert.That(entityBPosition, Is.EqualTo(finalPosition));
+            Assert.That(entityBPosition, Is.EqualTo(initialPosition));
 
             var initialEntities = board.GetEntities(initialPosition);
-            Assert.That(initialEntities, Has.Member(entityA));
+            Assert.That(initialEntities, Has.Member(entityB));
 
             var finalEntities = board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.No.Member(entityA));
-            Assert.That(finalEntities, Has.Member(entityB));
+            Assert.That(finalEntities, Has.Member(entityA));
+            Assert.That(finalEntities, Has.No.Member(entityB));
         }
 
         [Test]
