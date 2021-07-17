@@ -1,4 +1,5 @@
-﻿using RLEngine.Boards;
+﻿using RLEngine.Turns;
+using RLEngine.Boards;
 using RLEngine.Utils;
 
 namespace RLEngine.State
@@ -7,9 +8,11 @@ namespace RLEngine.State
     {
         public GameState(Size boardSize, ITileType defaultTileType)
         {
+            TurnManager = new();
             Board = new(boardSize, defaultTileType);
         }
 
+        public TurnManager TurnManager { get; }
         public Board Board { get; }
     }
 }

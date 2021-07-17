@@ -43,7 +43,8 @@ namespace RLEngine.Turns
             if (turns.Count == 0) return;
 
             var turn = turns.Min;
-            var realActionCost = (int)Math.Round(actionCost * (100f / turn.Entity.Speed));
+            var speed = Math.Max(1, turn.Entity.Speed);
+            var realActionCost = Math.Max(1, (int)Math.Round(actionCost * (100f / speed)));
             var nextTurn = turn.NewAfterTicks(realActionCost);
 
             turns.Remove(turn);

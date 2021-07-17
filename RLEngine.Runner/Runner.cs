@@ -16,10 +16,16 @@ namespace RLEngine.Runner
             var content = new GameContent(boardSize, floorType, wallType, playerType, goblinType);
 
             var game = new Game(content);
-            var log = game.SetupExample();
-
             var logger = new Logger(250);
+
+            var log = game.SetupExample();
             logger.Write(log);
+
+            for (var i = 0; i < 50; i++)
+            {
+                log = game.ProcessTurns();
+                logger.Write(log);
+            }
         }
     }
 }
