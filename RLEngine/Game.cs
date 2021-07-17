@@ -1,7 +1,10 @@
 ﻿using RLEngine.Actions;
 using RLEngine.Logs;
 using RLEngine.State;
+using RLEngine.Entities;
 using RLEngine.Utils;
+
+using System.Collections.Generic;
 
 namespace RLEngine
 {
@@ -20,46 +23,29 @@ namespace RLEngine
         {
             var log = new CombinedLog();
 
-            log.Add(state.Spawn(content.PlayerType, new Coords(1, 1), out var player));
-            if (player is null) return log;
-
-            log.Add(state.Move(player, new Coords(1, 0), true));
-            log.Add(state.Move(player, new Coords(1, 0), true));
-            log.Add(state.Modify(content.WallType, new Coords(4, 1)));
-
-            log.Add(state.Spawn(content.GoblinType, new Coords(3, 2), out var goblin));
-            if (goblin is null) return log;
+            log.Add(state.Spawn(content.PlayerType, new Coords(1, 0)));
+            log.Add(state.Spawn(content.GoblinType, new Coords(3, 0)));
 
             return log;
         }
 
         public CombinedLog ProcessTurns()
         {
-            var combinedLog = new CombinedLog();
-            return combinedLog;
-            //     var turnAction = new ParallelAction();
-            //     var processed = new HashSet<Agent>();
+            var log = new CombinedLog();
+            var processed = new HashSet<Entity>();
 
-            //     Agent? agent;
-            //     while (((agent = TurnManager.GetCurrent()) != null) && !processed.Contains(agent))
-            //     {
-            //         if (agent.IsPlayer) LastPlayer = agent;
-            //         Controller controller = agent.IsPlayer ? PlayerController : AIController;
-            //         var agentAction = controller.ProduceAction(agent, Ctx);
+            while (state.TurnManager.Current != null)
+            {
+                var agent = state.TurnManager.Current;
+                if (processed.Contains(agent)) break;
 
-            //         if (agentAction == null) break;
+                log.Add(state.Move(agent, new Coords(0, 1), true));
 
-            //         agentAction.Execute();
+                processed.Add(agent);
+                state.TurnManager.Next(100);
+            }
 
-            //         if (!agentAction.IsCompleted) turnAction.Add(agentAction);
-
-            //         processed.Add(agent);
-            //         TurnManager.Next();
-
-            //         if (agentAction is not MoveAction and not NullAction) break;
-            //     }
-
-            //     return turnAction;
+            return log;
         }
     }
 }

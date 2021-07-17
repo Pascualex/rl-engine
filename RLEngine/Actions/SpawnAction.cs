@@ -16,7 +16,14 @@ namespace RLEngine.Actions
                 entity = null;
                 return null;
             }
+            state.TurnManager.Add(entity);
             return new SpawnLog(entity, at);
+        }
+
+        public static Log? Spawn(this GameState state,
+        IEntityType entityType, Coords at)
+        {
+            return Spawn(state, entityType, at, out _);
         }
     }
 }
