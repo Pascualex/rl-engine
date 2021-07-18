@@ -11,6 +11,7 @@
             BlocksGround = type.BlocksGround;
             BlocksAir = type.BlocksAir;
             IsGhost = type.IsGhost;
+            IsRoamer = type.IsRoamer;
             Visuals = type.Visuals;
             Type = type;
         }
@@ -21,6 +22,7 @@
         public bool BlocksGround { get; }
         public bool BlocksAir { get; }
         public bool IsGhost { get; }
+        public bool IsRoamer { get; }
         public object? Visuals { get; }
         public IEntityType Type { get; }
     }
