@@ -1,4 +1,5 @@
-﻿using RLEngine.Actions;
+﻿using RLEngine.Controllers;
+using RLEngine.Actions;
 using RLEngine.Logs;
 using RLEngine.State;
 using RLEngine.Entities;
@@ -10,6 +11,7 @@ namespace RLEngine
 {
     public class Game
     {
+        private readonly AIController aiController = new();
         private readonly GameState state;
         private readonly IGameContent content;
 
@@ -36,12 +38,13 @@ namespace RLEngine
 
             while (state.TurnManager.Current != null)
             {
-                var agent = state.TurnManager.Current;
-                if (processed.Contains(agent)) break;
+                var current = state.TurnManager.Current;
+                if (processed.Contains(current)) break;
 
-                log.Add(state.Move(agent, new Coords(0, 1), true));
+                if (!aiController.ProcessTurn(current, state, out var turnLog)) break;
+                log.Add(turnLog);
 
-                processed.Add(agent);
+                processed.Add(current);
                 state.TurnManager.Next(100);
             }
 

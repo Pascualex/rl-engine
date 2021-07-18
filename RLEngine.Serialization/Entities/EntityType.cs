@@ -10,6 +10,7 @@ namespace RLEngine.Serialization.Entities
         public bool BlocksGround { get; set; } = true;
         public bool BlocksAir { get; set; } = false;
         public bool IsGhost { get; set; } = false;
+        public bool IsRoamer { get; set; } = true;
         public object? Visuals { get; set; } = null;
         public IEntityType? Parent { get; set; } = null;
     }

@@ -71,6 +71,33 @@ namespace RLEngine.Boards
             return tiles[at.Y][at.X].Modify(tileType);
         }
 
+        public bool CanAdd(Entity entity, Coords at)
+        {
+            if (entities.ContainsKey(entity)) return false;
+            if (!Size.Contains(at)) return false;
+            return tiles[at.Y][at.X].CanAdd(entity);
+        }
+
+        public bool CanMove(Entity entity, Coords to, bool relative)
+        {
+            if (!entities.TryGetValue(entity, out var from)) return false;
+            if (relative) to += from;
+            if (!Size.Contains(to)) return false;
+            if (to == from) return true;
+            return tiles[to.Y][to.X].CanAdd(entity);
+        }
+
+        public bool CanRemove(Entity entity, Coords at)
+        {
+            return entities.ContainsKey(entity);
+        }
+
+        public bool CanModify(ITileType tileType, Coords at)
+        {
+            if (!Size.Contains(at)) return false;
+            return tiles[at.Y][at.X].CanModify(tileType);
+        }
+
         public Coords? GetCoords(Entity entity)
         {
             if (!entities.TryGetValue(entity, out var at)) return null;

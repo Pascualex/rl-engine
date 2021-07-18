@@ -8,6 +8,7 @@ namespace RLEngine.Entities
         bool BlocksGround { get; }
         bool BlocksAir { get; }
         bool IsGhost { get; }
+        bool IsRoamer { get; }
         object? Visuals { get; }
     }
 }
