@@ -12,7 +12,7 @@ namespace RLEngine.Controllers
         {
             if (RandomMovement(entity, state, out log)) return true;
             log = null;
-            return false;
+            return true;
         }
 
         private bool RandomMovement(Entity entity, GameState state, out Log? log)

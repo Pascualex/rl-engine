@@ -4,11 +4,11 @@ namespace RLEngine.Logs
 {
     public class DestroyLog : Log
     {
-        public DestroyLog(IROEntity entity)
+        public DestroyLog(Entity entity)
         {
             Entity = entity;
         }
 
-        public IROEntity Entity { get; }
+        public Entity Entity { get; }
     }
 }

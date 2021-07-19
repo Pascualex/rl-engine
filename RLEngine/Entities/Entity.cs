@@ -1,6 +1,6 @@
 ﻿namespace RLEngine.Entities
 {
-    public class Entity : IEntityAttributes, IROEntity
+    public class Entity : IEntityAttributes
     {
         public Entity(IEntityType type)
         {
@@ -18,6 +18,7 @@
 
         public string Name { get; }
         public bool IsAgent { get; }
+        public bool IsPlayer { get; set; } = false;
         public int Speed { get; }
         public bool BlocksGround { get; }
         public bool BlocksAir { get; }
