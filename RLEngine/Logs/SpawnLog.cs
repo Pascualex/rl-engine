@@ -5,13 +5,13 @@ namespace RLEngine.Logs
 {
     public class SpawnLog : Log
     {
-        public SpawnLog(IROEntity entity, Coords at)
+        public SpawnLog(Entity entity, Coords at)
         {
             Entity = entity;
             At = at;
         }
 
-        public IROEntity Entity { get; }
+        public Entity Entity { get; }
         public Coords At { get; }
     }
 }

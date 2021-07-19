@@ -1,6 +1,9 @@
-﻿using RLEngine.Serialization.Boards;
+﻿using RLEngine.Input;
+using RLEngine.Serialization.Boards;
 using RLEngine.Serialization.Entities;
 using RLEngine.Utils;
+
+using System;
 
 namespace RLEngine.Runner
 {
@@ -21,11 +24,38 @@ namespace RLEngine.Runner
             var log = game.SetupExample();
             logger.Write(log);
 
-            for (var i = 0; i < 50; i++)
+            while (true)
             {
+                var input = GetInput();
+                if (input == null) break;
+                game.Input = input;
                 log = game.ProcessTurns();
                 logger.Write(log);
             }
+        }
+
+        private static PlayerInput? GetInput()
+        {
+            while (true)
+            {
+                var valid = AskForInput(out var input);
+                if (valid) return input;
+            }
+        }
+
+        private static bool AskForInput(out PlayerInput? input)
+        {
+            Console.Write(" #> ");
+            var str = Console.ReadLine().Trim();
+            input = null;
+
+            if (str == "exit") return true;
+            else if (str ==    "up") input = new MoveInput(   Coords.Up, true);
+            else if (str == "right") input = new MoveInput(Coords.Right, true);
+            else if (str ==  "down") input = new MoveInput( Coords.Down, true);
+            else if (str ==  "left") input = new MoveInput( Coords.Left, true);
+
+            return input != null;
         }
     }
 }

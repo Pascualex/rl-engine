@@ -5,13 +5,13 @@ namespace RLEngine.Logs
 {
     public class MoveLog : Log
     {
-        public MoveLog(IROEntity entity, Coords to)
+        public MoveLog(Entity entity, Coords to)
         {
             Entity = entity;
             To = to;
         }
 
-        public IROEntity Entity { get; }
+        public Entity Entity { get; }
         public Coords To { get; }
     }
 }
