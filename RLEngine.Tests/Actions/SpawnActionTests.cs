@@ -23,13 +23,15 @@ namespace RLEngine.Tests.Actions
             var position = new Coords(x, y);
 
             // Act
-            var log = state.Spawn(f.GroundEntityType, position, out var entity);
+            var log = state.Spawn(f.AgentType, position, out var entity);
 
             // Assert
             var spawnLog = (SpawnLog)log.FailIfNull();
             Assert.That(spawnLog.Entity, Is.SameAs(entity));
             Assert.That(spawnLog.At, Is.EqualTo(position));
             entity = entity.FailIfNull();
+            var currentEntity = state.TurnManager.Current;
+            Assert.That(currentEntity, Is.SameAs(entity));
             var entityPosition = state.Board.GetCoords(entity);
             Assert.That(entityPosition, Is.EqualTo(position));
         }
@@ -51,6 +53,8 @@ namespace RLEngine.Tests.Actions
             // Assert
             Assert.That(log, Is.Null);
             Assert.That(entity, Is.Null);
+            var currentEntity = state.TurnManager.Current;
+            Assert.That(currentEntity, Is.Null);
             var entities = state.Board.GetEntities(position);
             Assert.That(entities, Is.Empty);
         }
@@ -113,6 +117,8 @@ namespace RLEngine.Tests.Actions
             // Assert
             Assert.That(log, Is.Null);
             Assert.That(entity, Is.Null);
+            var entities = state.Board.GetEntities(position);
+            Assert.That(entities, Is.Empty);
         }
     }
 }

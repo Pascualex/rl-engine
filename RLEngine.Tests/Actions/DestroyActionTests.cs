@@ -20,7 +20,7 @@ namespace RLEngine.Tests.Actions
             var f = new ContentFixture();
             var state = new GameState(new Size(3, 3), f.FloorTileType);
             var position = new Coords(1, 1);
-            state.Spawn(f.GroundEntityType, position, out var entity);
+            state.Spawn(f.AgentType, position, out var entity);
             entity = entity.FailIfNull();
 
             // Act
@@ -29,6 +29,8 @@ namespace RLEngine.Tests.Actions
             // Assert
             var destroyLog = (DestroyLog)log.FailIfNull();
             Assert.That(destroyLog.Entity, Is.SameAs(entity));
+            var currentEntity = state.TurnManager.Current;
+            Assert.That(currentEntity, Is.Null);
             var entityPosition = state.Board.GetCoords(entity);
             Assert.That(entityPosition, Is.Null);
         }
@@ -39,13 +41,17 @@ namespace RLEngine.Tests.Actions
             // Arrange
             var f = new ContentFixture();
             var state = new GameState(new Size(3, 3), f.FloorTileType);
-            var entity = new Entity(f.GroundEntityType);
+            var entity = new Entity(f.AgentType);
 
             // Act
             var log = state.Destroy(entity);
 
             // Assert
             Assert.That(log, Is.Null);
+            var currentEntity = state.TurnManager.Current;
+            Assert.That(currentEntity, Is.Null);
+            var entityPosition = state.Board.GetCoords(entity);
+            Assert.That(entityPosition, Is.Null);
         }
     }
 }

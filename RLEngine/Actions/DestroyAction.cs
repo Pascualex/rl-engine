@@ -10,6 +10,7 @@ namespace RLEngine.Actions
         Entity entity)
         {
             if (!state.Board.Remove(entity)) return null;
+            state.TurnManager.Remove(entity);
             return new DestroyLog(entity);
         }
     }
