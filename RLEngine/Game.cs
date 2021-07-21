@@ -18,8 +18,11 @@ namespace RLEngine
         private readonly IGameContent content;
 
         public Game(IGameContent content)
+        : this(new(content.BoardSize, content.FloorType), content) { }
+
+        public Game(GameState state, IGameContent content)
         {
-            state = new(content.BoardSize, content.FloorType);
+            this.state = state;
             this.content = content;
         }
 
@@ -35,6 +38,10 @@ namespace RLEngine
             log.Add(state.Spawn(content.PlayerType, new Coords(1, 0), out var player));
             if (player is not null) player.IsPlayer = true;
             log.Add(state.Spawn(content.GoblinType, new Coords(3, 0)));
+            log.Add(state.Modify(content.WallType, new Coords(4, 4)));
+            log.Add(state.Modify(content.WallType, new Coords(5, 4)));
+            log.Add(state.Modify(content.WallType, new Coords(4, 5)));
+            log.Add(state.Modify(content.WallType, new Coords(5, 5)));
 
             return log;
         }

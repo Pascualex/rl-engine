@@ -191,5 +191,40 @@ namespace RLEngine.Tests.Turns
             var currentEntity = turnManager.Current;
             Assert.That(currentEntity, Is.SameAs(entityB));
         }
+
+        [Test]
+        public void RemovePasses()
+        {
+            // Arrange
+            var f = new ContentFixture();
+            var turnManager = new TurnManager();
+            var entity = new Entity(f.AgentType);
+            turnManager.Add(entity);
+
+            // Act
+            var removed = turnManager.Remove(entity);
+
+            // Assert
+            Assert.That(removed, Is.True);
+            var currentEntity = turnManager.Current;
+            Assert.That(currentEntity, Is.Null);
+        }
+
+        [Test]
+        public void RemoveFailsWhenAgentIsNotAdded()
+        {
+            // Arrange
+            var f = new ContentFixture();
+            var turnManager = new TurnManager();
+            var entity = new Entity(f.AgentType);
+
+            // Act
+            var removed = turnManager.Remove(entity);
+
+            // Assert
+            Assert.That(removed, Is.False);
+            var currentEntity = turnManager.Current;
+            Assert.That(currentEntity, Is.Null);
+        }
     }
 }

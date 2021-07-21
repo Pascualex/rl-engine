@@ -16,7 +16,7 @@ namespace RLEngine.Actions
                 entity = null;
                 return null;
             }
-            state.TurnManager.Add(entity);
+            if (entity.IsAgent) state.TurnManager.Add(entity);
             return new SpawnLog(entity, at);
         }
 

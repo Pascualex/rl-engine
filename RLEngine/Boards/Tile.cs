@@ -47,6 +47,7 @@ namespace RLEngine.Boards
 
         public bool CanModify(ITileType type)
         {
+            if (type == Type) return true;
             foreach (var entity in entities)
             {
                 if (!AreCompatible(entity, type)) return false;
