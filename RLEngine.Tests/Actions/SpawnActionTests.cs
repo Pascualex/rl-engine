@@ -32,7 +32,8 @@ namespace RLEngine.Tests.Actions
             entity = entity.FailIfNull();
             var currentEntity = state.TurnManager.Current;
             Assert.That(currentEntity, Is.SameAs(entity));
-            var entityPosition = state.Board.GetCoords(entity);
+            var found = state.Board.TryGetCoords(entity, out var entityPosition);
+            Assert.That(found, Is.True);
             Assert.That(entityPosition, Is.EqualTo(position));
         }
 
@@ -76,10 +77,12 @@ namespace RLEngine.Tests.Actions
             var spawnLog = (SpawnLog)log.FailIfNull();
             Assert.That(spawnLog.Entity, Is.SameAs(entityB));
             Assert.That(spawnLog.At, Is.EqualTo(position));
-            var entityAPosition = state.Board.GetCoords(entityA);
+            var entityAFound = state.Board.TryGetCoords(entityA, out var entityAPosition);
+            Assert.That(entityAFound, Is.True);
             Assert.That(entityAPosition, Is.EqualTo(position));
             entityB = entityB.FailIfNull();
-            var entityBPosition = state.Board.GetCoords(entityB);
+            var entityBFound = state.Board.TryGetCoords(entityB, out var entityBPosition);
+            Assert.That(entityBFound, Is.True);
             Assert.That(entityBPosition, Is.EqualTo(position));
         }
 
@@ -99,7 +102,8 @@ namespace RLEngine.Tests.Actions
             // Assert
             Assert.That(log, Is.Null);
             Assert.That(entityB, Is.Null);
-            var entityAPosition = state.Board.GetCoords(entityA);
+            var entityAFound = state.Board.TryGetCoords(entityA, out var entityAPosition);
+            Assert.That(entityAFound, Is.True);
             Assert.That(entityAPosition, Is.EqualTo(position));
         }
 

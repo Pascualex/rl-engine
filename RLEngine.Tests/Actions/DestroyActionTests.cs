@@ -31,8 +31,8 @@ namespace RLEngine.Tests.Actions
             Assert.That(destroyLog.Entity, Is.SameAs(entity));
             var currentEntity = state.TurnManager.Current;
             Assert.That(currentEntity, Is.Null);
-            var entityPosition = state.Board.GetCoords(entity);
-            Assert.That(entityPosition, Is.Null);
+            var found = state.Board.TryGetCoords(entity, out _);
+            Assert.That(found, Is.False);
         }
 
         [Test]
@@ -50,8 +50,8 @@ namespace RLEngine.Tests.Actions
             Assert.That(log, Is.Null);
             var currentEntity = state.TurnManager.Current;
             Assert.That(currentEntity, Is.Null);
-            var entityPosition = state.Board.GetCoords(entity);
-            Assert.That(entityPosition, Is.Null);
+            var found = state.Board.TryGetCoords(entity, out _);
+            Assert.That(found, Is.False);
         }
     }
 }
