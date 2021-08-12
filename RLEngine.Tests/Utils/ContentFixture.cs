@@ -38,10 +38,10 @@ namespace RLEngine.Tests.Utils
             UnparentedEntityType = Substitute.For<IEntityType>();
             UnparentedEntityType.Name.Returns("Unparented entity type");
             UnparentedEntityType.IsAgent.Returns(true);
+            UnparentedEntityType.MaxHealth.Returns(80);
             UnparentedEntityType.Speed.Returns(120);
             UnparentedEntityType.BlocksGround.Returns(true);
             UnparentedEntityType.Parent.Returns((IEntityType?)null);
-
             FloorTileType = Substitute.For<ITileType>();
             WallTileType = Substitute.For<ITileType>();
             WallTileType.BlocksGround.Returns(true);

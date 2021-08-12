@@ -39,10 +39,9 @@ namespace RLEngine.Boards
             return true;
         }
 
-        public bool Move(Entity entity, Coords to, bool relative)
+        public bool Move(Entity entity, Coords to)
         {
             if (!entities.TryGetValue(entity, out var from)) return false;
-            if (relative) to += from;
             if (!Size.Contains(to)) return false;
 
             if (to == from) return true;
@@ -78,16 +77,15 @@ namespace RLEngine.Boards
             return tiles[at.Y][at.X].CanAdd(entity);
         }
 
-        public bool CanMove(Entity entity, Coords to, bool relative)
+        public bool CanMove(Entity entity, Coords to)
         {
             if (!entities.TryGetValue(entity, out var from)) return false;
-            if (relative) to += from;
             if (!Size.Contains(to)) return false;
             if (to == from) return true;
             return tiles[to.Y][to.X].CanAdd(entity);
         }
 
-        public bool CanRemove(Entity entity, Coords at)
+        public bool CanRemove(Entity entity)
         {
             return entities.ContainsKey(entity);
         }
@@ -98,11 +96,9 @@ namespace RLEngine.Boards
             return tiles[at.Y][at.X].CanModify(tileType);
         }
 
-        public Coords? GetCoords(Entity entity)
+        public bool TryGetCoords(Entity entity, out Coords position)
         {
-            if (!entities.TryGetValue(entity, out var at)) return null;
-
-            return at;
+            return entities.TryGetValue(entity, out position);
         }
 
         public IEnumerable<Entity> GetEntities(Coords at)

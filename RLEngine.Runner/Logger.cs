@@ -25,6 +25,7 @@ namespace RLEngine.Runner
                 else if (currentLog is MoveLog moveLog) Write(moveLog);
                 else if (currentLog is DestroyLog destroyLog) Write(destroyLog);
                 else if (currentLog is ModifyLog modifyLog) Write(modifyLog);
+                else if (currentLog is DamageLog damageLog) Write(damageLog);
                 else Write(currentLog);
                 if (delayMS > 0) System.Threading.Thread.Sleep(delayMS);
             }
@@ -61,6 +62,19 @@ namespace RLEngine.Runner
             Console.Write(" is modified to ");
             Write(log.NewType);
             Console.WriteLine(".");
+        }
+
+        private static void Write(DamageLog log)
+        {
+            if (log.Attacker is not null)
+            {
+                Write(log.Attacker);
+                Console.Write(" attacks. ");
+            }
+            Write(log.Target);
+            Console.Write(" loses ");
+            Write(log.Damage, false);
+            Console.WriteLine(" health.");
         }
 
         private static void Write(Log log)

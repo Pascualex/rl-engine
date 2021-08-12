@@ -20,11 +20,14 @@ namespace RLEngine.Controllers
             log = null;
             if (!entity.IsRoamer) return false;
 
+            if (state.Board.TryGetCoords(entity, out var position)) return false;
+
             var directions = Coords.RandomizedDirections();
             var selectedDirection = Coords.Zero;
             foreach (var direction in directions)
             {
-                if (state.Board.CanMove(entity, direction, true))
+                var to = position + direction;
+                if (!state.Board.CanMove(entity, to))
                 {
                     selectedDirection = direction;
                     break;

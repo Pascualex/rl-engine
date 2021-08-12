@@ -38,7 +38,8 @@ namespace RLEngine.Tests.Actions
             var moveLog = (MoveLog)log.FailIfNull();
             Assert.That(moveLog.Entity, Is.SameAs(entity));
             Assert.That(moveLog.To, Is.EqualTo(finalPosition));
-            var entityPosition = state.Board.GetCoords(entity);
+            var found = state.Board.TryGetCoords(entity, out var entityPosition);
+            Assert.That(found, Is.True);
             Assert.That(entityPosition, Is.EqualTo(finalPosition));
         }
 
@@ -64,7 +65,7 @@ namespace RLEngine.Tests.Actions
 
             // Assert
             Assert.That(log, Is.Null);
-            var entityPosition = state.Board.GetCoords(entity);
+            var found = state.Board.TryGetCoords(entity, out var entityPosition);
             Assert.That(entityPosition, Is.EqualTo(initialPosition));
         }
 
@@ -82,8 +83,8 @@ namespace RLEngine.Tests.Actions
 
             // Assert
             Assert.That(log, Is.Null);
-            var entityPosition = state.Board.GetCoords(entity);
-            Assert.That(entityPosition, Is.Null);
+            var found = state.Board.TryGetCoords(entity, out _);
+            Assert.That(found, Is.False);
         }
 
         [Test]
@@ -106,9 +107,11 @@ namespace RLEngine.Tests.Actions
             var moveLog = (MoveLog)log.FailIfNull();
             Assert.That(moveLog.Entity, Is.SameAs(entityB));
             Assert.That(moveLog.To, Is.EqualTo(finalPosition));
-            var entityAPosition = state.Board.GetCoords(entityA);
+            var entityAFound = state.Board.TryGetCoords(entityA, out var entityAPosition);
+            Assert.That(entityAFound, Is.True);
             Assert.That(entityAPosition, Is.EqualTo(finalPosition));
-            var entityBPosition = state.Board.GetCoords(entityB);
+            var entityBFound = state.Board.TryGetCoords(entityB, out var entityBPosition);
+            Assert.That(entityBFound, Is.True);
             Assert.That(entityBPosition, Is.EqualTo(finalPosition));
         }
 
@@ -130,9 +133,11 @@ namespace RLEngine.Tests.Actions
 
             // Assert
             Assert.That(log, Is.Null);
-            var entityAPosition = state.Board.GetCoords(entityA);
+            var entityAFound = state.Board.TryGetCoords(entityA, out var entityAPosition);
+            Assert.That(entityAFound, Is.True);
             Assert.That(entityAPosition, Is.EqualTo(finalPosition));
-            var entityBPosition = state.Board.GetCoords(entityB);
+            var entityBFound = state.Board.TryGetCoords(entityB, out var entityBPosition);
+            Assert.That(entityBFound, Is.True);
             Assert.That(entityBPosition, Is.EqualTo(initialPosition));
         }
 
@@ -153,7 +158,7 @@ namespace RLEngine.Tests.Actions
 
             // Assert
             Assert.That(log, Is.Null);
-            var entityPosition = state.Board.GetCoords(entity);
+            var found = state.Board.TryGetCoords(entity, out var entityPosition);
             Assert.That(entityPosition, Is.EqualTo(initialPosition));
         }
     }
