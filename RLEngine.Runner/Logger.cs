@@ -21,11 +21,12 @@ namespace RLEngine.Runner
             foreach (var currentLog in log.Logs)
             {
                 if (currentLog is CombinedLog combinedLog) Write(combinedLog);
-                else if (currentLog is SpawnLog spawnLog) Write(spawnLog);
-                else if (currentLog is MoveLog moveLog) Write(moveLog);
+                else if (currentLog is   SpawnLog   spawnLog) Write(  spawnLog);
+                else if (currentLog is    MoveLog    moveLog) Write(   moveLog);
                 else if (currentLog is DestroyLog destroyLog) Write(destroyLog);
-                else if (currentLog is ModifyLog modifyLog) Write(modifyLog);
-                else if (currentLog is DamageLog damageLog) Write(damageLog);
+                else if (currentLog is  ModifyLog  modifyLog) Write( modifyLog);
+                else if (currentLog is  DamageLog  damageLog) Write( damageLog);
+                else if (currentLog is    HealLog    healLog) Write(   healLog);
                 else Write(currentLog);
                 if (delayMS > 0) System.Threading.Thread.Sleep(delayMS);
             }
@@ -74,6 +75,19 @@ namespace RLEngine.Runner
             Write(log.Target);
             Console.Write(" loses ");
             Write(log.Damage, false);
+            Console.WriteLine(" health.");
+        }
+
+        private static void Write(HealLog log)
+        {
+            if (log.Healer is not null)
+            {
+                Write(log.Healer);
+                Console.Write(" heals. ");
+            }
+            Write(log.Target);
+            Console.Write(" recovers ");
+            Write(log.ActualHealing, true);
             Console.WriteLine(" health.");
         }
 

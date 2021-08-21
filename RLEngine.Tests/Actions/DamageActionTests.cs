@@ -17,7 +17,7 @@ namespace RLEngine.Tests.Actions
         [TestCase(-20)]
         [TestCase(0)]
         [TestCase(79)]
-        public void DamagePassesWithNoDeath(int damage)
+        public void DamagePassesWithoutDeath(int damage)
         {
             // Arrange
             var f = new ContentFixture();

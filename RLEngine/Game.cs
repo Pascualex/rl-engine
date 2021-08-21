@@ -46,6 +46,8 @@ namespace RLEngine
             log.Add(state.Spawn(content.GoblinType, new Coords(3, 0), out var goblin));
             if (goblin is null) return log;
 
+            log.Add(state.Damage(goblin, new ActionAmount { Base = 30 }));
+
             return log;
         }
 
