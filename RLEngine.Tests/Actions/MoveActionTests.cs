@@ -66,6 +66,7 @@ namespace RLEngine.Tests.Actions
             // Assert
             Assert.That(log, Is.Null);
             var found = state.Board.TryGetCoords(entity, out var entityPosition);
+            Assert.That(found, Is.True);
             Assert.That(entityPosition, Is.EqualTo(initialPosition));
         }
 
@@ -159,6 +160,7 @@ namespace RLEngine.Tests.Actions
             // Assert
             Assert.That(log, Is.Null);
             var found = state.Board.TryGetCoords(entity, out var entityPosition);
+            Assert.That(found, Is.True);
             Assert.That(entityPosition, Is.EqualTo(initialPosition));
         }
     }
