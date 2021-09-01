@@ -26,7 +26,7 @@ namespace RLEngine
             this.content = content;
         }
 
-        public PlayerInput Input
+        public PlayerInput? Input
         {
             set { playerController.Input = value; }
         }
