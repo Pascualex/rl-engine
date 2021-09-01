@@ -32,7 +32,7 @@ namespace RLEngine.Controllers
             {
                 if (!otherEntity.IsPlayer)
                 {
-                    return state.Damage(otherEntity, entity, new ActionAmount { Base = 50 });
+                    return state.Damage(otherEntity, entity, new ActionAmount { Base = 10 });
                 }
             }
 
