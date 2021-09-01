@@ -9,7 +9,7 @@ namespace RLEngine.Controllers
 {
     public class PlayerController : IController
     {
-        public PlayerInput? Input { get; set; } = null;
+        public PlayerInput? Input { private get; set; } = null;
 
         public bool ProcessTurn(Entity entity, GameState state, out Log? log)
         {
