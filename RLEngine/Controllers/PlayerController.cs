@@ -3,7 +3,9 @@ using RLEngine.Actions;
 using RLEngine.Logs;
 using RLEngine.State;
 using RLEngine.Entities;
-using System;
+using RLEngine.Utils;
+
+using System.Collections.Generic;
 
 namespace RLEngine.Controllers
 {
@@ -17,6 +19,7 @@ namespace RLEngine.Controllers
             if (Input is null) return false;
 
             if (Input is MoveInput mi) log = AttemptMove(entity, state, mi);
+            else if (Input is AttackInput ai) log = AreaAttack(entity, state, ai);
 
             Input = null;
             return log != null;
@@ -37,6 +40,24 @@ namespace RLEngine.Controllers
             }
 
             return state.Move(entity, to, false);
+        }
+
+        public Log? AreaAttack(Entity entity, GameState state, AttackInput attackInput)
+        {
+            if (!state.Board.TryGetCoords(entity, out var position)) return null;
+
+            var log = new CombinedLog();
+
+            foreach (var direction in Coords.Directions())
+            {
+                var entities = new List<Entity>(state.Board.GetEntities(position + direction));
+                foreach (var otherEntity in entities)
+                {
+                    log.Add(state.Damage(otherEntity, entity, new ActionAmount { Base = 10 }));
+                }
+            }
+
+            return log;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace RLEngine.Runner
             var floorType = new TileType() { Name = "Floor" };
             var wallType = new TileType { Name = "Wall", BlocksGround = true, BlocksAir = true };
             var playerType = new EntityType { Name = "Pascu", IsAgent = true };
-            var goblinType = new EntityType { Name = "Echenike", IsAgent = true };
+            var goblinType = new EntityType { Name = "Goblin", IsAgent = true };
             var content = new GameContent(boardSize, floorType, wallType, playerType, goblinType);
 
             var game = new Game(content);

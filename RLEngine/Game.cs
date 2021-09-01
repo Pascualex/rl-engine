@@ -43,10 +43,14 @@ namespace RLEngine
             log.Add(state.Spawn(content.PlayerType, new Coords(1, 0), out var player));
             if (player is null) return log;
             player.IsPlayer = true;
-            log.Add(state.Spawn(content.GoblinType, new Coords(3, 0), out var goblin));
-            if (goblin is null) return log;
-
-            log.Add(state.Damage(goblin, new ActionAmount { Base = 30 }));
+            log.Add(state.Spawn(content.GoblinType, new Coords(3, 0), out var goblinA));
+            if (goblinA is null) return log;
+            log.Add(state.Spawn(content.GoblinType, new Coords(5, 0), out var goblinB));
+            if (goblinB is null) return log;
+            log.Add(state.Spawn(content.GoblinType, new Coords(3, 2), out var goblinC));
+            if (goblinC is null) return log;
+            log.Add(state.Spawn(content.GoblinType, new Coords(5, 2), out var goblinD));
+            if (goblinD is null) return log;
 
             return log;
         }
