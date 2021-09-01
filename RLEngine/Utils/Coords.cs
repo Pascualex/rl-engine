@@ -66,18 +66,23 @@ namespace RLEngine.Utils
             return !Equals(a, b);
         }
 
-        public static Coords[] RandomizedDirections()
+        public static Coords[] Directions()
         {
-            var directions = new Coords[] {
+            return new Coords[] {
                 Up,
+                UpRight,
                 Right,
+                DownRight,
                 Down,
                 Left,
-                UpRight,
-                DownRight,
                 DownLeft,
-                UpLeft
+                UpLeft,
             };
+        }
+
+        public static Coords[] RandomizedDirections()
+        {
+            var directions = Directions();
 
             new Random().Shuffle(directions);
 
