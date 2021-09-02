@@ -46,7 +46,7 @@ namespace RLEngine.Controllers
         {
             if (!state.Board.TryGetCoords(entity, out var position)) return null;
 
-            var log = new CombinedLog();
+            var log = new CombinedLog(true);
 
             foreach (var direction in Coords.Directions())
             {
