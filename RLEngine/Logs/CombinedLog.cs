@@ -7,6 +7,15 @@ namespace RLEngine.Logs
         private readonly IList<Log> logs = new List<Log>();
 
         public IEnumerable<Log> Logs => logs;
+        public bool IsParallel { get; }
+
+        public CombinedLog()
+        : this(false) { }
+
+        public CombinedLog(bool isParallel)
+        {
+            IsParallel = isParallel;
+        }
 
         public void Add(Log? log)
         {
