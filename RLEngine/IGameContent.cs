@@ -1,4 +1,5 @@
-﻿using RLEngine.Boards;
+﻿using RLEngine.Abilities;
+using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
 
@@ -11,5 +12,6 @@ namespace RLEngine
         ITileType WallType { get; }
         IEntityType PlayerType { get; }
         IEntityType GoblinType { get; }
+        IAbility Ability { get; }
     }
 }

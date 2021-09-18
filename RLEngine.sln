@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine", "RLEngine\RLEngi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Tests", "RLEngine.Tests\RLEngine.Tests.csproj", "{D271958E-2480-4C37-B15E-10D0948985F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Serialization", "RLEngine.Serialization\RLEngine.Serialization.csproj", "{6632BB3A-B682-4CC2-B599-EEA13B3D2D57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Content", "RLEngine.Content\RLEngine.Content.csproj", "{6632BB3A-B682-4CC2-B599-EEA13B3D2D57}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Runner", "RLEngine.Runner\RLEngine.Runner.csproj", "{E3656781-FE04-4925-BBA1-818A8BD18341}"
 EndProject

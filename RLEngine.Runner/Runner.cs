@@ -1,6 +1,8 @@
-﻿using RLEngine.Input;
-using RLEngine.Serialization.Boards;
-using RLEngine.Serialization.Entities;
+﻿using RLEngine.Content.Abilities;
+using RLEngine.Content.Boards;
+using RLEngine.Content.Entities;
+
+using RLEngine.Input;
 using RLEngine.Utils;
 
 using System;
@@ -16,7 +18,16 @@ namespace RLEngine.Runner
             var wallType = new TileType { Name = "Wall", BlocksGround = true, BlocksAir = true };
             var playerType = new EntityType { Name = "Pascu", IsAgent = true };
             var goblinType = new EntityType { Name = "Goblin", IsAgent = true };
-            var content = new GameContent(boardSize, floorType, wallType, playerType, goblinType);
+            var ability = new Ability();
+            var content = new GameContent
+            (
+                boardSize,
+                floorType,
+                wallType,
+                playerType,
+                goblinType,
+                ability
+            );
 
             var game = new Game(content);
             var logger = new Logger(250);
@@ -26,7 +37,7 @@ namespace RLEngine.Runner
 
             while (true)
             {
-                var input = GetInput();
+                var input = GetInput(game);
                 if (input == null) break;
                 game.Input = input;
                 log = game.ProcessTurns();
@@ -34,11 +45,11 @@ namespace RLEngine.Runner
             }
         }
 
-        private static PlayerInput? GetInput()
+        private static PlayerInput? GetInput(Game game)
         {
             while (true)
             {
-                var valid = AskForInput(out var input);
+                var valid = AskForInput(game, out var input);
                 if (valid) return input;
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(" ## Invalid syntax");
@@ -46,7 +57,7 @@ namespace RLEngine.Runner
             }
         }
 
-        private static bool AskForInput(out PlayerInput? input)
+        private static bool AskForInput(Game game, out PlayerInput? input)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(" #> ");
@@ -59,8 +70,10 @@ namespace RLEngine.Runner
             if (words.Length < 1) return false;
             var action = words[0];
 
+            var ability = game.Content.Ability;
             if (action == "e" || action == "exit") return true;
             else if (action == "a" || action == "attack") input = new AttackInput();
+            else if (action == "s" || action == "spell") input = new AbilityInput(ability);
 
             if (input != null) return true;
 

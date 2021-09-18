@@ -1,7 +1,8 @@
+using RLEngine.Content.Boards;
+using RLEngine.Content.Entities;
+
 using RLEngine.Boards;
 using RLEngine.Entities;
-
-using NSubstitute;
 
 namespace RLEngine.Tests.Utils
 {
@@ -20,32 +21,46 @@ namespace RLEngine.Tests.Utils
 
         public ContentFixture()
         {
-            EntityType = Substitute.For<IEntityType>();
-            GroundEntityType = Substitute.For<IEntityType>();
-            GroundEntityType.BlocksGround.Returns(true);
-            GhostAgentType = Substitute.For<IEntityType>();
-            GhostAgentType.IsAgent.Returns(true);
-            GhostAgentType.BlocksGround.Returns(true);
-            GhostAgentType.IsGhost.Returns(true);
-            AgentType = Substitute.For<IEntityType>();
-            AgentType.IsAgent.Returns(true);
-            SlowAgentType = Substitute.For<IEntityType>();
-            SlowAgentType.IsAgent.Returns(true);
-            SlowAgentType.Speed.Returns(50);
-            FastAgentType = Substitute.For<IEntityType>();
-            FastAgentType.IsAgent.Returns(true);
-            FastAgentType.Speed.Returns(150);
-            UnparentedEntityType = Substitute.For<IEntityType>();
-            UnparentedEntityType.Name.Returns("Unparented entity type");
-            UnparentedEntityType.IsAgent.Returns(true);
-            UnparentedEntityType.MaxHealth.Returns(80);
-            UnparentedEntityType.Speed.Returns(120);
-            UnparentedEntityType.BlocksGround.Returns(true);
-            UnparentedEntityType.Parent.Returns((IEntityType?)null);
-            FloorTileType = Substitute.For<ITileType>();
-            WallTileType = Substitute.For<ITileType>();
-            WallTileType.BlocksGround.Returns(true);
-            WallTileType.BlocksAir.Returns(true);
+            EntityType = new EntityType();
+            GroundEntityType = new EntityType
+            {
+                BlocksGround = true,
+            };
+            GhostAgentType = new EntityType
+            {
+                IsAgent = true,
+                BlocksGround = true,
+                IsGhost = true,
+            };
+            AgentType = new EntityType
+            {
+                IsAgent = true,
+            };
+            SlowAgentType = new EntityType
+            {
+                IsAgent = true,
+                Speed = 50,
+            };
+            FastAgentType = new EntityType
+            {
+                IsAgent = true,
+                Speed = 150,
+            };
+            UnparentedEntityType = new EntityType
+            {
+                Name = "Unparented entity type",
+                IsAgent = true,
+                MaxHealth = 80,
+                Speed = 120,
+                BlocksGround = true,
+                Parent = null,
+            };
+            FloorTileType = new TileType();
+            WallTileType = new TileType
+            {
+                BlocksGround = true,
+                BlocksAir = true,
+            };
         }
     }
 }

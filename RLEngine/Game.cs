@@ -15,7 +15,6 @@ namespace RLEngine
         private readonly PlayerController playerController = new();
         private readonly AIController aiController = new();
         private readonly GameState state;
-        private readonly IGameContent content;
 
         public Game(IGameContent content)
         : this(new(content.BoardSize, content.FloorType), content) { }
@@ -23,8 +22,10 @@ namespace RLEngine
         public Game(GameState state, IGameContent content)
         {
             this.state = state;
-            this.content = content;
+            Content = content;
         }
+
+        public IGameContent Content { get; }
 
         public PlayerInput? Input
         {
@@ -35,21 +36,21 @@ namespace RLEngine
         {
             var log = new CombinedLog(false);
 
-            log.Add(state.Modify(content.WallType, new Coords(4, 4)));
-            log.Add(state.Modify(content.WallType, new Coords(5, 4)));
-            log.Add(state.Modify(content.WallType, new Coords(4, 5)));
-            log.Add(state.Modify(content.WallType, new Coords(5, 5)));
+            log.Add(state.Modify(Content.WallType, new Coords(4, 4)));
+            log.Add(state.Modify(Content.WallType, new Coords(5, 4)));
+            log.Add(state.Modify(Content.WallType, new Coords(4, 5)));
+            log.Add(state.Modify(Content.WallType, new Coords(5, 5)));
 
-            log.Add(state.Spawn(content.PlayerType, new Coords(1, 0), out var player));
+            log.Add(state.Spawn(Content.PlayerType, new Coords(1, 0), out var player));
             if (player is null) return log;
             player.IsPlayer = true;
-            log.Add(state.Spawn(content.GoblinType, new Coords(3, 0), out var goblinA));
+            log.Add(state.Spawn(Content.GoblinType, new Coords(3, 0), out var goblinA));
             if (goblinA is null) return log;
-            log.Add(state.Spawn(content.GoblinType, new Coords(5, 0), out var goblinB));
+            log.Add(state.Spawn(Content.GoblinType, new Coords(5, 0), out var goblinB));
             if (goblinB is null) return log;
-            log.Add(state.Spawn(content.GoblinType, new Coords(3, 2), out var goblinC));
+            log.Add(state.Spawn(Content.GoblinType, new Coords(3, 2), out var goblinC));
             if (goblinC is null) return log;
-            log.Add(state.Spawn(content.GoblinType, new Coords(5, 2), out var goblinD));
+            log.Add(state.Spawn(Content.GoblinType, new Coords(5, 2), out var goblinD));
             if (goblinD is null) return log;
 
             return log;

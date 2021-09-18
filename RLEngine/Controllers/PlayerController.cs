@@ -1,3 +1,4 @@
+using RLEngine.Abilities;
 using RLEngine.Input;
 using RLEngine.Actions;
 using RLEngine.Logs;
@@ -19,7 +20,8 @@ namespace RLEngine.Controllers
             if (Input is null) return false;
 
             if (Input is MoveInput mi) log = AttemptMove(entity, state, mi);
-            else if (Input is AttackInput ai) log = AreaAttack(entity, state, ai);
+            else if (Input is AttackInput ati) log = AreaAttack(entity, state, ati);
+            else if (Input is AbilityInput abi) log = CastSpell(entity, state, abi);
 
             Input = null;
             return log != null;
@@ -58,6 +60,11 @@ namespace RLEngine.Controllers
             }
 
             return log;
+        }
+
+        public Log? CastSpell(Entity entity, GameState state, AbilityInput abilityInput)
+        {
+            return abilityInput.Ability.Cast(entity, entity, state);
         }
     }
 }
