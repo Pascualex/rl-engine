@@ -15,7 +15,7 @@ namespace RLEngine.Actions
             var actualDamage = target.Damage(damage);
             if (target.IsDead)
             {
-                var combinedLog = new CombinedLog();
+                var combinedLog = new CombinedLog(false);
                 combinedLog.Add(new DamageLog(target, attacker, damage, actualDamage));
                 combinedLog.Add(state.Destroy(target));
                 return combinedLog;

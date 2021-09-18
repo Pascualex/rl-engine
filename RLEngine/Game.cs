@@ -33,7 +33,7 @@ namespace RLEngine
 
         public CombinedLog SetupExample()
         {
-            var log = new CombinedLog();
+            var log = new CombinedLog(false);
 
             log.Add(state.Modify(content.WallType, new Coords(4, 4)));
             log.Add(state.Modify(content.WallType, new Coords(5, 4)));
@@ -57,7 +57,7 @@ namespace RLEngine
 
         public CombinedLog ProcessTurns()
         {
-            var log = new CombinedLog();
+            var log = new CombinedLog(false);
             var processed = new HashSet<Entity>();
 
             while (state.TurnManager.Current != null)

@@ -9,9 +9,6 @@ namespace RLEngine.Logs
         public IEnumerable<Log> Logs => logs;
         public bool IsParallel { get; }
 
-        public CombinedLog()
-        : this(false) { }
-
         public CombinedLog(bool isParallel)
         {
             IsParallel = isParallel;
