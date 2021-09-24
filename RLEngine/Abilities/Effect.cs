@@ -4,8 +4,8 @@ using RLEngine.Entities;
 
 namespace RLEngine.Abilities
 {
-    public interface IEffect
+    public abstract class Effect
     {
-        Log? Cast(Entity caster, Entity target, GameState state);
+        public abstract Log? Cast(Entity caster, Entity target, GameState state);
     }
 }

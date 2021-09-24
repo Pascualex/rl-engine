@@ -1,5 +1,4 @@
-﻿using RLEngine.Entities;
-using RLEngine.Utils;
+﻿using RLEngine.Utils;
 
 namespace RLEngine.Input
 {

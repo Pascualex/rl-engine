@@ -5,6 +5,6 @@ namespace RLEngine.Abilities
     public interface IAbility
     {
         int Cost { get; }
-        IEnumerable<IEffect> Effects { get; }
+        CombinedEffect RootEffect { get; }
     }
 }

@@ -6,14 +6,12 @@ namespace RLEngine.Content.Abilities
 {
     public class Ability : IAbility
     {
-        private readonly List<IEffect> effects = new();
-
         public int Cost { get; set; }
-        public IEnumerable<IEffect> Effects => effects;
+        public CombinedEffect RootEffect { get; set; } = new CombinedEffect(false);
 
-        public void Add(IEffect effect)
+        public void Add(Effect effect)
         {
-            effects.Add(effect);
+            RootEffect.Add(effect);
         }
     }
 }

@@ -3,6 +3,8 @@ using RLEngine.Content.Boards;
 using RLEngine.Content.Entities;
 
 using RLEngine.Input;
+using RLEngine.Abilities;
+using RLEngine.Actions;
 using RLEngine.Utils;
 
 using System;
@@ -19,6 +21,8 @@ namespace RLEngine.Runner
             var playerType = new EntityType { Name = "Pascu", IsAgent = true };
             var goblinType = new EntityType { Name = "Goblin", IsAgent = true };
             var ability = new Ability();
+            ability.Add(new DamageEffect(new ActionAmount { Base = 20 }));
+            ability.Add(new DamageEffect(new ActionAmount { Base =  5 }));
             var content = new GameContent
             (
                 boardSize,
