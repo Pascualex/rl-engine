@@ -1,17 +1,16 @@
 ﻿using RLEngine.Abilities;
 
-using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace RLEngine.Content.Abilities
 {
     public class Ability : IAbility
     {
-        public int Cost { get; set; }
-        public CombinedEffect RootEffect { get; set; } = new CombinedEffect(false);
+        public int Cost { get; set; } = 0;
+        [JsonIgnore]
+        public IEffect Effect => SerializedEffect;
 
-        public void Add(Effect effect)
-        {
-            RootEffect.Add(effect);
-        }
+        [JsonPropertyName("Effect")]
+        public Effect SerializedEffect { get; set; } = new();
     }
 }

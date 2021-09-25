@@ -8,7 +8,7 @@ namespace RLEngine.Abilities
     {
         public static Log? Cast(this IAbility ability, Entity caster, Entity target, GameState state)
         {
-            return ability.RootEffect.Cast(caster, target, state);
+            return ability.Effect.Cast(caster, target, state);
         }
     }
 }

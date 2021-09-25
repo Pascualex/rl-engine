@@ -1,0 +1,23 @@
+{
+  "cost": 0,
+  "effect": {
+    "type": "combined",
+    "effects": [
+      {
+        "type": "damage",
+        "isParallel": false,
+        "amount": {
+          "base": 20
+        }
+      },
+      {
+        "type": "damage",
+        "isParallel": false,
+        "amount": {
+          "base": 5
+        }
+      }
+    ],
+    "isParallel": false
+  }
+}

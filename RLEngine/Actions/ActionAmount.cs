@@ -6,7 +6,7 @@ namespace RLEngine.Actions
 {
     public class ActionAmount
     {
-        public int Base { get; init; } = 0;
+        public int Base { get; set; } = 0;
 
         public int Calculate(Entity? entity)
         {
