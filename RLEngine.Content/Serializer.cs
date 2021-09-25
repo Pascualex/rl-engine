@@ -1,33 +1,31 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.IO;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace RLEngine
 {
     public static class Serializer
     {
-        private static readonly JsonSerializerOptions Options = new()
-        {
-            WriteIndented = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true,
-            Converters = {
-                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
-            }
-        };
+        private static readonly ISerializer serializer = new SerializerBuilder()
+            .WithNamingConvention(PascalCaseNamingConvention.Instance)
+            .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
+            .Build();
+
+        private static readonly IDeserializer deserializer = new DeserializerBuilder()
+            .WithNamingConvention(PascalCaseNamingConvention.Instance)
+            .Build();
 
         public static void Serialize<T>(T obj, string filename)
         {
-            var jsonString = JsonSerializer.Serialize(obj, Options);
-            File.WriteAllText(filename, jsonString);
+            if (obj is null) return;
+            var yamlString = serializer.Serialize(obj);
+            File.WriteAllText(filename, yamlString);
         }
 
         public static T? Deserialize<T>(string filename)
         {
             var jsonString = File.ReadAllText(filename);
-            return JsonSerializer.Deserialize<T>(jsonString, Options);
+            return deserializer.Deserialize<T>(jsonString);
         }
     }
 }

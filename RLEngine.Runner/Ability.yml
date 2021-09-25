@@ -1,0 +1,10 @@
+Cost: 100
+Effect:
+  Type: Combined
+  Effects:
+  - Type: Damage
+    Amount:
+      Base: 20
+  - Type: Damage
+    Amount:
+      Base: 5

@@ -1,16 +1,16 @@
 ﻿using RLEngine.Abilities;
 
-using System.Text.Json.Serialization;
+using YamlDotNet.Serialization;
 
 namespace RLEngine.Content.Abilities
 {
     public class Ability : IAbility
     {
         public int Cost { get; set; } = 0;
-        [JsonIgnore]
+        [YamlIgnore]
         public IEffect Effect => SerializedEffect;
 
-        [JsonPropertyName("Effect")]
+        [YamlMember(Alias = "Effect")]
         public Effect SerializedEffect { get; set; } = new();
     }
 }
