@@ -20,7 +20,7 @@ namespace RLEngine.Runner
             var wallType = new TileType { Name = "Wall", BlocksGround = true, BlocksAir = true };
             var playerType = new EntityType { Name = "Pascu", IsAgent = true };
             var goblinType = new EntityType { Name = "Goblin", IsAgent = true };
-            IAbility ability = Serializer.Deserialize<Ability>("Ability.yml")!;
+            var ability = Serializer.Deserialize<Ability>("Content/Abilities/TestAbility.yml")!;
             var content = new GameContent
             (
                 boardSize,
