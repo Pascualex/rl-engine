@@ -3,7 +3,7 @@ using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
 
-namespace RLEngine.Content
+namespace RLEngine.Serialization
 {
     public class GameContent : IGameContent
     {

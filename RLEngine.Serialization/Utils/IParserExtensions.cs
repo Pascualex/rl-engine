@@ -1,7 +1,7 @@
 ﻿using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 
-namespace RLEngine.Content.Utils
+namespace RLEngine.Serialization.Utils
 {
     public static class IParserExtensions
     {

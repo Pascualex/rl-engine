@@ -3,7 +3,7 @@ using RLEngine.Actions;
 
 using System.Collections.Generic;
 
-namespace RLEngine.Content.Abilities
+namespace RLEngine.Serialization.Abilities
 {
     public class Effect : IEffect
     {

@@ -1,5 +1,5 @@
-﻿using RLEngine.Content.Abilities;
-using RLEngine.Content.Utils;
+﻿using RLEngine.Serialization.Abilities;
+using RLEngine.Serialization.Utils;
 
 using RLEngine.Abilities;
 
@@ -8,7 +8,7 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace RLEngine.Content.TypeConverters
+namespace RLEngine.Serialization.TypeConverters
 {
     public class IAbilityTypeConverter : IYamlTypeConverter
     {

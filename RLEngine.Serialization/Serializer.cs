@@ -1,5 +1,5 @@
-﻿using RLEngine.Content.TypeConverters;
-using RLEngine.Content.Abilities;
+﻿using RLEngine.Serialization.TypeConverters;
+using RLEngine.Serialization.Abilities;
 
 using RLEngine.Abilities;
 

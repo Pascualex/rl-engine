@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RLEngine.Content.Utils
+namespace RLEngine.Serialization.Utils
 {
     public static class ReflectionUtils
     {

@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RLEngine\RLEngine.csproj" />
-    <ProjectReference Include="..\RLEngine.Content\RLEngine.Content.csproj" />
+    <ProjectReference Include="..\RLEngine.Serialization\RLEngine.Serialization.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

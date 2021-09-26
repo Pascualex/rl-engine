@@ -1,7 +1,7 @@
-﻿using RLEngine.Content;
-using RLEngine.Content.Abilities;
-using RLEngine.Content.Boards;
-using RLEngine.Content.Entities;
+﻿using RLEngine.Serialization;
+using RLEngine.Serialization.Abilities;
+using RLEngine.Serialization.Boards;
+using RLEngine.Serialization.Entities;
 
 using RLEngine.Input;
 using RLEngine.Utils;

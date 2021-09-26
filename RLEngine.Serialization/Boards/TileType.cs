@@ -1,6 +1,6 @@
 using RLEngine.Boards;
 
-namespace RLEngine.Content.Boards
+namespace RLEngine.Serialization.Boards
 {
     public class TileType : ITileType
     {

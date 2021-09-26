@@ -1,5 +1,5 @@
-using RLEngine.Content.Boards;
-using RLEngine.Content.Entities;
+using RLEngine.Serialization.Boards;
+using RLEngine.Serialization.Entities;
 
 using RLEngine.Boards;
 using RLEngine.Entities;

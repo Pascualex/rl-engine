@@ -1,6 +1,6 @@
 ﻿using RLEngine.Abilities;
 
-namespace RLEngine.Content.Abilities
+namespace RLEngine.Serialization.Abilities
 {
     public class Ability : IAbility
     {

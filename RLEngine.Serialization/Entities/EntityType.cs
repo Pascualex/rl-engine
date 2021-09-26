@@ -1,6 +1,6 @@
 using RLEngine.Entities;
 
-namespace RLEngine.Content.Entities
+namespace RLEngine.Serialization.Entities
 {
     public class EntityType : IEntityType
     {
