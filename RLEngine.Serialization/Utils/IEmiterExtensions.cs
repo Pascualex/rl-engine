@@ -5,7 +5,7 @@ namespace RLEngine.Serialization.Utils
 {
     public static class IEmiterExtensions
     {
-        public static void Emit(this IEmitter emitter, string value)
+        public static void Format(this IEmitter emitter, string value)
         {
             if (value.Length == 0)
             {

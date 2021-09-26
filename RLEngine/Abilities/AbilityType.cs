@@ -2,8 +2,6 @@
 {
     public enum AbilityType
     {
-        None,
-        Combined,
-        Damage,
+        Target,
     }
 }

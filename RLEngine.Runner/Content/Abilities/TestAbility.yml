@@ -1,4 +1,4 @@
-type: none
+type: target
 cost: 100
 effect:
   type: combined

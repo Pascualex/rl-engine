@@ -14,24 +14,23 @@ namespace RLEngine.Runner
     {
         public static void Main()
         {
-            var serializer = new ContentSerializer();
-            var gameContent = serializer.Deserialize("Content");
-            serializer.Serialize(gameContent, "ContentCopy");
+            var deserializer = new ContentDeserializer();
+            var gameContent = deserializer.Deserialize("Content");
 
-            // var game = new Game(content);
-            // var logger = new Logger(250);
+            var game = new Game(gameContent);
+            var logger = new Logger(250);
 
-            // var log = game.SetupExample();
-            // logger.Write(log);
+            var log = game.SetupExample();
+            logger.Write(log);
 
-            // while (true)
-            // {
-            //     var input = GetInput(game);
-            //     if (input == null) break;
-            //     game.Input = input;
-            //     log = game.ProcessTurns();
-            //     logger.Write(log);
-            // }
+            while (true)
+            {
+                var input = GetInput(game);
+                if (input == null) break;
+                game.Input = input;
+                log = game.ProcessTurns();
+                logger.Write(log);
+            }
         }
 
         private static PlayerInput? GetInput(Game game)

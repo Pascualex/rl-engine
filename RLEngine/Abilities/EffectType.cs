@@ -2,7 +2,6 @@
 {
     public enum EffectType
     {
-        None,
         Combined,
         Damage,
     }
