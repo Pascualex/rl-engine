@@ -12,7 +12,12 @@ namespace RLEngine.Serialization.TypeConverters
 {
     public class IAbilityTypeConverter : IYamlTypeConverter
     {
-        private readonly IEffectTypeConverter effectTypeConverter = new();
+        private readonly IEffectTypeConverter effectTC;
+
+        public IAbilityTypeConverter(IEffectTypeConverter effectTC)
+        {
+            this.effectTC = effectTC;
+        }
 
         public bool Accepts(Type type) => typeof(IAbility).IsAssignableFrom(type);
 
@@ -26,7 +31,7 @@ namespace RLEngine.Serialization.TypeConverters
                 var name = parser.Consume();
                 if (name == nameof(ability.Effect))
                 {
-                    var value = effectTypeConverter.ReadYaml(parser, typeof(Effect));
+                    var value = effectTC.ReadYaml(parser, typeof(Effect));
                     ability.SerializedEffect = (Effect)value;
                 }
                 else
@@ -52,7 +57,7 @@ namespace RLEngine.Serialization.TypeConverters
             emitter.Emit(ability.Cost.ToString());
 
             emitter.Emit(nameof(ability.Effect));
-            effectTypeConverter.WriteYaml(emitter, ability.Effect, typeof(IEffect));
+            effectTC.WriteYaml(emitter, ability.Effect, typeof(IEffect));
 
             emitter.Emit(new MappingEnd());
         }

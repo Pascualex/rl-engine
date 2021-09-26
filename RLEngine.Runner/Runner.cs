@@ -14,22 +14,9 @@ namespace RLEngine.Runner
     {
         public static void Main()
         {
-            var boardSize = new Size(10, 10);
-            var floorType = new TileType() { Name = "Floor" };
-            var wallType = new TileType { Name = "Wall", BlocksGround = true, BlocksAir = true };
-            var playerType = new EntityType { Name = "Pascu", IsAgent = true };
-            var goblinType = new EntityType { Name = "Goblin", IsAgent = true };
-            var ability = Serializer.Deserialize<Ability>("Content/Abilities/TestAbility.yml")!;
-            Serializer.Serialize(ability, "Copia.yaml");
-            // var content = new GameContent
-            // (
-            //     boardSize,
-            //     floorType,
-            //     wallType,
-            //     playerType,
-            //     goblinType,
-            //     ability
-            // );
+            var serializer = new ContentSerializer();
+            var gameContent = serializer.Deserialize("Content");
+            serializer.Serialize(gameContent, "ContentCopy");
 
             // var game = new Game(content);
             // var logger = new Logger(250);

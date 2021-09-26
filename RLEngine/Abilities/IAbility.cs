@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using RLEngine.Utils;
 
 namespace RLEngine.Abilities
 {
-    public interface IAbility
+    public interface IAbility : IIdentifiable
     {
         AbilityType Type { get; }
         int Cost { get; }

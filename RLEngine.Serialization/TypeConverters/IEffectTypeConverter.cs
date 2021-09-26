@@ -14,7 +14,12 @@ namespace RLEngine.Serialization.TypeConverters
 {
     public class IEffectTypeConverter : IYamlTypeConverter
     {
-        private readonly ActionAmountTypeConverter actionAmountTypeConverter = new();
+        private readonly ActionAmountTypeConverter actionAmountTC;
+
+        public IEffectTypeConverter(ActionAmountTypeConverter actionAmountTC)
+        {
+            this.actionAmountTC = actionAmountTC;
+        }
 
         public bool Accepts(Type type) => typeof(IEffect).IsAssignableFrom(type);
 
@@ -38,7 +43,7 @@ namespace RLEngine.Serialization.TypeConverters
                 }
                 else if (name == nameof(effect.Amount))
                 {
-                    var value = actionAmountTypeConverter.ReadYaml(parser, typeof(ActionAmount));
+                    var value = actionAmountTC.ReadYaml(parser, typeof(ActionAmount));
                     effect.Amount = (ActionAmount)value;
                 }
                 else
@@ -76,7 +81,7 @@ namespace RLEngine.Serialization.TypeConverters
             else if (effect.Type == EffectType.Damage)
             {
                 emitter.Emit(nameof(effect.Amount));
-                actionAmountTypeConverter.WriteYaml(emitter, effect.Amount, typeof(ActionAmount));
+                actionAmountTC.WriteYaml(emitter, effect.Amount, typeof(ActionAmount));
             }
 
             emitter.Emit(new MappingEnd());
