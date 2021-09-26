@@ -7,8 +7,8 @@ namespace RLEngine.Abilities
     public interface IEffect
     {
         EffectType Type { get; }
-        IEnumerable<IEffect>? Effects { get; }
+        IEnumerable<IEffect> Effects { get; }
         bool IsParallel { get; }
-        ActionAmount? Amount { get; }
+        ActionAmount Amount { get; }
     }
 }

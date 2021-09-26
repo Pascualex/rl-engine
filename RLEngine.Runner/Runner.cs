@@ -1,10 +1,9 @@
-﻿using RLEngine.Content.Abilities;
+﻿using RLEngine.Content;
+using RLEngine.Content.Abilities;
 using RLEngine.Content.Boards;
 using RLEngine.Content.Entities;
 
 using RLEngine.Input;
-using RLEngine.Abilities;
-using RLEngine.Actions;
 using RLEngine.Utils;
 
 using System;
@@ -21,30 +20,31 @@ namespace RLEngine.Runner
             var playerType = new EntityType { Name = "Pascu", IsAgent = true };
             var goblinType = new EntityType { Name = "Goblin", IsAgent = true };
             var ability = Serializer.Deserialize<Ability>("Content/Abilities/TestAbility.yml")!;
-            var content = new GameContent
-            (
-                boardSize,
-                floorType,
-                wallType,
-                playerType,
-                goblinType,
-                ability
-            );
+            Serializer.Serialize(ability, "Copia.yaml");
+            // var content = new GameContent
+            // (
+            //     boardSize,
+            //     floorType,
+            //     wallType,
+            //     playerType,
+            //     goblinType,
+            //     ability
+            // );
 
-            var game = new Game(content);
-            var logger = new Logger(250);
+            // var game = new Game(content);
+            // var logger = new Logger(250);
 
-            var log = game.SetupExample();
-            logger.Write(log);
+            // var log = game.SetupExample();
+            // logger.Write(log);
 
-            while (true)
-            {
-                var input = GetInput(game);
-                if (input == null) break;
-                game.Input = input;
-                log = game.ProcessTurns();
-                logger.Write(log);
-            }
+            // while (true)
+            // {
+            //     var input = GetInput(game);
+            //     if (input == null) break;
+            //     game.Input = input;
+            //     log = game.ProcessTurns();
+            //     logger.Write(log);
+            // }
         }
 
         private static PlayerInput? GetInput(Game game)

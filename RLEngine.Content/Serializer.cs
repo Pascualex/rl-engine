@@ -1,5 +1,11 @@
-﻿using System.IO;
+﻿using RLEngine.Content.TypeConverters;
+using RLEngine.Content.Abilities;
+
+using RLEngine.Abilities;
+
+using System.IO;
 using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.TypeResolvers;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace RLEngine
@@ -7,18 +13,17 @@ namespace RLEngine
     public static class Serializer
     {
         private static readonly ISerializer serializer = new SerializerBuilder()
-            .WithNamingConvention(PascalCaseNamingConvention.Instance)
-            .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults)
+            .WithTypeConverter(new IAbilityTypeConverter())
             .Build();
 
         private static readonly IDeserializer deserializer = new DeserializerBuilder()
-            .WithNamingConvention(PascalCaseNamingConvention.Instance)
+            .WithTypeConverter(new IAbilityTypeConverter())
             .Build();
 
-        public static void Serialize<T>(T obj, string filename)
+        public static void Serialize<T>(T value, string filename)
         {
-            if (obj is null) return;
-            var yamlString = serializer.Serialize(obj);
+            if (value is null) return;
+            var yamlString = serializer.Serialize(value);
             File.WriteAllText(filename, yamlString);
         }
 

@@ -1,10 +1,12 @@
-Cost: 100
-Effect:
-  Type: Combined
-  Effects:
-  - Type: Damage
-    Amount:
-      Base: 20
-  - Type: Damage
-    Amount:
-      Base: 5
+type: none
+cost: 100
+effect:
+  type: combined
+  isParallel: false
+  effects:
+  - type: damage
+    amount:
+      base: 20
+  - type: damage
+    amount:
+      base: 5
