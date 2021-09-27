@@ -16,6 +16,8 @@ namespace RLEngine.Runner
         {
             var deserializer = new ContentDeserializer();
             var gameContent = deserializer.Deserialize("Content");
+            var serializer = new ContentSerializer();
+            serializer.Serialize(gameContent, "ContentCopy");
 
             var game = new Game(gameContent);
             var logger = new Logger(250);

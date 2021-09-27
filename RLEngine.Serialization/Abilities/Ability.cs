@@ -9,7 +9,7 @@ namespace RLEngine.Serialization.Abilities
     public class Ability : IAbility, IDeserializable
     {
         [YamlIgnore]
-        public string ID { get; set; } = "";
+        public string ID { get; set; } = "NO_ID";
         public AbilityType Type { get; set; } = AbilityType.Target;
         public int Cost { get; set; } = 0;
         [YamlIgnore]

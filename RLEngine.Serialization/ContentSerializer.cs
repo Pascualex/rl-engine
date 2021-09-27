@@ -1,4 +1,5 @@
 ﻿using RLEngine.Serialization.Yaml;
+using RLEngine.Serialization.Utils;
 
 using RLEngine.Utils;
 
@@ -19,10 +20,12 @@ namespace RLEngine.Serialization
                 .Build();
         }
 
-        public void Serialize(GameContent gameContent, string path)
+        public void Serialize(IGameContent gameContent, string path)
         {
             Directory.CreateDirectory(path);
-            Serialize(Path.Combine(path, "Abilities"), gameContent.Ability);
+            Serialize(Path.Combine(path, SPaths.TilesTypes), gameContent.FloorType);
+            Serialize(Path.Combine(path, SPaths.TilesTypes), gameContent.WallType);
+            Serialize(Path.Combine(path, SPaths.Abilities), gameContent.Ability);
         }
 
         private void Serialize(string path, IIdentifiable contentElement)
@@ -30,7 +33,8 @@ namespace RLEngine.Serialization
             Directory.CreateDirectory(path);
             var yamlString = serializer.Serialize(contentElement);
             if (contentElement.ID.Length == 0) throw new ArgumentNullException();
-            File.WriteAllText(Path.Combine(path, contentElement.ID), yamlString);
+            var filename = contentElement.ID + ".yml";
+            File.WriteAllText(Path.Combine(path, filename), yamlString);
         }
     }
 }

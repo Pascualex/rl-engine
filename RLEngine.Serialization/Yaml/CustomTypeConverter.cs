@@ -1,6 +1,7 @@
 ﻿using RLEngine.Serialization.Utils;
 
 using RLEngine.Actions;
+using RLEngine.Utils;
 
 using System;
 using System.Collections;
@@ -95,8 +96,10 @@ namespace RLEngine.Serialization.Yaml
             {
                 var style = inlineTypes.Contains(type) ? MappingStyle.Flow : MappingStyle.Block;
                 emitter.Emit(new MappingStart(null, null, false, style));
+                var isIdentifiable = typeof(IIdentifiable).IsAssignableFrom(type);
                 foreach (var propertyInfo in type.GetProperties())
                 {
+                    if (isIdentifiable && propertyInfo.Name == nameof(IIdentifiable.ID)) continue;
                     var ignore = propertyInfo.GetCustomAttribute(typeof(YamlIgnoreAttribute));
                     if (ignore is not null) continue;
                     var member = propertyInfo.GetCustomAttribute(typeof(YamlMemberAttribute))

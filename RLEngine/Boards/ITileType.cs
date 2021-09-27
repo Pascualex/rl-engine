@@ -1,6 +1,8 @@
+using RLEngine.Utils;
+
 namespace RLEngine.Boards
 {
-    public interface ITileType
+    public interface ITileType : IIdentifiable
     {
         string Name { get; }
         bool BlocksGround { get; }

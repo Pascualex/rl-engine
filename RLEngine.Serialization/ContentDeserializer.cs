@@ -26,9 +26,9 @@ namespace RLEngine.Serialization
         public GameContent Deserialize(string path)
         {
             var boardSize = new Size(10, 10);
-            var floorType = new TileType() { Name = "Floor" };
-            var wallType = new TileType { Name = "Wall", BlocksGround = true, BlocksAir = true };
-            var playerType = new EntityType { Name = "Pascu", IsAgent = true };
+            var floorType = new TileType() { ID = "Floor", Name = "Floor" };
+            var wallType = new TileType { ID = "Wall", Name = "Wall", BlocksGround = true, BlocksAir = true };
+            var playerType = new EntityType { Name = "Hero", IsAgent = true };
             var goblinType = new EntityType { Name = "Goblin", IsAgent = true };
             Ability? ability = null;
             foreach (var serializedAbility in Deserialize<Ability>(Path.Combine(path, "Abilities")))
@@ -52,7 +52,7 @@ namespace RLEngine.Serialization
             {
                 var yamlString = File.ReadAllText(filepath);
                 var contentElement = deserializer.Deserialize<T>(yamlString);
-                contentElement.ID = Path.GetFileName(filepath);
+                contentElement.ID = Path.GetFileNameWithoutExtension(filepath);
                 yield return contentElement;
             }
         }
