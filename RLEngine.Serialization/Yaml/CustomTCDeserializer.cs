@@ -1,7 +1,4 @@
-﻿using RLEngine.Serialization.Utils;
-
-using RLEngine.Actions;
-using RLEngine.Utils;
+﻿using RLEngine.Serialization.Yaml.Utils;
 
 using System;
 using System.Collections;
@@ -14,7 +11,7 @@ using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public class CustomDeserializer : IYamlTypeConverter
+    public class CustomTCDeserializer : IYamlTypeConverter
     {
         public bool Accepts(Type type) => true;
 

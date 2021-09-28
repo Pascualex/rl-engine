@@ -1,4 +1,4 @@
-﻿using RLEngine.Serialization.Utils;
+﻿using RLEngine.Serialization.Yaml.Utils;
 
 using RLEngine.Abilities;
 
@@ -10,9 +10,9 @@ using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public class IEffectCustomSerializer : IYamlTypeConverter
+    public class IEffectTCSerializer : IYamlTypeConverter
     {
-        private readonly CustomSerializer customSerializer;
+        private readonly CustomTCSerializer CustomTCSerializer;
         private readonly Dictionary<EffectType, string[]> filter = new()
         {
             {
@@ -32,9 +32,9 @@ namespace RLEngine.Serialization.Yaml
             },
         };
 
-        public IEffectCustomSerializer(CustomSerializer customSerializer)
+        public IEffectTCSerializer(CustomTCSerializer CustomTCSerializer)
         {
-            this.customSerializer = customSerializer;
+            this.CustomTCSerializer = CustomTCSerializer;
         }
 
         public bool Accepts(Type type) => typeof(IEffect).IsAssignableFrom(type);
@@ -51,7 +51,7 @@ namespace RLEngine.Serialization.Yaml
             emitter.Emit(new MappingStart(null, null, false, MappingStyle.Block));
 
             emitter.Format(nameof(effect.Type));
-            customSerializer.WriteField(emitter, effect.Type, typeof(EffectType));
+            CustomTCSerializer.WriteField(emitter, effect.Type, typeof(EffectType));
 
             foreach (var propertyName in filter[effect.Type])
             {
@@ -59,7 +59,7 @@ namespace RLEngine.Serialization.Yaml
                 var propertyValue = (object?)propertyInfo.GetValue(effect);
                 if (propertyValue is null) continue;
                 emitter.Format(propertyName);
-                customSerializer.WriteField(emitter, propertyValue, propertyInfo.PropertyType);
+                CustomTCSerializer.WriteField(emitter, propertyValue, propertyInfo.PropertyType);
             }
 
             emitter.Emit(new MappingEnd());

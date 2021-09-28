@@ -1,6 +1,4 @@
-﻿using RLEngine.Serialization.Utils;
-
-using RLEngine.Games;
+﻿using RLEngine.Games;
 using RLEngine.Utils;
 
 using System;
@@ -10,13 +8,13 @@ using YamlDotNet.Serialization.TypeResolvers;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public static class GameContentYamlSerializer
+    public static class YamlSerializer
     {
         public static void Serialize(IGameContent gameContent)
         {
             var serializationQueue = new SerializationQueue();
             var serializer = new SerializerBuilder()
-                .WithTypeConverter(new CustomSerializer(serializationQueue))
+                .WithTypeConverter(new CustomTCSerializer(serializationQueue))
                 .WithTypeResolver(new StaticTypeResolver())
                 .Build();
 
@@ -25,7 +23,7 @@ namespace RLEngine.Serialization.Yaml
             while (serializationQueue.Count > 0)
             {
                 var (element, type) = serializationQueue.Dequeue();
-                var path = Path.Combine(gameContent.ID, SPaths.Get(type));
+                var path = Path.Combine(gameContent.ID, SerializationPaths.Get(type));
                 Serialize(serializer, path, element, type);
             }
         }

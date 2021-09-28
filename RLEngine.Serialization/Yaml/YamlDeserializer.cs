@@ -12,14 +12,14 @@ using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public class GameContentYamlDeserializer
+    public class YamlDeserializer
     {
         private readonly IDeserializer deserializer;
 
-        public GameContentYamlDeserializer()
+        public YamlDeserializer()
         {
             deserializer = new DeserializerBuilder()
-                .WithTypeConverter(new CustomDeserializer())
+                .WithTypeConverter(new CustomTCDeserializer())
                 .Build();
         }
 

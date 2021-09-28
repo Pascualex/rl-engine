@@ -4,9 +4,9 @@ using RLEngine.Entities;
 
 using System;
 
-namespace RLEngine.Serialization.Utils
+namespace RLEngine.Serialization.Yaml
 {
-    public static class SPaths
+    public static class SerializationPaths
     {
         public static string Get(Type type)
         {

@@ -1,4 +1,4 @@
-﻿using RLEngine.Serialization.Utils;
+﻿using RLEngine.Serialization.Yaml.Utils;
 
 using RLEngine.Actions;
 using RLEngine.Utils;
@@ -14,10 +14,10 @@ using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public class CustomSerializer : IYamlTypeConverter
+    public class CustomTCSerializer : IYamlTypeConverter
     {
         private readonly SerializationQueue serializationQueue;
-        private readonly IEffectCustomSerializer effectCustomSerializer;
+        private readonly IEffectTCSerializer effectCustomTCSerializer;
         private readonly Type[] inlineTypes = new[]
         {
             typeof(ActionAmount),
@@ -25,10 +25,10 @@ namespace RLEngine.Serialization.Yaml
             typeof(Size),
         };
 
-        public CustomSerializer(SerializationQueue serializationQueue)
+        public CustomTCSerializer(SerializationQueue serializationQueue)
         {
             this.serializationQueue = serializationQueue;
-            effectCustomSerializer = new IEffectCustomSerializer(this);
+            effectCustomTCSerializer = new IEffectTCSerializer(this);
         }
 
         public bool Accepts(Type type) => true;
@@ -51,9 +51,9 @@ namespace RLEngine.Serialization.Yaml
 
         private void WriteField(IEmitter emitter, object value, Type type, bool root)
         {
-            if (effectCustomSerializer.Accepts(type))
+            if (effectCustomTCSerializer.Accepts(type))
             {
-                effectCustomSerializer.WriteYaml(emitter, value, type);
+                effectCustomTCSerializer.WriteYaml(emitter, value, type);
                 return;
             }
 

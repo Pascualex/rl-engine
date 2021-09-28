@@ -1,4 +1,4 @@
-﻿namespace RLEngine.Serialization.Utils
+﻿namespace RLEngine.Serialization.Yaml.Utils
 {
     public enum EmitterStyle
     {

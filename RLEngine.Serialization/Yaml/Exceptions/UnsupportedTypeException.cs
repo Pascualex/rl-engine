@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RLEngine.Serialization.Utils
+namespace RLEngine.Serialization.Yaml
 {
     public class UnsupportedTypeException : Exception
     {
