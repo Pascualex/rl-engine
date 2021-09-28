@@ -4,6 +4,7 @@ namespace RLEngine.Serialization.Entities
 {
     public class EntityType : IEntityType
     {
+        public string ID { get; set; } = "NO_ID";
         public string Name { get; set; } = "NO_NAME";
         public bool IsAgent { get; set; } = false;
         public int MaxHealth { get; set; } = 100;

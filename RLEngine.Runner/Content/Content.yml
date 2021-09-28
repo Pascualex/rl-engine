@@ -1,0 +1,6 @@
+boardSize: {x: 10, y: 10}
+floorType: $Floor
+wallType: $Wall
+playerType: $Hero
+goblinType: $Goblin
+ability: $TestAbility

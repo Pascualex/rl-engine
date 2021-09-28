@@ -1,0 +1,8 @@
+name: "Human"
+isAgent: true
+maxHealth: 100
+speed: 100
+blocksGround: true
+blocksAir: false
+isGhost: false
+isRoamer: true

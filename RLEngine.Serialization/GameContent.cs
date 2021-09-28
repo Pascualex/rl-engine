@@ -17,6 +17,7 @@ namespace RLEngine.Serialization
             Ability = ability;
         }
 
+        public string ID { get; set; } = "NO_ID";
         public Size BoardSize { get; set; }
         public ITileType FloorType { get; set; }
         public ITileType WallType { get; set; }

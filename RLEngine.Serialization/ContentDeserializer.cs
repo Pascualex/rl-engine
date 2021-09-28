@@ -19,7 +19,7 @@ namespace RLEngine.Serialization
         public ContentDeserializer()
         {
             deserializer = new DeserializerBuilder()
-                .WithTypeConverter(new CustomTypeConverter())
+                .WithTypeConverter(new CustomDeserializer())
                 .Build();
         }
 
@@ -28,8 +28,10 @@ namespace RLEngine.Serialization
             var boardSize = new Size(10, 10);
             var floorType = new TileType() { ID = "Floor", Name = "Floor" };
             var wallType = new TileType { ID = "Wall", Name = "Wall", BlocksGround = true, BlocksAir = true };
-            var playerType = new EntityType { Name = "Hero", IsAgent = true };
-            var goblinType = new EntityType { Name = "Goblin", IsAgent = true };
+            var humanType = new EntityType { ID = "Human", Name = "Human", IsAgent = true };
+            var playerType = new EntityType
+            { ID = "Hero", Name = "Hero", MaxHealth = 200, Parent = humanType };
+            var goblinType = new EntityType { ID = "Goblin", Name = "Goblin", IsAgent = true };
             Ability? ability = null;
             foreach (var serializedAbility in Deserialize<Ability>(Path.Combine(path, "Abilities")))
             {

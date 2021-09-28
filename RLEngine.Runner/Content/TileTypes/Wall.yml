@@ -1,0 +1,3 @@
+name: "Wall"
+blocksGround: true
+blocksAir: true

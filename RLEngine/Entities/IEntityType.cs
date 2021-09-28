@@ -1,6 +1,8 @@
+using RLEngine.Utils;
+
 namespace RLEngine.Entities
 {
-    public interface IEntityType : IEntityAttributes
+    public interface IEntityType : IIdentifiable, IEntityAttributes
     {
         IEntityType? Parent { get; }
     }

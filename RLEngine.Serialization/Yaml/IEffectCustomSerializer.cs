@@ -10,9 +10,9 @@ using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public class IEffectTypeConverter : IYamlTypeConverter
+    public class IEffectCustomSerializer : IYamlTypeConverter
     {
-        private readonly CustomTypeConverter customTypeConverter;
+        private readonly CustomSerializer customSerializer;
         private readonly Dictionary<EffectType, string[]> filter = new()
         {
             {
@@ -32,16 +32,16 @@ namespace RLEngine.Serialization.Yaml
             },
         };
 
-        public IEffectTypeConverter(CustomTypeConverter customTypeConverter)
+        public IEffectCustomSerializer(CustomSerializer customSerializer)
         {
-            this.customTypeConverter = customTypeConverter;
+            this.customSerializer = customSerializer;
         }
 
         public bool Accepts(Type type) => typeof(IEffect).IsAssignableFrom(type);
 
         public object ReadYaml(IParser parser, Type type)
         {
-            return customTypeConverter.ReadYaml(parser, type);
+            throw new NotImplementedException();
         }
 
         public void WriteYaml(IEmitter emitter, object? value, Type type)
@@ -51,14 +51,15 @@ namespace RLEngine.Serialization.Yaml
             emitter.Emit(new MappingStart(null, null, false, MappingStyle.Block));
 
             emitter.Format(nameof(effect.Type));
-            customTypeConverter.WriteYaml(emitter, effect.Type, typeof(EffectType));
+            customSerializer.WriteField(emitter, effect.Type, typeof(EffectType));
 
             foreach (var propertyName in filter[effect.Type])
             {
-                emitter.Format(propertyName);
                 var propertyInfo = typeof(IEffect).GetProperty(propertyName);
-                var propertyValue = propertyInfo.GetValue(effect);
-                customTypeConverter.WriteYaml(emitter, propertyValue, propertyInfo.PropertyType);
+                var propertyValue = (object?)propertyInfo.GetValue(effect);
+                if (propertyValue is null) continue;
+                emitter.Format(propertyName);
+                customSerializer.WriteField(emitter, propertyValue, propertyInfo.PropertyType);
             }
 
             emitter.Emit(new MappingEnd());

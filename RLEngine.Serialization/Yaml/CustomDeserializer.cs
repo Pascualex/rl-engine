@@ -14,19 +14,8 @@ using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public class CustomTypeConverter : IYamlTypeConverter
+    public class CustomDeserializer : IYamlTypeConverter
     {
-        private readonly IEffectTypeConverter effectTypeConverter;
-        private readonly Type[] inlineTypes = new[]
-        {
-            typeof(ActionAmount),
-        };
-
-        public CustomTypeConverter()
-        {
-            effectTypeConverter = new IEffectTypeConverter(this);
-        }
-
         public bool Accepts(Type type) => true;
 
         public object ReadYaml(IParser parser, Type type)
@@ -67,61 +56,19 @@ namespace RLEngine.Serialization.Yaml
 
         public void WriteYaml(IEmitter emitter, object? value, Type type)
         {
-            if (effectTypeConverter.Accepts(type))
-            {
-                effectTypeConverter.WriteYaml(emitter, value, type);
-                return;
-            }
-
-            if (value == null)
-            {
-                emitter.Format("Null");
-            }
-            else if (type.IsPrimitive || type.IsEnum || type == typeof(string))
-            {
-                emitter.Format(value.ToString());
-            }
-            else if (typeof(IEnumerable).IsAssignableFrom(type))
-            {
-                var enumerable = (IEnumerable)value;
-                emitter.Emit(new SequenceStart(null, null, false, SequenceStyle.Block));
-                var elementType = type.GetGenericArguments().Single();
-                foreach (var element in enumerable)
-                {
-                    WriteYaml(emitter, element, elementType);
-                }
-                emitter.Emit(new SequenceEnd());
-            }
-            else
-            {
-                var style = inlineTypes.Contains(type) ? MappingStyle.Flow : MappingStyle.Block;
-                emitter.Emit(new MappingStart(null, null, false, style));
-                var isIdentifiable = typeof(IIdentifiable).IsAssignableFrom(type);
-                foreach (var propertyInfo in type.GetProperties())
-                {
-                    if (isIdentifiable && propertyInfo.Name == nameof(IIdentifiable.ID)) continue;
-                    var ignore = propertyInfo.GetCustomAttribute(typeof(YamlIgnoreAttribute));
-                    if (ignore is not null) continue;
-                    var member = propertyInfo.GetCustomAttribute(typeof(YamlMemberAttribute))
-                        as YamlMemberAttribute;
-                    emitter.Format(member?.Alias ?? propertyInfo.Name);
-                    var propertyValue = propertyInfo.GetValue(value);
-                    WriteYaml(emitter, propertyValue, propertyInfo.PropertyType);
-                }
-                emitter.Emit(new MappingEnd());
-            }
+            throw new NotImplementedException();
         }
 
         private PropertyInfo GetPropertyOrAlias(Type type, string propertyName)
         {
-            var propertyInfo = type.GetProperty(propertyName);
+            var propertyInfo = type.GetPublicProperty(propertyName);
             if (propertyInfo is not null)
             {
                 var ignore = propertyInfo.GetCustomAttribute(typeof(YamlIgnoreAttribute));
                 if (ignore is null) return propertyInfo;
             }
 
-            var aliasPropertiesInfo = type.GetProperties()
+            var aliasPropertiesInfo = type.GetPublicProperties()
                 .Where(x => Attribute.IsDefined(x, typeof(YamlMemberAttribute)));
 
             foreach (var aliasPropertyInfo in aliasPropertiesInfo)

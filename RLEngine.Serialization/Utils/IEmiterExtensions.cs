@@ -7,14 +7,29 @@ namespace RLEngine.Serialization.Utils
     {
         public static void Format(this IEmitter emitter, string value)
         {
+            Format(emitter, value, EmitterStyle.Standard);
+        }
+
+        public static void Format(this IEmitter emitter, string value, EmitterStyle style)
+        {
             if (value.Length == 0)
             {
                 emitter.Emit(new Scalar(string.Empty));
                 return;
             }
 
-            var formattedValue = char.ToLowerInvariant(value[0]) + value.Substring(1);
-            emitter.Emit(new Scalar(formattedValue));
+            if (style == EmitterStyle.String)
+            {
+                emitter.Emit(new Scalar(null, null, value, ScalarStyle.DoubleQuoted, true, false));
+            }
+            else if (style == EmitterStyle.ID)
+            {
+                emitter.Emit(new Scalar("$" + value));
+            }
+            else
+            {
+                emitter.Emit(new Scalar(char.ToLowerInvariant(value[0]) + value.Substring(1)));
+            }
         }
     }
 }

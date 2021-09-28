@@ -5,8 +5,6 @@ effect:
   isParallel: false
   effects:
   - type: damage
-    amount:
-      base: 20
+    amount: {base: 20}
   - type: damage
-    amount:
-      base: 5
+    amount: {base: 5}

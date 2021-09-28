@@ -6,35 +6,38 @@ using RLEngine.Utils;
 using System;
 using System.IO;
 using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.TypeResolvers;
 
 namespace RLEngine.Serialization
 {
-    public class ContentSerializer
+    public static class ContentSerializer
     {
-        private readonly ISerializer serializer;
-
-        public ContentSerializer()
+        public static void Serialize(IGameContent gameContent)
         {
-            serializer = new SerializerBuilder()
-                .WithTypeConverter(new CustomTypeConverter())
+            var serializationQueue = new SerializationQueue();
+            var serializer = new SerializerBuilder()
+                .WithTypeConverter(new CustomSerializer(serializationQueue))
+                .WithTypeResolver(new StaticTypeResolver())
                 .Build();
+
+            Directory.CreateDirectory(gameContent.ID);
+            Serialize(serializer, gameContent.ID, gameContent, typeof(IGameContent));
+            while (serializationQueue.Count > 0)
+            {
+                var (element, type) = serializationQueue.Dequeue();
+                var path = Path.Combine(gameContent.ID, SPaths.Get(type));
+                Serialize(serializer, path, element, type);
+            }
         }
 
-        public void Serialize(IGameContent gameContent, string path)
+        private static void Serialize(ISerializer serializer,
+        string path, IIdentifiable element, Type type)
         {
             Directory.CreateDirectory(path);
-            Serialize(Path.Combine(path, SPaths.TilesTypes), gameContent.FloorType);
-            Serialize(Path.Combine(path, SPaths.TilesTypes), gameContent.WallType);
-            Serialize(Path.Combine(path, SPaths.Abilities), gameContent.Ability);
-        }
-
-        private void Serialize(string path, IIdentifiable contentElement)
-        {
-            Directory.CreateDirectory(path);
-            var yamlString = serializer.Serialize(contentElement);
-            if (contentElement.ID.Length == 0) throw new ArgumentNullException();
-            var filename = contentElement.ID + ".yml";
-            File.WriteAllText(Path.Combine(path, filename), yamlString);
+            if (element.ID.Length == 0) throw new ArgumentNullException();
+            var filename = element.ID + ".yml";
+            using var sw = new StreamWriter(Path.Combine(path, filename));
+            serializer.Serialize(sw, element, type);
         }
     }
 }

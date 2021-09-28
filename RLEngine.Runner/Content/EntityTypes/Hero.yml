@@ -1,0 +1,9 @@
+name: "Hero"
+isAgent: false
+maxHealth: 200
+speed: 100
+blocksGround: true
+blocksAir: false
+isGhost: false
+isRoamer: true
+parent: $Human

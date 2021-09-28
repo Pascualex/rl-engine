@@ -5,7 +5,7 @@ using RLEngine.Utils;
 
 namespace RLEngine
 {
-    public interface IGameContent
+    public interface IGameContent : IIdentifiable
     {
         Size BoardSize { get; }
         ITileType FloorType { get; }
