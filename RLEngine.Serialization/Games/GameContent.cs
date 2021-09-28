@@ -1,9 +1,10 @@
-﻿using RLEngine.Abilities;
+﻿using RLEngine.Games;
+using RLEngine.Abilities;
 using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
 
-namespace RLEngine.Serialization
+namespace RLEngine.Serialization.Games
 {
     public class GameContent : IGameContent
     {

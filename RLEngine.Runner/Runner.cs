@@ -1,8 +1,6 @@
-﻿using RLEngine.Serialization;
-using RLEngine.Serialization.Abilities;
-using RLEngine.Serialization.Boards;
-using RLEngine.Serialization.Entities;
+﻿using RLEngine.Serialization.Yaml;
 
+using RLEngine.Games;
 using RLEngine.Input;
 using RLEngine.Utils;
 
@@ -14,10 +12,10 @@ namespace RLEngine.Runner
     {
         public static void Main()
         {
-            var deserializer = new ContentDeserializer();
+            var deserializer = new GameContentYamlDeserializer();
             var gameContent = deserializer.Deserialize("Content");
             gameContent.ID = "ContentCopy";
-            ContentSerializer.Serialize(gameContent);
+            GameContentYamlSerializer.Serialize(gameContent);
 
             var game = new Game(gameContent);
             var logger = new Logger(250);

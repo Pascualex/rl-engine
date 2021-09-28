@@ -3,7 +3,7 @@ using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
 
-namespace RLEngine
+namespace RLEngine.Games
 {
     public interface IGameContent : IIdentifiable
     {

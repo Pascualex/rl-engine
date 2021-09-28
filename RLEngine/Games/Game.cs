@@ -8,7 +8,7 @@ using RLEngine.Utils;
 
 using System.Collections.Generic;
 
-namespace RLEngine
+namespace RLEngine.Games
 {
     public class Game
     {

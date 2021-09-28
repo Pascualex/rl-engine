@@ -1,4 +1,4 @@
-﻿using RLEngine.Serialization.Yaml;
+﻿using RLEngine.Serialization.Games;
 using RLEngine.Serialization.Abilities;
 using RLEngine.Serialization.Boards;
 using RLEngine.Serialization.Entities;
@@ -10,13 +10,13 @@ using System.Collections.Generic;
 using System.IO;
 using YamlDotNet.Serialization;
 
-namespace RLEngine.Serialization
+namespace RLEngine.Serialization.Yaml
 {
-    public class ContentDeserializer
+    public class GameContentYamlDeserializer
     {
         private readonly IDeserializer deserializer;
 
-        public ContentDeserializer()
+        public GameContentYamlDeserializer()
         {
             deserializer = new DeserializerBuilder()
                 .WithTypeConverter(new CustomDeserializer())

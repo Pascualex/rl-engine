@@ -1,6 +1,6 @@
-﻿using RLEngine.Serialization.Yaml;
-using RLEngine.Serialization.Utils;
+﻿using RLEngine.Serialization.Utils;
 
+using RLEngine.Games;
 using RLEngine.Utils;
 
 using System;
@@ -8,9 +8,9 @@ using System.IO;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.TypeResolvers;
 
-namespace RLEngine.Serialization
+namespace RLEngine.Serialization.Yaml
 {
-    public static class ContentSerializer
+    public static class GameContentYamlSerializer
     {
         public static void Serialize(IGameContent gameContent)
         {
