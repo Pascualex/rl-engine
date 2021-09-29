@@ -10,9 +10,9 @@ using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public class IEffectTCSerializer : IYamlTypeConverter
+    public class IEffectWritter
     {
-        private readonly CustomTCSerializer CustomTCSerializer;
+        private readonly GenericWritter genericWritter;
         private readonly Dictionary<EffectType, string[]> filter = new()
         {
             {
@@ -32,26 +32,17 @@ namespace RLEngine.Serialization.Yaml
             },
         };
 
-        public IEffectTCSerializer(CustomTCSerializer CustomTCSerializer)
+        public IEffectWritter(GenericWritter CustomTCSerializer)
         {
-            this.CustomTCSerializer = CustomTCSerializer;
+            genericWritter = CustomTCSerializer;
         }
 
-        public bool Accepts(Type type) => typeof(IEffect).IsAssignableFrom(type);
-
-        public object ReadYaml(IParser parser, Type type)
+        public void WriteField(IEmitter emitter, IEffect effect)
         {
-            throw new NotImplementedException();
-        }
-
-        public void WriteYaml(IEmitter emitter, object? value, Type type)
-        {
-            var effect = (IEffect)value!;
-
             emitter.Emit(new MappingStart(null, null, false, MappingStyle.Block));
 
             emitter.Format(nameof(effect.Type));
-            CustomTCSerializer.WriteField(emitter, effect.Type, typeof(EffectType));
+            genericWritter.WriteField(emitter, effect.Type, typeof(EffectType));
 
             foreach (var propertyName in filter[effect.Type])
             {
@@ -59,7 +50,7 @@ namespace RLEngine.Serialization.Yaml
                 var propertyValue = (object?)propertyInfo.GetValue(effect);
                 if (propertyValue is null) continue;
                 emitter.Format(propertyName);
-                CustomTCSerializer.WriteField(emitter, propertyValue, propertyInfo.PropertyType);
+                genericWritter.WriteField(emitter, propertyValue, propertyInfo.PropertyType);
             }
 
             emitter.Emit(new MappingEnd());
