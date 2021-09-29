@@ -49,7 +49,13 @@ namespace RLEngine.Serialization.Yaml
 
         private void Write(IEmitter emitter, object value, Type type, bool root)
         {
-            if (type.IsPrimitive || type.IsEnum)
+            if (!root && typeof(IIdentifiable).IsAssignableFrom(type))
+            {
+                var identifiable = (IIdentifiable)value;
+                serializationQueue.Enqueue(identifiable, type);
+                emitter.Format(identifiable.ID, ParseStyle.ID);
+            }
+            else if (type.IsPrimitive || type.IsEnum)
             {
                 emitter.Format(value.ToString());
             }
@@ -71,12 +77,6 @@ namespace RLEngine.Serialization.Yaml
             else if (typeof(IEffect).IsAssignableFrom(type))
             {
                 effectWritter.WriteField(emitter, (IEffect)value);
-            }
-            else if (!root && typeof(IIdentifiable).IsAssignableFrom(type))
-            {
-                var identifiable = (IIdentifiable)value;
-                serializationQueue.Enqueue(identifiable, type);
-                emitter.Format(identifiable.ID, ParseStyle.ID);
             }
             else
             {
