@@ -12,8 +12,7 @@ namespace RLEngine.Runner
     {
         public static void Main()
         {
-            var deserializer = new YamlDeserializer();
-            var gameContent = deserializer.Deserialize("Content");
+            var gameContent = YamlDeserializer.Deserialize("Content");
             gameContent.ID = "ContentCopy";
             YamlSerializer.Serialize(gameContent);
 

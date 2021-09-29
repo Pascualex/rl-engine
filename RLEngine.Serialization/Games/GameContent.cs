@@ -1,29 +1,30 @@
-﻿using RLEngine.Games;
+﻿using RLEngine.Serialization.Abilities;
+using RLEngine.Serialization.Boards;
+using RLEngine.Serialization.Entities;
+using RLEngine.Serialization.Utils;
+
+using RLEngine.Games;
 using RLEngine.Abilities;
 using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
 
+using YamlDotNet.Serialization;
+
 namespace RLEngine.Serialization.Games
 {
-    public class GameContent : IGameContent
+    public class GameContent : Deserializable, IGameContent
     {
-        public GameContent(Size boardSize, ITileType floorType, ITileType wallTile, IEntityType playerType, IEntityType goblinType, IAbility ability)
-        {
-            BoardSize = boardSize;
-            FloorType = floorType;
-            WallType = wallTile;
-            PlayerType = playerType;
-            GoblinType = goblinType;
-            Ability = ability;
-        }
-
-        public string ID { get; set; } = "NO_ID";
-        public Size BoardSize { get; set; }
-        public ITileType FloorType { get; set; }
-        public ITileType WallType { get; set; }
-        public IEntityType PlayerType { get; set; }
-        public IEntityType GoblinType { get; set; }
-        public IAbility Ability { get; set; }
+        public Size BoardSize { get; set; } = Size.Zero;
+        [YamlMember(SerializeAs = typeof(TileType))]
+        public ITileType FloorType { get; set; } = new TileType();
+        [YamlMember(SerializeAs = typeof(TileType))]
+        public ITileType WallType { get; set; } = new TileType();
+        [YamlMember(SerializeAs = typeof(EntityType))]
+        public IEntityType PlayerType { get; set; } = new EntityType();
+        [YamlMember(SerializeAs = typeof(EntityType))]
+        public IEntityType GoblinType { get; set; } = new EntityType();
+        [YamlMember(SerializeAs = typeof(Ability))]
+        public IAbility Ability { get; set; } = new Ability();
     }
 }

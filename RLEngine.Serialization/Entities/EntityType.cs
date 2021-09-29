@@ -1,10 +1,13 @@
+using RLEngine.Serialization.Utils;
+
 using RLEngine.Entities;
+
+using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Entities
 {
-    public class EntityType : IEntityType
+    public class EntityType : Deserializable, IEntityType
     {
-        public string ID { get; set; } = "NO_ID";
         public string Name { get; set; } = "NO_NAME";
         public bool IsAgent { get; set; } = false;
         public int MaxHealth { get; set; } = 100;
@@ -14,6 +17,7 @@ namespace RLEngine.Serialization.Entities
         public bool IsGhost { get; set; } = false;
         public bool IsRoamer { get; set; } = true;
         public object? Visuals { get; set; } = null;
+        [YamlMember(SerializeAs = typeof(EntityType))]
         public IEntityType? Parent { get; set; } = null;
     }
 }

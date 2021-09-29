@@ -5,12 +5,8 @@ namespace RLEngine.Serialization.Yaml.Utils
 {
     public static class IEmiterExtensions
     {
-        public static void Format(this IEmitter emitter, string value)
-        {
-            Format(emitter, value, EmitterStyle.Standard);
-        }
-
-        public static void Format(this IEmitter emitter, string value, EmitterStyle style)
+        public static void Format(this IEmitter emitter,
+        string value, ParseStyle style = ParseStyle.Standard)
         {
             if (value.Length == 0)
             {
@@ -18,11 +14,11 @@ namespace RLEngine.Serialization.Yaml.Utils
                 return;
             }
 
-            if (style == EmitterStyle.String)
+            if (style == ParseStyle.String)
             {
                 emitter.Emit(new Scalar(null, null, value, ScalarStyle.DoubleQuoted, true, false));
             }
-            else if (style == EmitterStyle.ID)
+            else if (style == ParseStyle.ID)
             {
                 emitter.Emit(new Scalar("$" + value));
             }

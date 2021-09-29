@@ -17,7 +17,7 @@ namespace RLEngine.Serialization.Yaml
 {
     public class GenericWritter
     {
-        private readonly SerializationQueue serializationQueue;
+        private readonly SerializationQueue<IIdentifiable> serializationQueue;
         private readonly IEffectWritter effectWritter;
         private readonly Type[] inlineTypes = new[]
         {
@@ -26,7 +26,7 @@ namespace RLEngine.Serialization.Yaml
             typeof(Size),
         };
 
-        public GenericWritter(SerializationQueue serializationQueue)
+        public GenericWritter(SerializationQueue<IIdentifiable> serializationQueue)
         {
             this.serializationQueue = serializationQueue;
             effectWritter = new IEffectWritter(this);
@@ -55,7 +55,7 @@ namespace RLEngine.Serialization.Yaml
             }
             else if (type == typeof(string))
             {
-                emitter.Format(value.ToString(), EmitterStyle.String);
+                emitter.Format(value.ToString(), ParseStyle.String);
             }
             else if (typeof(IEnumerable).IsAssignableFrom(type))
             {
@@ -76,7 +76,7 @@ namespace RLEngine.Serialization.Yaml
             {
                 var identifiable = (IIdentifiable)value;
                 serializationQueue.Enqueue(identifiable, type);
-                emitter.Format(identifiable.ID, EmitterStyle.ID);
+                emitter.Format(identifiable.ID, ParseStyle.ID);
             }
             else
             {

@@ -1,6 +1,6 @@
 ﻿namespace RLEngine.Serialization.Yaml.Utils
 {
-    public enum EmitterStyle
+    public enum ParseStyle
     {
         Standard,
         String,

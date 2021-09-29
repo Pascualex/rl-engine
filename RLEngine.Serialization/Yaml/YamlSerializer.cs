@@ -1,4 +1,7 @@
-﻿using RLEngine.Games;
+﻿using RLEngine.Serialization.Yaml.Utils;
+using RLEngine.Serialization.Utils;
+
+using RLEngine.Games;
 using RLEngine.Utils;
 
 using System;
@@ -10,27 +13,28 @@ namespace RLEngine.Serialization.Yaml
     {
         public static void Serialize(IGameContent gameContent)
         {
-            var serializationQueue = new SerializationQueue();
-            var genericWritter = new GenericWritter(serializationQueue);
+            var serializationQueue = new SerializationQueue<IIdentifiable>();
+            var writter = new GenericWritter(serializationQueue);
 
             Directory.CreateDirectory(gameContent.ID);
-            Serialize(genericWritter, gameContent.ID, gameContent, typeof(IGameContent));
+            Serialize(writter, gameContent.ID, gameContent, typeof(IGameContent));
             while (serializationQueue.Count > 0)
             {
                 var (element, type) = serializationQueue.Dequeue();
-                var path = Path.Combine(gameContent.ID, SerializationPaths.Get(type));
-                Serialize(genericWritter, path, element, type);
+                var typePath = Path.Combine(gameContent.ID, SerializationPaths.Get(type));
+                Serialize(writter, typePath, element, type);
             }
         }
 
-        private static void Serialize(GenericWritter genericWritter,
+        private static void Serialize(GenericWritter writter,
         string path, IIdentifiable element, Type type)
         {
             Directory.CreateDirectory(path);
             if (element.ID.Length == 0) throw new ArgumentNullException();
+            if (element.ID == DefaultID.Value) throw new ArgumentNullException();
             var filename = element.ID + ".yml";
-            using var sw = new StreamWriter(Path.Combine(path, filename));
-            genericWritter.WriteObject(sw, element, type);
+            using var streamWriter = new StreamWriter(Path.Combine(path, filename));
+            writter.WriteObject(streamWriter, element, type);
         }
     }
 }

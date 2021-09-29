@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public class SerializationQueue
+    public class SerializationQueue<T> where T : IIdentifiable
     {
-        private readonly Queue<(IIdentifiable, Type)> queue = new();
-        private readonly Dictionary<Type, Dictionary<string, IIdentifiable>> discovered = new();
+        private readonly Queue<(T, Type)> queue = new();
+        private readonly Dictionary<Type, Dictionary<string, T>> discovered = new();
 
         public int Count => queue.Count;
 
-        public void Enqueue(IIdentifiable identifiable, Type type)
+        public void Enqueue(T identifiable, Type type)
         {
             if (!discovered.TryGetValue(type, out var discoveredForType))
             {
@@ -22,7 +22,7 @@ namespace RLEngine.Serialization.Yaml
 
             if (discoveredForType.TryGetValue(identifiable.ID, out var present))
             {
-                if (identifiable != present)
+                if (!Equals(identifiable, present))
                 {
                     var message = $"For type {type} the ID \"{identifiable.ID} already exists\"";
                     throw new InvalidOperationException(message);
@@ -35,9 +35,19 @@ namespace RLEngine.Serialization.Yaml
             }
         }
 
-        public (IIdentifiable, Type) Dequeue()
+        public (T, Type) Dequeue()
         {
             return queue.Dequeue();
+        }
+
+        public bool TryGetValue(string id, Type type, out T value)
+        {
+            if (discovered.TryGetValue(type, out var discoveredForType))
+            {
+                return discoveredForType.TryGetValue(id, out value);
+            }
+            value = default!;
+            return false;
         }
     }
 }

@@ -1,62 +1,39 @@
 ﻿using RLEngine.Serialization.Games;
-using RLEngine.Serialization.Abilities;
-using RLEngine.Serialization.Boards;
-using RLEngine.Serialization.Entities;
+using RLEngine.Serialization.Yaml.Utils;
 using RLEngine.Serialization.Utils;
 
-using RLEngine.Utils;
-
-using System.Collections.Generic;
+using System;
 using System.IO;
-using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public class YamlDeserializer
+    public static class YamlDeserializer
     {
-        private readonly IDeserializer deserializer;
-
-        public YamlDeserializer()
+        public static GameContent Deserialize(string path)
         {
-            deserializer = new DeserializerBuilder()
-                .WithTypeConverter(new CustomTCDeserializer())
-                .Build();
+            var serializationQueue = new SerializationQueue<Deserializable>();
+            var reader = new GenericReader(serializationQueue);
+
+            var gameContentID = Path.GetFileName(path);
+            var gameContent = new GameContent { ID = gameContentID };
+            Deserialize(reader, path, gameContent, typeof(GameContent));
+            while (serializationQueue.Count > 0)
+            {
+                var (target, type) = serializationQueue.Dequeue();
+                var typePath = Path.Combine(gameContent.ID, SerializationPaths.Get(type));
+                Deserialize(reader, typePath, target, type);
+            }
+            return gameContent;
         }
 
-        public GameContent Deserialize(string path)
+        public static void Deserialize(GenericReader reader,
+        string path, Deserializable target, Type type)
         {
-            var boardSize = new Size(10, 10);
-            var floorType = new TileType() { ID = "Floor", Name = "Floor" };
-            var wallType = new TileType { ID = "Wall", Name = "Wall", BlocksGround = true, BlocksAir = true };
-            var humanType = new EntityType { ID = "Human", Name = "Human", IsAgent = true };
-            var playerType = new EntityType
-            { ID = "Hero", Name = "Hero", MaxHealth = 200, Parent = humanType };
-            var goblinType = new EntityType { ID = "Goblin", Name = "Goblin", IsAgent = true };
-            Ability? ability = null;
-            foreach (var serializedAbility in Deserialize<Ability>(Path.Combine(path, "Abilities")))
-            {
-                ability = serializedAbility;
-            }
-            return new GameContent
-            (
-                boardSize,
-                floorType,
-                wallType,
-                playerType,
-                goblinType,
-                ability!
-            );
-        }
-
-        public IEnumerable<T> Deserialize<T>(string path) where T : IDeserializable
-        {
-            foreach (var filepath in Directory.GetFiles(path))
-            {
-                var yamlString = File.ReadAllText(filepath);
-                var contentElement = deserializer.Deserialize<T>(yamlString);
-                contentElement.ID = Path.GetFileNameWithoutExtension(filepath);
-                yield return contentElement;
-            }
+            if (target.ID.Length == 0) throw new ArgumentNullException();
+            if (target.ID == DefaultID.Value) throw new ArgumentNullException();
+            var filename = target.ID + ".yml";
+            using var streamReader = new StreamReader(Path.Combine(path, filename));
+            reader.ReadObject(streamReader, type, target);
         }
     }
 }
