@@ -19,9 +19,9 @@ namespace RLEngine.Abilities
             entities.Add("caster", caster);
         }
 
-        public bool TryGetTarget(string id, out Entity target)
+        public bool TryGetEntity(string id, out Entity entity)
         {
-            return entities.TryGetValue(id, out target);
+            return entities.TryGetValue(id, out entity);
         }
     }
 }

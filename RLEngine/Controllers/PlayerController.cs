@@ -6,7 +6,7 @@ using RLEngine.State;
 using RLEngine.Entities;
 using RLEngine.Utils;
 
-using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace RLEngine.Controllers
@@ -65,7 +65,11 @@ namespace RLEngine.Controllers
 
         public Log? CastSpell(Entity entity, GameState state, AbilityInput abilityInput)
         {
-            return abilityInput.Ability.Cast(entity, entity, state);
+            if (!state.Board.TryGetCoords(entity, out var position)) return null;
+            var targetPosition = position + abilityInput.Coords;
+            var entities = state.Board.GetEntities(targetPosition);
+            if (!entities.Any()) return null;
+            return abilityInput.Ability.Cast(entity, entities.First(), state);
         }
     }
 }

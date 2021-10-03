@@ -58,9 +58,8 @@ namespace RLEngine.Runner
             var action = words[0];
 
             var ability = game.Content.Ability;
-            if (action == "e" || action == "exit") return true;
+            if      (action == "e" || action ==   "exit") return true;
             else if (action == "a" || action == "attack") input = new AttackInput();
-            else if (action == "s" || action == "spell") input = new AbilityInput(ability);
 
             if (input != null) return true;
 
@@ -68,14 +67,15 @@ namespace RLEngine.Runner
             var dir = words[1];
 
             Coords coords = Coords.Zero;
-            if      (dir == "u" ||    dir == "up") coords =    Coords.Up;
+            if      (dir == "u" || dir ==    "up") coords =    Coords.Up;
             else if (dir == "r" || dir == "right") coords = Coords.Right;
             else if (dir == "d" || dir ==  "down") coords =  Coords.Down;
             else if (dir == "l" || dir ==  "left") coords =  Coords.Left;
 
             if (coords == Coords.Zero) return false;
 
-            if (action == "m" || action == "move") input = new MoveInput(coords, true);
+            if      (action == "m" || action ==   "move") input = new MoveInput(coords, true);
+            else if (action == "s" || action ==  "spell") input = new AbilityInput(ability, coords);
 
             return input != null;
         }
