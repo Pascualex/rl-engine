@@ -1,10 +1,14 @@
-type: target
 cost: 100
+targetType: entity
 effect:
   type: combined
   isParallel: false
   effects:
   - type: damage
     amount: {base: 20}
+    target: "target"
+    source: "caster"
   - type: damage
     amount: {base: 5}
+    target: "caster"
+    source: "target"

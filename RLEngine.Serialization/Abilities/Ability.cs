@@ -8,8 +8,8 @@ namespace RLEngine.Serialization.Abilities
 {
     public class Ability : Deserializable, IAbility
     {
-        public AbilityType Type { get; set; } = AbilityType.SelfTarget;
         public int Cost { get; set; } = 0;
+        public TargetType TargetType { get; set; } = TargetType.Self;
         [YamlMember(SerializeAs = typeof(Effect))]
         public IEffect Effect { get; set; } = new Effect();
     }

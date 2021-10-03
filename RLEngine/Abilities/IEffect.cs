@@ -10,5 +10,7 @@ namespace RLEngine.Abilities
         IEnumerable<IEffect> Effects { get; }
         bool IsParallel { get; }
         ActionAmount Amount { get; }
+        string Target { get; }
+        string Source { get; }
     }
 }

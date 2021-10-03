@@ -40,22 +40,19 @@ namespace RLEngine.Serialization.Yaml
 
         private object Read(IParser parser, Type type, object? target, bool root)
         {
-            if (!root && typeof(Deserializable).IsAssignableFrom(type))
+            if (type.IsPrimitive || type.IsEnum)
             {
-                var id = parser.Formatted(ParseStyle.ID);
-                if (serializationQueue.TryGetValue(id, type, out var value)) return value;
-                value = (Deserializable)(target ?? Activator.CreateInstance(type));
-                value.ID = id;
-                serializationQueue.Enqueue(value, type);
-                return value;
-            }
-            else if (parser.TryFormatted(out var valueStr))
-            {
+                var valueStr = parser.Formatted();
                 var typeDescriptor = TypeDescriptor.GetConverter(type);
                 return typeDescriptor.ConvertFromInvariantString(valueStr);
             }
-            else if (parser.TryConsume<SequenceStart>(out _))
+            else if (type == typeof(string))
             {
+                return parser.Formatted(ParseStyle.String);
+            }
+            else if (typeof(IEnumerable).IsAssignableFrom(type))
+            {
+                parser.Consume<SequenceStart>();
                 var value = (IList)(target ?? Activator.CreateInstance(type));
                 var elementType = type.GetGenericArguments().Single();
                 while (!parser.TryConsume<SequenceEnd>(out _))
@@ -65,8 +62,18 @@ namespace RLEngine.Serialization.Yaml
                 }
                 return value;
             }
-            else if (parser.TryConsume<MappingStart>(out _))
+            else if (!root && typeof(Deserializable).IsAssignableFrom(type))
             {
+                var id = parser.Formatted(ParseStyle.ID);
+                if (serializationQueue.TryGetValue(id, type, out var value)) return value;
+                value = (Deserializable)(target ?? Activator.CreateInstance(type));
+                value.ID = id;
+                serializationQueue.Enqueue(value, type);
+                return value;
+            }
+            else
+            {
+                parser.Consume<MappingStart>();
                 var value = target ?? Activator.CreateInstance(type);
                 while (!parser.TryConsume<MappingEnd>(out _))
                 {
@@ -78,10 +85,6 @@ namespace RLEngine.Serialization.Yaml
                     propertyInfo.SetValue(value, propertyValue);
                 }
                 return value;
-            }
-            else
-            {
-                throw new FormatException();
             }
         }
 

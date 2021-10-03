@@ -4,8 +4,8 @@ namespace RLEngine.Abilities
 {
     public interface IAbility : IIdentifiable
     {
-        AbilityType Type { get; }
         int Cost { get; }
+        TargetType TargetType { get; }
         IEffect Effect { get; }
     }
 }

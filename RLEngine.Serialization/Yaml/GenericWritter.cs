@@ -18,7 +18,7 @@ namespace RLEngine.Serialization.Yaml
     public class GenericWritter
     {
         private readonly SerializationQueue<IIdentifiable> serializationQueue;
-        private readonly IEffectWritter effectWritter;
+        private readonly EffectWritter effectWritter;
         private readonly Type[] inlineTypes = new[]
         {
             typeof(ActionAmount),
@@ -29,7 +29,7 @@ namespace RLEngine.Serialization.Yaml
         public GenericWritter(SerializationQueue<IIdentifiable> serializationQueue)
         {
             this.serializationQueue = serializationQueue;
-            effectWritter = new IEffectWritter(this);
+            effectWritter = new EffectWritter(this);
         }
 
         public void WriteObject(TextWriter textWriter, object value, Type type)
@@ -49,13 +49,7 @@ namespace RLEngine.Serialization.Yaml
 
         private void Write(IEmitter emitter, object value, Type type, bool root)
         {
-            if (!root && typeof(IIdentifiable).IsAssignableFrom(type))
-            {
-                var identifiable = (IIdentifiable)value;
-                serializationQueue.Enqueue(identifiable, type);
-                emitter.Format(identifiable.ID, ParseStyle.ID);
-            }
-            else if (type.IsPrimitive || type.IsEnum)
+            if (type.IsPrimitive || type.IsEnum)
             {
                 emitter.Format(value.ToString());
             }
@@ -77,6 +71,12 @@ namespace RLEngine.Serialization.Yaml
             else if (typeof(IEffect).IsAssignableFrom(type))
             {
                 effectWritter.WriteField(emitter, (IEffect)value);
+            }
+            else if (!root && typeof(IIdentifiable).IsAssignableFrom(type))
+            {
+                var identifiable = (IIdentifiable)value;
+                serializationQueue.Enqueue(identifiable, type);
+                emitter.Format(identifiable.ID, ParseStyle.ID);
             }
             else
             {

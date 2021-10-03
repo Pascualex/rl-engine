@@ -1,5 +1,5 @@
 name: "Hero"
-isAgent: false
+isAgent: true
 maxHealth: 200
 speed: 100
 blocksGround: true

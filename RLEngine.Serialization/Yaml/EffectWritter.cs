@@ -10,7 +10,7 @@ using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Yaml
 {
-    public class IEffectWritter
+    public class EffectWritter
     {
         private readonly GenericWritter genericWritter;
         private readonly Dictionary<EffectType, string[]> filter = new()
@@ -28,11 +28,13 @@ namespace RLEngine.Serialization.Yaml
                 new[]
                 {
                     nameof(IEffect.Amount),
+                    nameof(IEffect.Target),
+                    nameof(IEffect.Source),
                 }
             },
         };
 
-        public IEffectWritter(GenericWritter CustomTCSerializer)
+        public EffectWritter(GenericWritter CustomTCSerializer)
         {
             genericWritter = CustomTCSerializer;
         }

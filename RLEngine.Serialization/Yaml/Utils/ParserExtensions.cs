@@ -9,8 +9,10 @@ namespace RLEngine.Serialization.Yaml.Utils
         {
             var value = parser.Consume<Scalar>().Value;
             if (value.Length == 0) return string.Empty;
-            if (style == ParseStyle.ID) return value.Substring(1);
-            else return char.ToUpperInvariant(value[0]) + value.Substring(1);
+            if (style == ParseStyle.Standard)
+                return char.ToUpperInvariant(value[0]) + value.Substring(1);
+            else if (style == ParseStyle.ID) return value.Substring(1);
+            else return value;
         }
 
         public static bool TryFormatted(this IParser parser,
@@ -20,8 +22,9 @@ namespace RLEngine.Serialization.Yaml.Utils
             if (!parser.TryConsume<Scalar>(out var scalar)) return false;
             value = scalar.Value;
             if (value.Length == 0) return false;
-            if (style == ParseStyle.ID) value = value.Substring(1);
-            else value = char.ToUpperInvariant(value[0]) + value.Substring(1);
+            if (style == ParseStyle.Standard)
+                value = char.ToUpperInvariant(value[0]) + value.Substring(1);
+            else if (style == ParseStyle.ID) value = value.Substring(1);
             return true;
         }
     }
