@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace RLEngine.Tests.Utils
 {
-    public static class ObjectExtension
+    public static class ObjectExtensions
     {
         public static T FailIfNull<T>(this T? obj)
         {

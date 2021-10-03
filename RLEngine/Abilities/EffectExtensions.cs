@@ -7,7 +7,7 @@ using System;
 
 namespace RLEngine.Abilities
 {
-    public static class IEffectExtension
+    public static class EffectExtensions
     {
         public static Log? Cast(this IEffect effect,
         Entity caster, Entity target, GameState state) => effect.Type switch

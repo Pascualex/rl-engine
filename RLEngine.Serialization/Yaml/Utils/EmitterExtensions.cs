@@ -3,7 +3,7 @@ using YamlDotNet.Core.Events;
 
 namespace RLEngine.Serialization.Yaml.Utils
 {
-    public static class IEmiterExtensions
+    public static class EmitterExtensions
     {
         public static void Format(this IEmitter emitter,
         string value, ParseStyle style = ParseStyle.Standard)

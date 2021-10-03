@@ -4,7 +4,7 @@ using RLEngine.Entities;
 
 namespace RLEngine.Abilities
 {
-    public static class IAbilityExtensions
+    public static class AbilityExtensions
     {
         public static Log? Cast(this IAbility ability, Entity caster, Entity target, GameState state)
         {

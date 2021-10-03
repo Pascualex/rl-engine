@@ -2,6 +2,7 @@
 {
     public enum AbilityType
     {
-        Target,
+        SelfTarget,
+        EntityTarget,
     }
 }
