@@ -13,7 +13,7 @@ namespace RLEngine.Serialization.Abilities
         public IEnumerable<IEffect> Effects { get; set; } = new List<Effect>();
         public bool IsParallel { get; set; } = false;
         public ActionAmount Amount { get; set; } = new();
-        public string Target { get; set; } = "NO_TARGET";
-        public string Source { get; set; } = "NO_SOURCE";
+        public string Target { get; set; } = string.Empty;
+        public string Source { get; set; } = string.Empty;
     }
 }

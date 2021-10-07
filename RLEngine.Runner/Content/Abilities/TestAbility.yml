@@ -4,8 +4,6 @@ effects:
 - type: damage
   amount: {base: 20}
   target: "target"
-  source: "caster"
 - type: damage
   amount: {base: 5}
   target: "caster"
-  source: "target"

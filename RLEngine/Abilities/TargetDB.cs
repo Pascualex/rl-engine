@@ -19,8 +19,21 @@ namespace RLEngine.Abilities
             entities.Add("caster", caster);
         }
 
+        public void Add(string id, Entity entity)
+        {
+            if (id.Length == 0) return;
+            entities.Add(id, entity);
+        }
+
+        public Entity? GetEntity(string id)
+        {
+            return TryGetEntity(id, out var entity) ? entity : null;
+        }
+
         public bool TryGetEntity(string id, out Entity entity)
         {
+            entity = null!;
+            if (id.Length == 0) return false;
             return entities.TryGetValue(id, out entity);
         }
     }

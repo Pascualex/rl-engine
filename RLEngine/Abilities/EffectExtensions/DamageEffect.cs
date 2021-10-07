@@ -13,7 +13,7 @@ namespace RLEngine.Abilities
             if (effect.Amount is null) return null;
 
             if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();
-            if (!targetDB.TryGetEntity(effect.Source, out var attacker)) throw new NRE();
+            var attacker = targetDB.GetEntity(effect.Source);
 
             return state.Damage(target, attacker, effect.Amount);
         }

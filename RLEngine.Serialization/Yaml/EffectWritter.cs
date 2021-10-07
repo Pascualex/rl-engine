@@ -13,7 +13,7 @@ namespace RLEngine.Serialization.Yaml
     public class EffectWritter
     {
         private readonly GenericWritter genericWritter;
-        private readonly Dictionary<EffectType, string[]> filter = new()
+        private readonly Dictionary<EffectType, string[]> effectTypesFields = new()
         {
             {
                 EffectType.Combined,
@@ -33,6 +33,10 @@ namespace RLEngine.Serialization.Yaml
                 }
             },
         };
+        private readonly Dictionary<string, object> ignoreFilter = new()
+        {
+            { nameof(IEffect.Source), string.Empty },
+        };
 
         public EffectWritter(GenericWritter CustomTCSerializer)
         {
@@ -46,11 +50,13 @@ namespace RLEngine.Serialization.Yaml
             emitter.Format(nameof(effect.Type));
             genericWritter.WriteField(emitter, effect.Type, typeof(EffectType));
 
-            foreach (var propertyName in filter[effect.Type])
+            foreach (var propertyName in effectTypesFields[effect.Type])
             {
                 var propertyInfo = typeof(IEffect).GetProperty(propertyName);
                 var propertyValue = (object?)propertyInfo.GetValue(effect);
-                if (propertyValue is null) continue;
+                if (propertyValue == null) continue;
+                var hasIgnoreFilter = ignoreFilter.TryGetValue(propertyName, out var ignoreValue);
+                if (hasIgnoreFilter && propertyValue == ignoreValue) continue;
                 emitter.Format(propertyName);
                 genericWritter.WriteField(emitter, propertyValue, propertyInfo.PropertyType);
             }
