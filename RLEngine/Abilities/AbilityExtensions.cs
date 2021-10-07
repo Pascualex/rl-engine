@@ -13,7 +13,12 @@ namespace RLEngine.Abilities
             if (ability.TargetType != TargetType.Entity) throw new InvalidOperationException();
 
             var targetDB = new TargetDB(caster, target);
-            return ability.Effect.Cast(targetDB, state);
+            var log = new CombinedLog(false);
+            foreach (var effect in ability.Effects)
+            {
+                log.Add(effect.Cast(targetDB, state));
+            }
+            return log;
         }
     }
 }

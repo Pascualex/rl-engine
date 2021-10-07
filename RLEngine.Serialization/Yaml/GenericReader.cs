@@ -107,7 +107,7 @@ namespace RLEngine.Serialization.Yaml
                 if (member.Alias == propertyName) return aliasPropertyInfo;
             }
 
-            throw new FormatException();
+            throw new DeserializationException(type, propertyName);
         }
 
         private Type GetSerializationType(PropertyInfo propertyInfo)

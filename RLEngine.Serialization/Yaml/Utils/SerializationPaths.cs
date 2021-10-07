@@ -13,7 +13,7 @@ namespace RLEngine.Serialization.Yaml.Utils
             if (typeof(IAbility).IsAssignableFrom(type)) return "Abilities";
             if (typeof(ITileType).IsAssignableFrom(type)) return "TileTypes";
             if (typeof(IEntityType).IsAssignableFrom(type)) return "EntityTypes";
-            throw new UnsupportedTypeException(type);
+            throw new SerializationPathException(type);
         }
     }
 }

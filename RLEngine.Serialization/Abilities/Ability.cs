@@ -2,6 +2,7 @@
 
 using RLEngine.Abilities;
 
+using System.Collections.Generic;
 using YamlDotNet.Serialization;
 
 namespace RLEngine.Serialization.Abilities
@@ -10,7 +11,7 @@ namespace RLEngine.Serialization.Abilities
     {
         public int Cost { get; set; } = 0;
         public TargetType TargetType { get; set; } = TargetType.Self;
-        [YamlMember(SerializeAs = typeof(Effect))]
-        public IEffect Effect { get; set; } = new Effect();
+        [YamlMember(SerializeAs = typeof(IList<Effect>))]
+        public IEnumerable<IEffect> Effects { get; set; } = new List<Effect>();
     }
 }
