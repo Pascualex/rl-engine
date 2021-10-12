@@ -12,12 +12,12 @@ namespace RLEngine.Abilities
     {
         public string ID { get; init; } = string.Empty;
         public int Cost { get; init; } = 0;
-        public TargetType TargetType { get; init; } = TargetType.Unset;
+        public AbilityType Type { get; init; } = AbilityType.Unset;
         public IEnumerable<Effect> Effects { get; init; } = new List<Effect>();
 
         public Log? Cast(Entity caster, Entity target, GameState state)
         {
-            if (TargetType != TargetType.Entity) throw new InvalidOperationException();
+            if (Type != AbilityType.Entity) throw new InvalidOperationException();
 
             var targetDB = new TargetDB(caster, target);
             var log = new CombinedLog(false);
