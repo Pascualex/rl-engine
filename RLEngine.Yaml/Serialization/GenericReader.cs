@@ -6,11 +6,9 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.ComponentModel;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
-using YamlDotNet.Serialization;
 
 namespace RLEngine.Yaml.Serialization
 {
@@ -68,8 +66,7 @@ namespace RLEngine.Yaml.Serialization
                 var id = parser.Formatted(ParseStyle.ID);
                 if (serializationQueue.TryGetValue(id, type, out var value)) return value;
                 value = (IIdentifiable)(target ?? Activator.CreateInstance(type));
-                var idProperty = GetPropertyOrAlias(type, nameof(IIdentifiable.ID));
-                idProperty.SetValue(value, id);
+                type.GetPublicProperty(nameof(IIdentifiable.ID)).SetValue(value, id);
                 serializationQueue.Enqueue(value, type);
                 return value;
             }
@@ -80,43 +77,14 @@ namespace RLEngine.Yaml.Serialization
                 while (!parser.TryConsume<MappingEnd>(out _))
                 {
                     var propertyName = parser.Formatted();
-                    var propertyInfo = GetPropertyOrAlias(type, propertyName);
-                    var propertyType = GetSerializationType(propertyInfo);
+                    var propertyInfo = type.GetPublicProperty(propertyName);
+                    var propertyType = propertyInfo.PropertyType;
                     var propertyTarget = propertyInfo.GetValue(value);
                     var propertyValue = ReadField(parser, propertyType, propertyTarget);
                     propertyInfo.SetValue(value, propertyValue);
                 }
                 return value;
             }
-        }
-
-        private PropertyInfo GetPropertyOrAlias(Type type, string propertyName)
-        {
-            var propertyInfo = type.GetPublicProperty(propertyName);
-            if (propertyInfo is not null)
-            {
-                var ignore = propertyInfo.GetCustomAttribute(typeof(YamlIgnoreAttribute));
-                if (ignore is null) return propertyInfo;
-            }
-
-            var aliasPropertiesInfo = type.GetPublicProperties()
-                .Where(x => Attribute.IsDefined(x, typeof(YamlMemberAttribute)));
-
-            foreach (var aliasPropertyInfo in aliasPropertiesInfo)
-            {
-                var attribute = aliasPropertyInfo.GetCustomAttribute(typeof(YamlMemberAttribute));
-                var member = (YamlMemberAttribute)attribute;
-                if (member.Alias == propertyName) return aliasPropertyInfo;
-            }
-
-            throw new DeserializationException(type, propertyName);
-        }
-
-        private Type GetSerializationType(PropertyInfo propertyInfo)
-        {
-            var attribute = propertyInfo.GetCustomAttribute(typeof(YamlMemberAttribute));
-            var member = (YamlMemberAttribute?)attribute;
-            return member?.SerializeAs ?? propertyInfo.PropertyType;
         }
     }
 }

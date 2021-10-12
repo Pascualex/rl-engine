@@ -8,10 +8,8 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
-using YamlDotNet.Serialization;
 
 namespace RLEngine.Yaml.Serialization
 {
@@ -86,13 +84,9 @@ namespace RLEngine.Yaml.Serialization
                 foreach (var propertyInfo in type.GetPublicProperties())
                 {
                     if (isIdentifiable && propertyInfo.Name == nameof(IIdentifiable.ID)) continue;
-                    var ignore = propertyInfo.GetCustomAttribute(typeof(YamlIgnoreAttribute));
-                    if (ignore is not null) continue;
                     var propertyValue = (object?)propertyInfo.GetValue(value);
                     if (propertyValue is null) continue;
-                    var member = propertyInfo.GetCustomAttribute(typeof(YamlMemberAttribute))
-                        as YamlMemberAttribute;
-                    emitter.Format(member?.Alias ?? propertyInfo.Name);
+                    emitter.Format(propertyInfo.Name);
                     WriteField(emitter, propertyValue, propertyInfo.PropertyType);
                 }
                 emitter.Emit(new MappingEnd());
