@@ -1,6 +1,7 @@
 ﻿using RLEngine.Yaml.Utils;
 
 using RLEngine.Abilities;
+using RLEngine.Utils;
 
 using System;
 using System.Collections.Generic;
@@ -13,30 +14,6 @@ namespace RLEngine.Yaml.Serialization
     public class EffectWritter
     {
         private readonly GenericWritter genericWritter;
-        private readonly Dictionary<EffectType, string[]> effectTypesFields = new()
-        {
-            {
-                EffectType.Combined,
-                new[]
-                {
-                    nameof(Effect.IsParallel),
-                    nameof(Effect.Effects),
-                }
-            },
-            {
-                EffectType.Damage,
-                new[]
-                {
-                    nameof(Effect.Amount),
-                    nameof(Effect.Target),
-                    nameof(Effect.Source),
-                }
-            },
-        };
-        private readonly Dictionary<string, object> ignoreFilter = new()
-        {
-            { nameof(Effect.Source), string.Empty },
-        };
 
         public EffectWritter(GenericWritter CustomTCSerializer)
         {
@@ -50,14 +27,20 @@ namespace RLEngine.Yaml.Serialization
             emitter.Format(nameof(effect.Type));
             genericWritter.WriteField(emitter, effect.Type, typeof(EffectType));
 
-            foreach (var propertyName in effectTypesFields[effect.Type])
+            var effectType = effect.GetEffectType();
+            if (effectType is null)
             {
-                var propertyInfo = typeof(Effect).GetProperty(propertyName);
+                emitter.Emit(new MappingEnd());
+                return;
+            }
+
+            foreach (var propertyInfo in effectType.GetPublicProperties())
+            {
+                if (propertyInfo.Name == nameof(IIdentifiable.ID)) continue;
                 var propertyValue = (object?)propertyInfo.GetValue(effect);
-                if (propertyValue == null) continue;
-                var hasIgnoreFilter = ignoreFilter.TryGetValue(propertyName, out var ignoreValue);
-                if (hasIgnoreFilter && propertyValue == ignoreValue) continue;
-                emitter.Format(propertyName);
+                if (propertyValue is null) continue;
+                if (propertyValue is string str && str.Length == 0) continue;
+                emitter.Format(propertyInfo.Name);
                 genericWritter.WriteField(emitter, propertyValue, propertyInfo.PropertyType);
             }
 

@@ -6,9 +6,10 @@ using NRE = System.NullReferenceException;
 
 namespace RLEngine.Abilities
 {
-    public static class DamageEffect
+    public static class DamageEffectExtensions
     {
-        public static Log? CastDamage(this Effect effect, TargetDB targetDB, GameState state)
+        public static Log? CastDamage(this IDamageEffect effect,
+        TargetDB targetDB, GameState state)
         {
             if (effect.Amount is null) return null;
 

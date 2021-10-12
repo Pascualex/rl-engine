@@ -17,7 +17,6 @@ namespace RLEngine.Runner
             var propertyInfo = typeof(GameContent).GetPublicProperty(nameof(IIdentifiable.ID));
             propertyInfo.SetValue(gameContent, "ContentCopy");
             YamlSerializer.Serialize(gameContent);
-            Console.WriteLine(gameContent);
 
             var game = new Game(gameContent);
             var logger = new Logger(250);
