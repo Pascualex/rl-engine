@@ -1,7 +1,7 @@
 ﻿using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 
-namespace RLEngine.Serialization.Yaml.Utils
+namespace RLEngine.Yaml.Utils
 {
     public static class ParserExtensions
     {

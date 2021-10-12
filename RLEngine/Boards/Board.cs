@@ -11,7 +11,7 @@ namespace RLEngine.Boards
         private readonly Tile[][] tiles;
         private readonly Dictionary<Entity, Coords> entities = new();
 
-        public Board(Size size, ITileType defaultTileType)
+        public Board(Size size, TileType defaultTileType)
         {
             Size = size;
             tiles = new Tile[Size.Y][];
@@ -63,7 +63,7 @@ namespace RLEngine.Boards
             return true;
         }
 
-        public bool Modify(ITileType tileType, Coords at)
+        public bool Modify(TileType tileType, Coords at)
         {
             if (!Size.Contains(at)) return false;
 
@@ -90,7 +90,7 @@ namespace RLEngine.Boards
             return entities.ContainsKey(entity);
         }
 
-        public bool CanModify(ITileType tileType, Coords at)
+        public bool CanModify(TileType tileType, Coords at)
         {
             if (!Size.Contains(at)) return false;
             return tiles[at.Y][at.X].CanModify(tileType);
@@ -108,7 +108,7 @@ namespace RLEngine.Boards
             return tiles[at.Y][at.X].Entities;
         }
 
-        public ITileType? GetTileType(Coords at)
+        public TileType? GetTileType(Coords at)
         {
             if (!Size.Contains(at)) return null;
 

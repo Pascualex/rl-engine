@@ -16,16 +16,16 @@ namespace RLEngine.Games
         private readonly AIController aiController = new();
         private readonly GameState state;
 
-        public Game(IGameContent content)
+        public Game(GameContent content)
         : this(new(content.BoardSize, content.FloorType), content) { }
 
-        public Game(GameState state, IGameContent content)
+        public Game(GameState state, GameContent content)
         {
             this.state = state;
             Content = content;
         }
 
-        public IGameContent Content { get; }
+        public GameContent Content { get; }
 
         public PlayerInput? Input
         {

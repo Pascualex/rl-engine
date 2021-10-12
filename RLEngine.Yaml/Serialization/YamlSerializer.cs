@@ -1,5 +1,4 @@
-﻿using RLEngine.Serialization.Yaml.Utils;
-using RLEngine.Serialization.Utils;
+﻿using RLEngine.Yaml.Utils;
 
 using RLEngine.Games;
 using RLEngine.Utils;
@@ -7,17 +6,17 @@ using RLEngine.Utils;
 using System;
 using System.IO;
 
-namespace RLEngine.Serialization.Yaml
+namespace RLEngine.Yaml.Serialization
 {
     public static class YamlSerializer
     {
-        public static void Serialize(IGameContent gameContent)
+        public static void Serialize(GameContent gameContent)
         {
-            var serializationQueue = new SerializationQueue<IIdentifiable>();
+            var serializationQueue = new SerializationQueue();
             var writter = new GenericWritter(serializationQueue);
 
             Directory.CreateDirectory(gameContent.ID);
-            Serialize(writter, gameContent.ID, gameContent, typeof(IGameContent));
+            Serialize(writter, gameContent.ID, gameContent, typeof(GameContent));
             while (serializationQueue.Count > 0)
             {
                 var (element, type) = serializationQueue.Dequeue();
@@ -31,7 +30,6 @@ namespace RLEngine.Serialization.Yaml
         {
             Directory.CreateDirectory(path);
             if (element.ID.Length == 0) throw new ArgumentNullException();
-            if (element.ID == DefaultID.Value) throw new ArgumentNullException();
             var filename = element.ID + ".yml";
             using var streamWriter = new StreamWriter(Path.Combine(path, filename));
             writter.WriteObject(streamWriter, element, type);

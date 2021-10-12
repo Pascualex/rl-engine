@@ -29,7 +29,6 @@ namespace RLEngine.Tests.Entities
             Assert.That(entity.BlocksGround, Is.True);
             Assert.That(entity.BlocksAir, Is.False);
             Assert.That(entity.IsGhost, Is.False);
-            Assert.That(entity.Visuals, Is.Null);
             Assert.That(entity.Type, Is.SameAs(f.UnparentedEntityType));
             Assert.That(entity.Type.Parent, Is.Null);
         }

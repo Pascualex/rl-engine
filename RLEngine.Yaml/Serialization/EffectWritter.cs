@@ -1,4 +1,4 @@
-﻿using RLEngine.Serialization.Yaml.Utils;
+﻿using RLEngine.Yaml.Utils;
 
 using RLEngine.Abilities;
 
@@ -8,7 +8,7 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace RLEngine.Serialization.Yaml
+namespace RLEngine.Yaml.Serialization
 {
     public class EffectWritter
     {
@@ -19,23 +19,23 @@ namespace RLEngine.Serialization.Yaml
                 EffectType.Combined,
                 new[]
                 {
-                    nameof(IEffect.IsParallel),
-                    nameof(IEffect.Effects),
+                    nameof(Effect.IsParallel),
+                    nameof(Effect.Effects),
                 }
             },
             {
                 EffectType.Damage,
                 new[]
                 {
-                    nameof(IEffect.Amount),
-                    nameof(IEffect.Target),
-                    nameof(IEffect.Source),
+                    nameof(Effect.Amount),
+                    nameof(Effect.Target),
+                    nameof(Effect.Source),
                 }
             },
         };
         private readonly Dictionary<string, object> ignoreFilter = new()
         {
-            { nameof(IEffect.Source), string.Empty },
+            { nameof(Effect.Source), string.Empty },
         };
 
         public EffectWritter(GenericWritter CustomTCSerializer)
@@ -43,7 +43,7 @@ namespace RLEngine.Serialization.Yaml
             genericWritter = CustomTCSerializer;
         }
 
-        public void WriteField(IEmitter emitter, IEffect effect)
+        public void WriteField(IEmitter emitter, Effect effect)
         {
             emitter.Emit(new MappingStart(null, null, false, MappingStyle.Block));
 
@@ -52,7 +52,7 @@ namespace RLEngine.Serialization.Yaml
 
             foreach (var propertyName in effectTypesFields[effect.Type])
             {
-                var propertyInfo = typeof(IEffect).GetProperty(propertyName);
+                var propertyInfo = typeof(Effect).GetProperty(propertyName);
                 var propertyValue = (object?)propertyInfo.GetValue(effect);
                 if (propertyValue == null) continue;
                 var hasIgnoreFilter = ignoreFilter.TryGetValue(propertyName, out var ignoreValue);

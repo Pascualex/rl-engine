@@ -1,6 +1,3 @@
-using RLEngine.Serialization.Boards;
-using RLEngine.Serialization.Entities;
-
 using RLEngine.Boards;
 using RLEngine.Entities;
 
@@ -8,16 +5,16 @@ namespace RLEngine.Tests.Utils
 {
     public class ContentFixture
     {
-        public IEntityType EntityType { get; }
-        public IEntityType GroundEntityType { get; }
-        public IEntityType AgentType { get; }
-        public IEntityType SlowAgentType { get; }
-        public IEntityType FastAgentType { get; }
-        public IEntityType GhostAgentType { get; }
-        public IEntityType UnparentedEntityType { get; }
+        public EntityType EntityType { get; }
+        public EntityType GroundEntityType { get; }
+        public EntityType AgentType { get; }
+        public EntityType SlowAgentType { get; }
+        public EntityType FastAgentType { get; }
+        public EntityType GhostAgentType { get; }
+        public EntityType UnparentedEntityType { get; }
         public int StandardActionCost { get; } = 100;
-        public ITileType FloorTileType { get; }
-        public ITileType WallTileType { get; }
+        public TileType FloorTileType { get; }
+        public TileType WallTileType { get; }
 
         public ContentFixture()
         {

@@ -5,10 +5,10 @@ namespace RLEngine.Input
 {
     public class AbilityInput : PlayerInput
     {
-        public IAbility Ability { get; }
+        public Ability Ability { get; }
         public Coords Coords { get; }
 
-        public AbilityInput(IAbility ability, Coords coords)
+        public AbilityInput(Ability ability, Coords coords)
         {
             Ability = ability;
             Coords = coords;

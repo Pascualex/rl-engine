@@ -1,4 +1,5 @@
-﻿using RLEngine.Serialization.Yaml;
+﻿using RLEngine.Yaml.Serialization;
+using RLEngine.Yaml.Utils;
 
 using RLEngine.Games;
 using RLEngine.Input;
@@ -13,8 +14,10 @@ namespace RLEngine.Runner
         public static void Main()
         {
             var gameContent = YamlDeserializer.Deserialize("Content");
-            gameContent.ID = "ContentCopy";
+            var propertyInfo = typeof(GameContent).GetPublicProperty(nameof(IIdentifiable.ID));
+            propertyInfo.SetValue(gameContent, "ContentCopy");
             YamlSerializer.Serialize(gameContent);
+            Console.WriteLine(gameContent);
 
             var game = new Game(gameContent);
             var logger = new Logger(250);

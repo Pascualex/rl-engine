@@ -4,7 +4,7 @@ namespace RLEngine.Entities
 {
     public class Entity : IEntityAttributes
     {
-        public Entity(IEntityType type)
+        public Entity(EntityType type)
         {
             // TODO: support inheritance in types and overridden attributes
             Name = type.Name;
@@ -16,7 +16,6 @@ namespace RLEngine.Entities
             BlocksAir = type.BlocksAir;
             IsGhost = type.IsGhost;
             IsRoamer = type.IsRoamer;
-            Visuals = type.Visuals;
             Type = type;
         }
 
@@ -32,8 +31,7 @@ namespace RLEngine.Entities
         public bool BlocksAir { get; }
         public bool IsGhost { get; }
         public bool IsRoamer { get; }
-        public object? Visuals { get; }
-        public IEntityType Type { get; }
+        public EntityType Type { get; }
 
         public int Damage(int damage)
         {

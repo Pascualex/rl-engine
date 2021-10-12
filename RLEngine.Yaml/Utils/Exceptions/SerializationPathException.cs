@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RLEngine.Serialization.Yaml
+namespace RLEngine.Yaml.Utils
 {
     public class SerializationPathException : Exception
     {

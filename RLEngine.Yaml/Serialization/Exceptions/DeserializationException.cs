@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RLEngine.Serialization.Yaml
+namespace RLEngine.Yaml.Serialization
 {
     public class DeserializationException : Exception
     {

@@ -2,6 +2,7 @@
 {
     public enum TargetType
     {
+        Unset,
         Self,
         Entity,
     }

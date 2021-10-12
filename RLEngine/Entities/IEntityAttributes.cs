@@ -10,6 +10,5 @@ namespace RLEngine.Entities
         bool BlocksAir { get; }
         bool IsGhost { get; }
         bool IsRoamer { get; }
-        object? Visuals { get; }
     }
 }

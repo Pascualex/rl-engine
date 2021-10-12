@@ -1,5 +1,6 @@
-﻿using RLEngine.Serialization.Yaml.Utils;
-using RLEngine.Serialization.Utils;
+﻿using RLEngine.Yaml.Utils;
+
+using RLEngine.Utils;
 
 using System;
 using System.Collections;
@@ -11,13 +12,13 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace RLEngine.Serialization.Yaml
+namespace RLEngine.Yaml.Serialization
 {
     public class GenericReader
     {
-        private readonly SerializationQueue<Deserializable> serializationQueue;
+        private readonly SerializationQueue serializationQueue;
 
-        public GenericReader(SerializationQueue<Deserializable> serializationQueue)
+        public GenericReader(SerializationQueue serializationQueue)
         {
             this.serializationQueue = serializationQueue;
         }
@@ -62,12 +63,13 @@ namespace RLEngine.Serialization.Yaml
                 }
                 return value;
             }
-            else if (!root && typeof(Deserializable).IsAssignableFrom(type))
+            else if (!root && typeof(IIdentifiable).IsAssignableFrom(type))
             {
                 var id = parser.Formatted(ParseStyle.ID);
                 if (serializationQueue.TryGetValue(id, type, out var value)) return value;
-                value = (Deserializable)(target ?? Activator.CreateInstance(type));
-                value.ID = id;
+                value = (IIdentifiable)(target ?? Activator.CreateInstance(type));
+                var idProperty = GetPropertyOrAlias(type, nameof(IIdentifiable.ID));
+                idProperty.SetValue(value, id);
                 serializationQueue.Enqueue(value, type);
                 return value;
             }

@@ -8,7 +8,7 @@ namespace RLEngine.Actions
     public static class ModifyAction
     {
         public static Log? Modify(this GameState state,
-        ITileType tileType, Coords at)
+        TileType tileType, Coords at)
         {
             var previousType = state.Board.GetTileType(at);
             if (previousType == null) return null;

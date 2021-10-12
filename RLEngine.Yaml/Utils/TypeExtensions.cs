@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace RLEngine.Serialization.Yaml.Utils
+namespace RLEngine.Yaml.Utils
 {
     public static class TypeExtensions
     {

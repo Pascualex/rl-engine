@@ -2,6 +2,6 @@
 {
     public interface IIdentifiable
     {
-        string ID { get; }
+        string ID { get; init; }
     }
 }

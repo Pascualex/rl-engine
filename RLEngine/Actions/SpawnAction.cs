@@ -8,7 +8,7 @@ namespace RLEngine.Actions
     public static class SpawnAction
     {
         public static Log? Spawn(this GameState state,
-        IEntityType entityType, Coords at, out Entity? entity)
+        EntityType entityType, Coords at, out Entity? entity)
         {
             entity = new Entity(entityType);
             if (!state.Board.Add(entity, at))
@@ -21,7 +21,7 @@ namespace RLEngine.Actions
         }
 
         public static Log? Spawn(this GameState state,
-        IEntityType entityType, Coords at)
+        EntityType entityType, Coords at)
         {
             return Spawn(state, entityType, at, out _);
         }

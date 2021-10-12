@@ -1,4 +1,4 @@
-﻿using RLEngine.Serialization.Yaml.Utils;
+﻿using RLEngine.Yaml.Utils;
 
 using RLEngine.Abilities;
 using RLEngine.Actions;
@@ -13,11 +13,11 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace RLEngine.Serialization.Yaml
+namespace RLEngine.Yaml.Serialization
 {
     public class GenericWritter
     {
-        private readonly SerializationQueue<IIdentifiable> serializationQueue;
+        private readonly SerializationQueue serializationQueue;
         private readonly EffectWritter effectWritter;
         private readonly Type[] inlineTypes = new[]
         {
@@ -26,7 +26,7 @@ namespace RLEngine.Serialization.Yaml
             typeof(Size),
         };
 
-        public GenericWritter(SerializationQueue<IIdentifiable> serializationQueue)
+        public GenericWritter(SerializationQueue serializationQueue)
         {
             this.serializationQueue = serializationQueue;
             effectWritter = new EffectWritter(this);
@@ -68,9 +68,9 @@ namespace RLEngine.Serialization.Yaml
                 }
                 emitter.Emit(new SequenceEnd());
             }
-            else if (typeof(IEffect).IsAssignableFrom(type))
+            else if (typeof(Effect).IsAssignableFrom(type))
             {
-                effectWritter.WriteField(emitter, (IEffect)value);
+                effectWritter.WriteField(emitter, (Effect)value);
             }
             else if (!root && typeof(IIdentifiable).IsAssignableFrom(type))
             {

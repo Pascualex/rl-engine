@@ -8,13 +8,13 @@ namespace RLEngine.Boards
     {
         private readonly HashSet<Entity> entities = new();
 
-        public Tile(ITileType type)
+        public Tile(TileType type)
         {
             Type = type;
         }
 
         public IEnumerable<Entity> Entities => entities;
-        public ITileType Type { get; private set; }
+        public TileType Type { get; private set; }
 
         public bool Add(Entity entity)
         {
@@ -28,7 +28,7 @@ namespace RLEngine.Boards
             entities.Remove(entity);
         }
 
-        public bool Modify(ITileType type)
+        public bool Modify(TileType type)
         {
             if (!CanModify(type)) return false;
             Type = type;
@@ -45,7 +45,7 @@ namespace RLEngine.Boards
             return AreCompatible(entity, Type);
         }
 
-        public bool CanModify(ITileType type)
+        public bool CanModify(TileType type)
         {
             if (type == Type) return true;
             foreach (var entity in entities)
@@ -67,7 +67,7 @@ namespace RLEngine.Boards
             return true;
         }
 
-        private static bool AreCompatible(Entity entity, ITileType tileType)
+        private static bool AreCompatible(Entity entity, TileType tileType)
         {
             if (entity.Type.IsGhost) return true;
 

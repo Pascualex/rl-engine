@@ -103,7 +103,7 @@ namespace RLEngine.Runner
             Write(entity.Name, ConsoleColor.Yellow);
         }
 
-        private static void Write(ITileType tileType)
+        private static void Write(TileType tileType)
         {
             Write(tileType.Name, ConsoleColor.Yellow);
         }

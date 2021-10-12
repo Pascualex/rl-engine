@@ -1,4 +1,4 @@
-﻿namespace RLEngine.Serialization.Yaml.Utils
+﻿namespace RLEngine.Yaml.Utils
 {
     public enum ParseStyle
     {

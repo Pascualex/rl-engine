@@ -3,16 +3,16 @@
 using System;
 using System.Collections.Generic;
 
-namespace RLEngine.Serialization.Yaml
+namespace RLEngine.Yaml.Serialization
 {
-    public class SerializationQueue<T> where T : IIdentifiable
+    public class SerializationQueue
     {
-        private readonly Queue<(T, Type)> queue = new();
-        private readonly Dictionary<Type, Dictionary<string, T>> discovered = new();
+        private readonly Queue<(IIdentifiable, Type)> queue = new();
+        private readonly Dictionary<Type, Dictionary<string, IIdentifiable>> discovered = new();
 
         public int Count => queue.Count;
 
-        public void Enqueue(T identifiable, Type type)
+        public void Enqueue(IIdentifiable identifiable, Type type)
         {
             if (!discovered.TryGetValue(type, out var discoveredForType))
             {
@@ -35,12 +35,12 @@ namespace RLEngine.Serialization.Yaml
             }
         }
 
-        public (T, Type) Dequeue()
+        public (IIdentifiable, Type) Dequeue()
         {
             return queue.Dequeue();
         }
 
-        public bool TryGetValue(string id, Type type, out T value)
+        public bool TryGetValue(string id, Type type, out IIdentifiable value)
         {
             if (discovered.TryGetValue(type, out var discoveredForType))
             {

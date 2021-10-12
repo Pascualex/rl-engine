@@ -6,7 +6,7 @@ namespace RLEngine.State
 {
     public class GameState
     {
-        public GameState(Size boardSize, ITileType defaultTileType)
+        public GameState(Size boardSize, TileType defaultTileType)
         {
             TurnManager = new();
             Board = new(boardSize, defaultTileType);

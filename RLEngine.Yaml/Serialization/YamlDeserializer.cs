@@ -1,17 +1,18 @@
-﻿using RLEngine.Serialization.Games;
-using RLEngine.Serialization.Yaml.Utils;
-using RLEngine.Serialization.Utils;
+﻿using RLEngine.Yaml.Utils;
+
+using RLEngine.Games;
+using RLEngine.Utils;
 
 using System;
 using System.IO;
 
-namespace RLEngine.Serialization.Yaml
+namespace RLEngine.Yaml.Serialization
 {
     public static class YamlDeserializer
     {
         public static GameContent Deserialize(string path)
         {
-            var serializationQueue = new SerializationQueue<Deserializable>();
+            var serializationQueue = new SerializationQueue();
             var reader = new GenericReader(serializationQueue);
 
             var gameContentID = Path.GetFileName(path);
@@ -27,10 +28,9 @@ namespace RLEngine.Serialization.Yaml
         }
 
         public static void Deserialize(GenericReader reader,
-        string path, Deserializable target, Type type)
+        string path, IIdentifiable target, Type type)
         {
             if (target.ID.Length == 0) throw new ArgumentNullException();
-            if (target.ID == DefaultID.Value) throw new ArgumentNullException();
             var filename = target.ID + ".yml";
             using var streamReader = new StreamReader(Path.Combine(path, filename));
             reader.ReadObject(streamReader, type, target);
