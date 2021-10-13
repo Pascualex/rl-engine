@@ -11,7 +11,7 @@ namespace RLEngine.Actions
         {
             if (target.IsDead) return null;
             if (attacker?.IsDead ?? false) return null;
-            var damage = amount.Calculate(attacker);
+            var damage = amount.Calculate(target, attacker);
             var actualDamage = target.Damage(damage);
             if (target.IsDead)
             {

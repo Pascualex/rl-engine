@@ -2,7 +2,7 @@
 
 namespace RLEngine.Abilities
 {
-    public interface IDamageEffect
+    public interface IAmountEffect
     {
         string Target { get; }
         string Source { get; }

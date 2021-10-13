@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace RLEngine.Abilities
 {
-    public class Effect : ICombinedEffect, IDamageEffect
+    public class Effect : ICombinedEffect, IAmountEffect
     {
         public EffectType Type { get; init; } = EffectType.Unset;
         public bool IsParallel { get; init; } = false;
@@ -20,13 +20,15 @@ namespace RLEngine.Abilities
         {
             EffectType.Combined => this.CastCombined(targetDB, state),
             EffectType.Damage => this.CastDamage(targetDB, state),
+            EffectType.Heal => this.CastHeal(targetDB, state),
             _ => null,
         };
 
         public Type? GetEffectType() => Type switch
         {
             EffectType.Combined => typeof(ICombinedEffect),
-            EffectType.Damage => typeof(IDamageEffect),
+            EffectType.Damage => typeof(IAmountEffect),
+            EffectType.Heal => typeof(IAmountEffect),
             _ => null,
         };
     }

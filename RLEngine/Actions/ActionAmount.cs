@@ -8,7 +8,7 @@ namespace RLEngine.Actions
     {
         public int Base { get; set; } = 0;
 
-        public int Calculate(Entity? entity)
+        public int Calculate(Entity target, Entity? caster)
         {
             return Math.Max(0, Base);
         }

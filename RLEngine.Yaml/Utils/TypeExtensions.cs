@@ -21,7 +21,7 @@ namespace RLEngine.Yaml.Utils
                 .SelectMany(i => i.GetProperties());
         }
 
-        public static PropertyInfo GetPublicProperty(this Type type, string name)
+        public static PropertyInfo? GetPublicProperty(this Type type, string name)
         {
             if (!type.IsInterface) return type.GetProperty(name, flags);
 

@@ -5,5 +5,6 @@
         Unset,
         Combined,
         Damage,
+        Heal,
     }
 }

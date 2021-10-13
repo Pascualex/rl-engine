@@ -10,6 +10,8 @@ using System.ComponentModel;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 
+using DE = RLEngine.Yaml.Serialization.DeserializationException;
+
 namespace RLEngine.Yaml.Serialization
 {
     public class GenericReader
@@ -66,7 +68,9 @@ namespace RLEngine.Yaml.Serialization
                 var id = parser.Formatted(ParseStyle.ID);
                 if (serializationQueue.TryGetValue(id, type, out var value)) return value;
                 value = (IIdentifiable)(target ?? Activator.CreateInstance(type));
-                type.GetPublicProperty(nameof(IIdentifiable.ID)).SetValue(value, id);
+                var idProperty = type.GetPublicProperty(nameof(IIdentifiable.ID));
+                if (idProperty is null) throw new DE(type, nameof(IIdentifiable.ID));
+                idProperty.SetValue(value, id);
                 serializationQueue.Enqueue(value, type);
                 return value;
             }
@@ -78,6 +82,7 @@ namespace RLEngine.Yaml.Serialization
                 {
                     var propertyName = parser.Formatted();
                     var propertyInfo = type.GetPublicProperty(propertyName);
+                    if (propertyInfo is null) throw new DE(type, propertyName);
                     var propertyType = propertyInfo.PropertyType;
                     var propertyTarget = propertyInfo.GetValue(value);
                     var propertyValue = ReadField(parser, propertyType, propertyTarget);

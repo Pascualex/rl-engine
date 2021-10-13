@@ -14,7 +14,7 @@ namespace RLEngine.Runner
         public static void Main()
         {
             var gameContent = YamlDeserializer.Deserialize("Content");
-            var propertyInfo = typeof(GameContent).GetPublicProperty(nameof(IIdentifiable.ID));
+            var propertyInfo = typeof(GameContent).GetPublicProperty(nameof(IIdentifiable.ID))!;
             propertyInfo.SetValue(gameContent, "ContentCopy");
             YamlSerializer.Serialize(gameContent);
 

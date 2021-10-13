@@ -11,7 +11,7 @@ namespace RLEngine.Actions
         {
             if (target.IsDead) return null;
             if (healer?.IsDead ?? false) return null;
-            var healing = amount.Calculate(healer);
+            var healing = amount.Calculate(target, healer);
             var actualHealing = target.Heal(healing);
             return new HealLog(target, healer, healing, actualHealing);
         }

@@ -1,6 +1,6 @@
 ﻿namespace RLEngine.Abilities
 {
-    public enum AbilityType
+    public enum TargetType
     {
         Unset,
         Self,

@@ -4,6 +4,6 @@ effects:
 - type: damage
   amount: {base: 20}
   target: "target"
-- type: damage
+- type: heal
   amount: {base: 5}
   target: "caster"
