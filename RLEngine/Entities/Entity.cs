@@ -22,7 +22,7 @@ namespace RLEngine.Entities
         public string Name { get; }
         public bool IsAgent { get; }
         public bool IsPlayer { get; set; } = false;
-        public bool IsDead => Health <= 0;
+        public bool IsDestroyed { get; private set; } = false;
         public int Health { get; private set; }
         public int MissingHealth => MaxHealth - Health;
         public int MaxHealth { get; }
@@ -45,6 +45,11 @@ namespace RLEngine.Entities
             heal = heal.Clamp(0, MissingHealth);
             Health += heal;
             return heal;
+        }
+
+        public void OnDestroy()
+        {
+            IsDestroyed = true;
         }
     }
 }

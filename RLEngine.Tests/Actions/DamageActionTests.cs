@@ -38,7 +38,7 @@ namespace RLEngine.Tests.Actions
             Assert.That(damageLog.Damage, Is.EqualTo(Math.Max(0, damage)));
             Assert.That(damageLog.ActualDamage, Is.EqualTo(expectedDamage));
             Assert.That(entity.Health, Is.EqualTo(entity.MaxHealth - expectedDamage));
-            Assert.That(entity.IsDead, Is.False);
+            Assert.That(entity.IsDestroyed, Is.False);
             var currentEntity = state.TurnManager.Current;
             Assert.That(currentEntity, Is.SameAs(entity));
             var found = state.Board.TryGetCoords(entity, out var entityPosition);
@@ -70,8 +70,8 @@ namespace RLEngine.Tests.Actions
             Assert.That(damageLog.Attacker, Is.Null);
             Assert.That(damageLog.Damage, Is.EqualTo(Math.Max(0, damage)));
             Assert.That(damageLog.ActualDamage, Is.EqualTo(expectedDamage));
-            Assert.That(entity.Health, Is.EqualTo(entity.MaxHealth - expectedDamage));
-            Assert.That(entity.IsDead, Is.True);
+            Assert.That(entity.Health, Is.EqualTo(0));
+            Assert.That(entity.IsDestroyed, Is.True);
             var destroyLog = (DestroyLog)combinedLog.Logs.ElementAt(1);
             Assert.That(destroyLog.Entity, Is.SameAs(entity));
             var currentEntity = state.TurnManager.Current;

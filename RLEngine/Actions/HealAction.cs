@@ -9,8 +9,8 @@ namespace RLEngine.Actions
         public static Log? Heal(this GameState state,
         Entity target, Entity? healer, ActionAmount amount)
         {
-            if (target.IsDead) return null;
-            if (healer?.IsDead ?? false) return null;
+            if (target.IsDestroyed) return null;
+            if (healer?.IsDestroyed ?? false) return null;
             var healing = amount.Calculate(target, healer);
             var actualHealing = target.Heal(healing);
             return new HealLog(target, healer, healing, actualHealing);

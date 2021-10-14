@@ -19,6 +19,7 @@ namespace RLEngine.Abilities
         public Log? Cast(TargetDB targetDB, GameState state) => Type switch
         {
             EffectType.Combined => this.CastCombined(targetDB, state),
+            EffectType.Destroy => this.CastDestroy(targetDB, state),
             EffectType.Damage => this.CastDamage(targetDB, state),
             EffectType.Heal => this.CastHeal(targetDB, state),
             _ => null,
@@ -27,6 +28,7 @@ namespace RLEngine.Abilities
         public Type? GetEffectType() => Type switch
         {
             EffectType.Combined => typeof(ICombinedEffect),
+            EffectType.Destroy => typeof(ITargetEffect),
             EffectType.Damage => typeof(IAmountEffect),
             EffectType.Heal => typeof(IAmountEffect),
             _ => null,

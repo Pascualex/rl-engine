@@ -6,15 +6,14 @@ using NRE = System.NullReferenceException;
 
 namespace RLEngine.Abilities
 {
-    public static class HealEffectExtensions
+    public static class DestroyEffectExtensions
     {
-        public static Log? CastHeal(this IAmountEffect effect,
+        public static Log? CastDestroy(this ITargetEffect effect,
         TargetDB targetDB, GameState state)
         {
             if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();
-            var healer = targetDB.GetEntity(effect.Source);
 
-            return state.Heal(target, healer, effect.Amount);
+            return state.Destroy(target);
         }
     }
 }

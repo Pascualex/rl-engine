@@ -4,6 +4,7 @@
     {
         Unset,
         Combined,
+        Destroy,
         Damage,
         Heal,
     }

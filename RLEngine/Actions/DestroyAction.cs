@@ -11,6 +11,7 @@ namespace RLEngine.Actions
         {
             if (!state.Board.Remove(entity)) return null;
             state.TurnManager.Remove(entity);
+            entity.OnDestroy();
             return new DestroyLog(entity);
         }
     }

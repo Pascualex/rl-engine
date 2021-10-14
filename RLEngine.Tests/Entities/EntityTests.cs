@@ -24,7 +24,7 @@ namespace RLEngine.Tests.Entities
             Assert.That(entity.MaxHealth, Is.EqualTo(80));
             Assert.That(entity.Health, Is.EqualTo(80));
             Assert.That(entity.MissingHealth, Is.EqualTo(0));
-            Assert.That(entity.IsDead, Is.EqualTo(false));
+            Assert.That(entity.IsDestroyed, Is.EqualTo(false));
             Assert.That(entity.Speed, Is.EqualTo(120));
             Assert.That(entity.BlocksGround, Is.True);
             Assert.That(entity.BlocksAir, Is.False);
@@ -52,7 +52,7 @@ namespace RLEngine.Tests.Entities
             Assert.That(actualDamage, Is.EqualTo(expectedDamage));
             Assert.That(entity.Health, Is.EqualTo(entity.MaxHealth - expectedDamage));
             Assert.That(entity.MissingHealth, Is.EqualTo(expectedDamage));
-            Assert.That(entity.IsDead, Is.EqualTo(expectedDamage == entity.MaxHealth));
+            Assert.That(entity.IsDestroyed, Is.EqualTo(false));
         }
     }
 }

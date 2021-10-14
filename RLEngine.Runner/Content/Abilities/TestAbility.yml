@@ -7,3 +7,8 @@ effects:
 - type: heal
   amount: {base: 5}
   target: "caster"
+- type: destroy
+  target: "target"
+- type: damage
+  amount: {base: 20}
+  target: "target"

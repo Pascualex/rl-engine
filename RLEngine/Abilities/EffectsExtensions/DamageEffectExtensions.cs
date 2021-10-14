@@ -11,8 +11,6 @@ namespace RLEngine.Abilities
         public static Log? CastDamage(this IAmountEffect effect,
         TargetDB targetDB, GameState state)
         {
-            if (effect.Amount is null) return null;
-
             if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();
             var attacker = targetDB.GetEntity(effect.Target);
 
