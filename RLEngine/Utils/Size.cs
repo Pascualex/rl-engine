@@ -1,13 +1,12 @@
 namespace RLEngine.Utils
 {
-    [System.Serializable]
-    public struct Size
+    public class Size
     {
         public static Size Zero { get; } = new Size(0, 0);
         public static Size One { get; } = new Size(1, 1);
 
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int X { get; init; }
+        public int Y { get; init; }
 
         public Size(int x, int y)
         {

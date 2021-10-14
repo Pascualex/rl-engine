@@ -1,6 +1,9 @@
 cost: 100
 targetType: entity
 effects:
+- type: projectile
+  target: "target"
+  source: "caster"
 - type: damage
   amount: {base: 20}
   target: "target"
@@ -8,7 +11,4 @@ effects:
   amount: {base: 5}
   target: "caster"
 - type: destroy
-  target: "target"
-- type: damage
-  amount: {base: 20}
   target: "target"

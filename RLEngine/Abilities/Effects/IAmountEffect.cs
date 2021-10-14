@@ -2,9 +2,8 @@
 
 namespace RLEngine.Abilities
 {
-    public interface IAmountEffect : ITargetEffect
+    public interface IAmountEffect : ISourceEffect
     {
-        string Source { get; }
         ActionAmount Amount { get; }
     }
 }

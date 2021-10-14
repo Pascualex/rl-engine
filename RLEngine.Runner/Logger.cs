@@ -21,13 +21,14 @@ namespace RLEngine.Runner
             foreach (var currentLog in log.Logs)
             {
                 if (currentLog is CombinedLog combinedLog) Write(combinedLog);
-                else if (currentLog is   SpawnLog   spawnLog) Write(  spawnLog);
-                else if (currentLog is    MoveLog    moveLog) Write(   moveLog);
-                else if (currentLog is DestroyLog destroyLog) Write(destroyLog);
-                else if (currentLog is  ModifyLog  modifyLog) Write( modifyLog);
-                else if (currentLog is  DamageLog  damageLog) Write( damageLog);
-                else if (currentLog is    HealLog    healLog) Write(   healLog);
-                else Write(currentLog);
+                else if (currentLog is      SpawnLog      spawnLog) Write(     spawnLog);
+                else if (currentLog is       MoveLog       moveLog) Write(      moveLog);
+                else if (currentLog is    DestroyLog    destroyLog) Write(   destroyLog);
+                else if (currentLog is     ModifyLog     modifyLog) Write(    modifyLog);
+                else if (currentLog is     DamageLog     damageLog) Write(    damageLog);
+                else if (currentLog is       HealLog       healLog) Write(      healLog);
+                else if (currentLog is ProjectileLog projectileLog) Write(projectileLog);
+                else WriteUnsuported(currentLog);
                 if (delayMS > 0) System.Threading.Thread.Sleep(delayMS);
             }
         }
@@ -91,7 +92,20 @@ namespace RLEngine.Runner
             Console.WriteLine(" health.");
         }
 
-        private static void Write(Log log)
+        private static void Write(ProjectileLog log)
+        {
+            Console.Write("A projectile goes from ");
+            if (log.From is not null) Write(log.From);
+            else if (log.Source is not null) Write(log.Source);
+            else WriteNull();
+            Console.Write(" to ");
+            if (log.To is not null) Write(log.To);
+            else if (log.Target is not null) Write(log.Target);
+            else WriteNull();
+            Console.WriteLine(".");
+        }
+
+        private static void WriteUnsuported(Log log)
         {
             Console.Write("[");
             Write("error", ConsoleColor.Red);
@@ -116,6 +130,11 @@ namespace RLEngine.Runner
         private static void Write(int amount, bool isHeal)
         {
             Write(amount, isHeal ? ConsoleColor.Green : ConsoleColor.Red);
+        }
+
+        private static void WriteNull()
+        {
+            Write("null", ConsoleColor.Red);
         }
 
         private static void Write(object obj, ConsoleColor color)

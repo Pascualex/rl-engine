@@ -2,7 +2,7 @@ using System;
 
 namespace RLEngine.Utils
 {
-    public struct Coords
+    public class Coords
     {
         public static Coords Zero { get; } = new Coords(0, 0);
         public static Coords One { get; } = new Coords(1, 1);
@@ -16,8 +16,8 @@ namespace RLEngine.Utils
         public static Coords DownLeft { get; } = new Coords(-1, -1);
         public static Coords UpLeft { get; } = new Coords(-1, 1);
 
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int X { get; init; }
+        public int Y { get; init; }
 
         public Coords(int x, int y)
         {

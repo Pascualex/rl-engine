@@ -1,6 +1,4 @@
-﻿using RLEngine.Actions;
-
-namespace RLEngine.Abilities
+﻿namespace RLEngine.Abilities
 {
     public interface ITargetEffect
     {

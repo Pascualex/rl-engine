@@ -4,8 +4,9 @@
     {
         Unset,
         Combined,
-        Destroy,
         Damage,
+        Destroy,
         Heal,
+        Projectile,
     }
 }
