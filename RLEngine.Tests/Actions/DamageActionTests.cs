@@ -72,8 +72,8 @@ namespace RLEngine.Tests.Actions
             Assert.That(damageLog.ActualDamage, Is.EqualTo(expectedDamage));
             Assert.That(entity.Health, Is.EqualTo(0));
             Assert.That(entity.IsDestroyed, Is.True);
-            var destroyLog = (DestroyLog)combinedLog.Logs.ElementAt(1);
-            Assert.That(destroyLog.Entity, Is.SameAs(entity));
+            var destructionLog = (DestructionLog)combinedLog.Logs.ElementAt(1);
+            Assert.That(destructionLog.Entity, Is.SameAs(entity));
             var currentEntity = state.TurnManager.Current;
             Assert.That(currentEntity, Is.Null);
             var found = state.Board.TryGetCoords(entity, out _);

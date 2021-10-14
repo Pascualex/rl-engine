@@ -2,9 +2,9 @@
 
 namespace RLEngine.Logs
 {
-    public class HealLog : Log
+    public class HealingLog : Log
     {
-        public HealLog(Entity target, Entity? healer, int healing, int actualHealing)
+        public HealingLog(Entity target, Entity? healer, int healing, int actualHealing)
         {
             Target = target;
             Healer = healer;

@@ -22,11 +22,11 @@ namespace RLEngine.Runner
             {
                 if (currentLog is CombinedLog combinedLog) Write(combinedLog);
                 else if (currentLog is      SpawnLog      spawnLog) Write(     spawnLog);
-                else if (currentLog is       MoveLog       moveLog) Write(      moveLog);
-                else if (currentLog is    DestroyLog    destroyLog) Write(   destroyLog);
-                else if (currentLog is     ModifyLog     modifyLog) Write(    modifyLog);
+                else if (currentLog is       MovementLog       movementLog) Write(      movementLog);
+                else if (currentLog is    DestructionLog    destructionLog) Write(   destructionLog);
+                else if (currentLog is     ModificationLog     modificationLog) Write(    modificationLog);
                 else if (currentLog is     DamageLog     damageLog) Write(    damageLog);
-                else if (currentLog is       HealLog       healLog) Write(      healLog);
+                else if (currentLog is       HealingLog       healingLog) Write(      healingLog);
                 else if (currentLog is ProjectileLog projectileLog) Write(projectileLog);
                 else WriteUnsuported(currentLog);
                 if (delayMS > 0) System.Threading.Thread.Sleep(delayMS);
@@ -41,7 +41,7 @@ namespace RLEngine.Runner
             Console.WriteLine(".");
         }
 
-        private static void Write(MoveLog log)
+        private static void Write(MovementLog log)
         {
             Write(log.Entity);
             Console.Write(" moves to ");
@@ -49,14 +49,14 @@ namespace RLEngine.Runner
             Console.WriteLine(".");
         }
 
-        private static void Write(DestroyLog log)
+        private static void Write(DestructionLog log)
         {
             Write(log.Entity);
             var verb = log.Entity.IsAgent ? "dies" : "is destroyed";
             Console.WriteLine($" {verb}.");
         }
 
-        private static void Write(ModifyLog log)
+        private static void Write(ModificationLog log)
         {
             Write(log.PreviousType);
             Console.Write(" at ");
@@ -79,7 +79,7 @@ namespace RLEngine.Runner
             Console.WriteLine(" health.");
         }
 
-        private static void Write(HealLog log)
+        private static void Write(HealingLog log)
         {
             if (log.Healer is not null)
             {

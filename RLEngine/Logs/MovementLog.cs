@@ -3,9 +3,9 @@ using RLEngine.Utils;
 
 namespace RLEngine.Logs
 {
-    public class MoveLog : Log
+    public class MovementLog : Log
     {
-        public MoveLog(Entity entity, Coords to)
+        public MovementLog(Entity entity, Coords to)
         {
             Entity = entity;
             To = to;

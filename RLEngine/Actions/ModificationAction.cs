@@ -5,7 +5,7 @@ using RLEngine.Utils;
 
 namespace RLEngine.Actions
 {
-    public static class ModifyAction
+    public static class ModificationAction
     {
         public static Log? Modify(this GameState state,
         TileType tileType, Coords at)
@@ -13,7 +13,7 @@ namespace RLEngine.Actions
             var previousType = state.Board.GetTileType(at);
             if (previousType == null) return null;
             if (!state.Board.Modify(tileType, at)) return null;
-            return new ModifyLog(tileType, previousType, at);
+            return new ModificationLog(tileType, previousType, at);
         }
     }
 }

@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace RLEngine.Tests.Actions
 {
     [TestFixture]
-    public class DestroyActionTests
+    public class DestructionActionTests
     {
         [Test]
         public void DestroyPasses()
@@ -27,8 +27,8 @@ namespace RLEngine.Tests.Actions
             var log = state.Destroy(entity);
 
             // Assert
-            var destroyLog = (DestroyLog)log.FailIfNull();
-            Assert.That(destroyLog.Entity, Is.SameAs(entity));
+            var destructionLog = (DestructionLog)log.FailIfNull();
+            Assert.That(destructionLog.Entity, Is.SameAs(entity));
             var currentEntity = state.TurnManager.Current;
             Assert.That(currentEntity, Is.Null);
             var found = state.Board.TryGetCoords(entity, out _);

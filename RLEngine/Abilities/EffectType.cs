@@ -5,8 +5,8 @@
         Unset,
         Combined,
         Damage,
-        Destroy,
-        Heal,
+        Destruction,
+        Healing,
         Projectile,
     }
 }

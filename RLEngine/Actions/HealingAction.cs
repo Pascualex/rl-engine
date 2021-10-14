@@ -4,7 +4,7 @@ using RLEngine.Entities;
 
 namespace RLEngine.Actions
 {
-    public static class HealAction
+    public static class HealingAction
     {
         public static Log? Heal(this GameState state,
         Entity target, Entity? healer, ActionAmount amount)
@@ -13,7 +13,7 @@ namespace RLEngine.Actions
             if (healer?.IsDestroyed ?? false) return null;
             var healing = amount.Calculate(target, healer);
             var actualHealing = target.Heal(healing);
-            return new HealLog(target, healer, healing, actualHealing);
+            return new HealingLog(target, healer, healing, actualHealing);
         }
 
         public static Log? Heal(this GameState state,

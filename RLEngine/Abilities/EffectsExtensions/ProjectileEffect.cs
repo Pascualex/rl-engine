@@ -6,7 +6,7 @@ using NRE = System.NullReferenceException;
 
 namespace RLEngine.Abilities
 {
-    public static class ProjectileEffectExtensions
+    public static class ProjectileEffect
     {
         public static Log? Shoot(this IProjectileEffect effect,
         TargetDB targetDB, GameState state)

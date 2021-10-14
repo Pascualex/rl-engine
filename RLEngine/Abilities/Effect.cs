@@ -21,21 +21,21 @@ namespace RLEngine.Abilities
 
         public Log? Cast(TargetDB targetDB, GameState state) => Type switch
         {
-            EffectType.Combined => this.CastCombined(targetDB, state),
-            EffectType.Damage => this.CastDamage(targetDB, state),
-            EffectType.Destroy => this.CastDestroy(targetDB, state),
-            EffectType.Heal => this.CastHeal(targetDB, state),
-            EffectType.Projectile => this.Shoot(targetDB, state),
+            EffectType.Combined    => this.CastSubeffects(targetDB, state),
+            EffectType.Damage      => this.        Damage(targetDB, state),
+            EffectType.Destruction => this.       Destroy(targetDB, state),
+            EffectType.Healing     => this.          Heal(targetDB, state),
+            EffectType.Projectile  => this.         Shoot(targetDB, state),
             _ => null,
         };
 
         public Type? GetEffectType() => Type switch
         {
-            EffectType.Combined => typeof(ICombinedEffect),
-            EffectType.Damage => typeof(IAmountEffect),
-            EffectType.Destroy => typeof(ITargetEffect),
-            EffectType.Heal => typeof(IAmountEffect),
-            EffectType.Projectile => typeof(IProjectileEffect),
+            EffectType.Combined    => typeof(  ICombinedEffect),
+            EffectType.Damage      => typeof(    IAmountEffect),
+            EffectType.Destruction => typeof(    ITargetEffect),
+            EffectType.Healing     => typeof(    IAmountEffect),
+            EffectType.Projectile  => typeof(IProjectileEffect),
             _ => null,
         };
     }

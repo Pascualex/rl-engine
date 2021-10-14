@@ -5,7 +5,7 @@ using RLEngine.Utils;
 
 namespace RLEngine.Actions
 {
-    public static class MoveAction
+    public static class MovementAction
     {
         public static Log? Move(this GameState state,
         Entity entity, Coords to, bool relative)
@@ -14,7 +14,7 @@ namespace RLEngine.Actions
             if (relative) to += position;
 
             if (!state.Board.Move(entity, to)) return null;
-            return new MoveLog(entity, to);
+            return new MovementLog(entity, to);
         }
     }
 }

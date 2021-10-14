@@ -2,18 +2,20 @@
 using RLEngine.Logs;
 using RLEngine.State;
 
+using System;
 using NRE = System.NullReferenceException;
 
 namespace RLEngine.Abilities
 {
-    public static class DestroyEffectExtensions
+    public static class DamageEffect
     {
-        public static Log? CastDestroy(this ITargetEffect effect,
+        public static Log? Damage(this IAmountEffect effect,
         TargetDB targetDB, GameState state)
         {
             if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();
+            var attacker = targetDB.GetEntity(effect.Source);
 
-            return state.Destroy(target);
+            return state.Damage(target, attacker, effect.Amount);
         }
     }
 }

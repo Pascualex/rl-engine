@@ -10,7 +10,7 @@ using System;
 namespace RLEngine.Tests.Actions
 {
     [TestFixture]
-    public class HealActionTests
+    public class HealingActionTests
     {
         [Test]
         [TestCase(40, -20)]
@@ -33,11 +33,11 @@ namespace RLEngine.Tests.Actions
 
             // Assert
             var expectedHealing = healing.Clamp(0, damage);
-            var healLog = (HealLog)log.FailIfNull();
-            Assert.That(healLog.Target, Is.SameAs(entity));
-            Assert.That(healLog.Healer, Is.Null);
-            Assert.That(healLog.Healing, Is.EqualTo(Math.Max(0, healing)));
-            Assert.That(healLog.ActualHealing, Is.EqualTo(expectedHealing));
+            var healingLog = (HealingLog)log.FailIfNull();
+            Assert.That(healingLog.Target, Is.SameAs(entity));
+            Assert.That(healingLog.Healer, Is.Null);
+            Assert.That(healingLog.Healing, Is.EqualTo(Math.Max(0, healing)));
+            Assert.That(healingLog.ActualHealing, Is.EqualTo(expectedHealing));
             Assert.That(entity.Health, Is.EqualTo(entity.MaxHealth - damage + expectedHealing));
         }
     }

@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace RLEngine.Tests.Actions
 {
     [TestFixture]
-    public class MoveActionTests
+    public class MovementActionTests
     {
         [Test]
         [TestCase(0, 1, 2,  0, false)]
@@ -35,9 +35,9 @@ namespace RLEngine.Tests.Actions
 
             // Assert
             if (relative) finalPosition += initialPosition;
-            var moveLog = (MoveLog)log.FailIfNull();
-            Assert.That(moveLog.Entity, Is.SameAs(entity));
-            Assert.That(moveLog.To, Is.EqualTo(finalPosition));
+            var movementLog = (MovementLog)log.FailIfNull();
+            Assert.That(movementLog.Entity, Is.SameAs(entity));
+            Assert.That(movementLog.To, Is.EqualTo(finalPosition));
             var found = state.Board.TryGetCoords(entity, out var entityPosition);
             Assert.That(found, Is.True);
             Assert.That(entityPosition, Is.EqualTo(finalPosition));
@@ -105,9 +105,9 @@ namespace RLEngine.Tests.Actions
             var log = state.Move(entityB, finalPosition, false);
 
             // Assert
-            var moveLog = (MoveLog)log.FailIfNull();
-            Assert.That(moveLog.Entity, Is.SameAs(entityB));
-            Assert.That(moveLog.To, Is.EqualTo(finalPosition));
+            var movementLog = (MovementLog)log.FailIfNull();
+            Assert.That(movementLog.Entity, Is.SameAs(entityB));
+            Assert.That(movementLog.To, Is.EqualTo(finalPosition));
             var entityAFound = state.Board.TryGetCoords(entityA, out var entityAPosition);
             Assert.That(entityAFound, Is.True);
             Assert.That(entityAPosition, Is.EqualTo(finalPosition));

@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace RLEngine.Tests.Actions
 {
     [TestFixture]
-    public class ModifyActionTests
+    public class ModificationActionTests
     {
         [Test]
         [TestCase(0, 0)]
@@ -28,10 +28,10 @@ namespace RLEngine.Tests.Actions
             var log = state.Modify(f.WallTileType, position);
 
             // Assert
-            var modifyLog = (ModifyLog)log.FailIfNull();
-            Assert.That(modifyLog.NewType, Is.SameAs(f.WallTileType));
-            Assert.That(modifyLog.PreviousType, Is.SameAs(f.FloorTileType));
-            Assert.That(modifyLog.At, Is.EqualTo(position));
+            var modificationLog = (ModificationLog)log.FailIfNull();
+            Assert.That(modificationLog.NewType, Is.SameAs(f.WallTileType));
+            Assert.That(modificationLog.PreviousType, Is.SameAs(f.FloorTileType));
+            Assert.That(modificationLog.At, Is.EqualTo(position));
             var tileType = state.Board.GetTileType(position);
             Assert.That(tileType, Is.SameAs(f.WallTileType));
         }

@@ -6,9 +6,9 @@ using NRE = System.NullReferenceException;
 
 namespace RLEngine.Abilities
 {
-    public static class HealEffectExtensions
+    public static class HealingEffect
     {
-        public static Log? CastHeal(this IAmountEffect effect,
+        public static Log? Heal(this IAmountEffect effect,
         TargetDB targetDB, GameState state)
         {
             if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();

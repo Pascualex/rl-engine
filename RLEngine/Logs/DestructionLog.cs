@@ -2,9 +2,9 @@
 
 namespace RLEngine.Logs
 {
-    public class DestroyLog : Log
+    public class DestructionLog : Log
     {
-        public DestroyLog(Entity entity)
+        public DestructionLog(Entity entity)
         {
             Entity = entity;
         }
