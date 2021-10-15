@@ -1,14 +1,18 @@
 ﻿using RLEngine.Actions;
 using RLEngine.Logs;
 using RLEngine.State;
-using RLEngine.Utils;
 
 using System;
 using System.Collections.Generic;
 
 namespace RLEngine.Abilities
 {
-    public class Effect : ICombinedEffect, IAmountEffect, IProjectileEffect
+    public class Effect :
+        ICombinedEffect,
+        IDamageEffect,
+        IDestructionEffect,
+        IHealingEffect,
+        IProjectileEffect
     {
         public EffectType Type { get; init; } = EffectType.Unset;
         public bool IsParallel { get; init; } = false;
@@ -31,11 +35,11 @@ namespace RLEngine.Abilities
 
         public Type? GetEffectType() => Type switch
         {
-            EffectType.Combined    => typeof(  ICombinedEffect),
-            EffectType.Damage      => typeof(    IAmountEffect),
-            EffectType.Destruction => typeof(    ITargetEffect),
-            EffectType.Healing     => typeof(    IAmountEffect),
-            EffectType.Projectile  => typeof(IProjectileEffect),
+            EffectType.Combined    => typeof(   ICombinedEffect),
+            EffectType.Damage      => typeof(     IDamageEffect),
+            EffectType.Destruction => typeof(IDestructionEffect),
+            EffectType.Healing     => typeof(    IHealingEffect),
+            EffectType.Projectile  => typeof( IProjectileEffect),
             _ => null,
         };
     }

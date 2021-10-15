@@ -8,7 +8,7 @@ namespace RLEngine.Abilities
 {
     public static class HealingEffect
     {
-        public static Log? Heal(this IAmountEffect effect,
+        public static Log? Heal(this IHealingEffect effect,
         TargetDB targetDB, GameState state)
         {
             if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();

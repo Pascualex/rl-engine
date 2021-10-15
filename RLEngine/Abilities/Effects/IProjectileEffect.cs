@@ -1,9 +1,9 @@
-﻿using RLEngine.Utils;
-
-namespace RLEngine.Abilities
+﻿namespace RLEngine.Abilities
 {
-    public interface IProjectileEffect : ISourceEffect
+    public interface IProjectileEffect
     {
+        string Target { get; }
+        string Source { get; }
         string From { get; }
         string To { get; }
     }

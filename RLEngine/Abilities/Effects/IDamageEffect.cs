@@ -2,8 +2,10 @@
 
 namespace RLEngine.Abilities
 {
-    public interface IAmountEffect : ISourceEffect
+    public interface IDamageEffect
     {
+        string Source { get; }
+        string Target { get; }
         ActionAmount Amount { get; }
     }
 }

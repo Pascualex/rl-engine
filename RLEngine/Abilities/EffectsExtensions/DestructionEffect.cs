@@ -8,7 +8,7 @@ namespace RLEngine.Abilities
 {
     public static class DestructionEffect
     {
-        public static Log? Destroy(this ITargetEffect effect,
+        public static Log? Destroy(this IDestructionEffect effect,
         TargetDB targetDB, GameState state)
         {
             if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();

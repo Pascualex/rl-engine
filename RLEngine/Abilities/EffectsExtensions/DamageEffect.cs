@@ -9,7 +9,7 @@ namespace RLEngine.Abilities
 {
     public static class DamageEffect
     {
-        public static Log? Damage(this IAmountEffect effect,
+        public static Log? Damage(this IDamageEffect effect,
         TargetDB targetDB, GameState state)
         {
             if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();
