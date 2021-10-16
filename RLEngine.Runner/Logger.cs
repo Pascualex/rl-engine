@@ -20,15 +20,17 @@ namespace RLEngine.Runner
         {
             foreach (var currentLog in log.Logs)
             {
-                if (currentLog is CombinedLog combinedLog) Write(combinedLog);
-                else if (currentLog is      SpawnLog      spawnLog) Write(     spawnLog);
-                else if (currentLog is       MovementLog       movementLog) Write(      movementLog);
-                else if (currentLog is    DestructionLog    destructionLog) Write(   destructionLog);
-                else if (currentLog is     ModificationLog     modificationLog) Write(    modificationLog);
-                else if (currentLog is     DamageLog     damageLog) Write(    damageLog);
-                else if (currentLog is       HealingLog       healingLog) Write(      healingLog);
-                else if (currentLog is ProjectileLog projectileLog) Write(projectileLog);
-                else WriteUnsuported(currentLog);
+                if      (currentLog is     CombinedLog     combinedLog) Write(    combinedLog);
+                else if (currentLog is        SpawnLog        spawnLog) Write(       spawnLog);
+                else if (currentLog is     MovementLog     movementLog) Write(    movementLog);
+                else if (currentLog is  DestructionLog  destructionLog) Write( destructionLog);
+                else if (currentLog is ModificationLog modificationLog) Write(modificationLog);
+                else if (currentLog is       DamageLog       damageLog) Write(      damageLog);
+                else if (currentLog is      HealingLog      healingLog) Write(     healingLog);
+                else if (currentLog is   ProjectileLog   projectileLog) Write(  projectileLog);
+                else WriteUnsupported(currentLog);
+
+                if (currentLog is CombinedLog) continue;
                 if (delayMS > 0) System.Threading.Thread.Sleep(delayMS);
             }
         }
@@ -75,7 +77,13 @@ namespace RLEngine.Runner
             }
             Write(log.Target);
             Console.Write(" loses ");
-            Write(log.Damage, false);
+            Write(log.ActualDamage, false);
+            if (log.Damage > log.ActualDamage)
+            {
+                Console.Write(" (");
+                Write(log.Damage, false);
+                Console.Write(")");
+            }
             Console.WriteLine(" health.");
         }
 
@@ -89,6 +97,12 @@ namespace RLEngine.Runner
             Write(log.Target);
             Console.Write(" recovers ");
             Write(log.ActualHealing, true);
+            if (log.Healing > log.ActualHealing)
+            {
+                Console.Write(" (");
+                Write(log.Healing, true);
+                Console.Write(")");
+            }
             Console.WriteLine(" health.");
         }
 
@@ -105,7 +119,7 @@ namespace RLEngine.Runner
             Console.WriteLine(".");
         }
 
-        private static void WriteUnsuported(Log log)
+        private static void WriteUnsupported(Log log)
         {
             Console.Write("[");
             Write("error", ConsoleColor.Red);
