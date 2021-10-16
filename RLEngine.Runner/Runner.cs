@@ -23,7 +23,7 @@ namespace RLEngine.Runner
 
             while (true)
             {
-                var input = InputManager.GetInput();
+                var input = InputManager.GetInput(game);
                 if (input == null) break;
                 game.Input = input;
                 log = game.ProcessTurns();

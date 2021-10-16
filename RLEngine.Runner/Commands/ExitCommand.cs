@@ -1,35 +1,16 @@
+﻿using RLEngine.Input;
+
 using System;
-using System.Reflection;
-using System.CommandLine;
-using System.CommandLine.Invocation;
 
 namespace RLEngine.Runner
 {
-    public class ExitCommand : Subcommand
+    public static class ExitCommand
     {
-        private readonly Action exitCallback;
+        private static readonly string[] aliases = { "exit", "e" };
 
-        public ExitCommand(Action exitCallback)
-        : base(_ => { })
+        public static bool Execute(string command)
         {
-            this.exitCallback = exitCallback;
-        }
-
-        public override Command CreateDefinition()
-        {
-            var command = new Command("exit");
-
-            command.AddAlias("e");
-            const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
-            var method = GetType().GetMethod(nameof(Execute), bindingFlags);
-            command.Handler = CommandHandler.Create(method);
-
-            return command;
-        }
-
-        private void Execute()
-        {
-            exitCallback.Invoke();
+            return AliasesUtils.Accepts(command, aliases);
         }
     }
 }
