@@ -49,7 +49,7 @@ namespace RLEngine.Controllers
         {
             if (!state.Board.TryGetCoords(entity, out var position)) return null;
 
-            var log = new CombinedLog(true);
+            var log = new CombinedLogBuilder(true);
 
             foreach (var direction in Coords.Directions())
             {
@@ -60,7 +60,7 @@ namespace RLEngine.Controllers
                 }
             }
 
-            return log;
+            return log.Build();
         }
 
         public Log? CastSpell(Entity entity, GameState state, AbilityInput abilityInput)

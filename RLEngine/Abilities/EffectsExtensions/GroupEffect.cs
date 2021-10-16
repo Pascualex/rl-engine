@@ -8,18 +8,18 @@ namespace RLEngine.Abilities
         public static Log? CastGroup(this IGroupEffect effect,
         TargetDB targetDB, GameState state)
         {
-            var log = new CombinedLog(effect.IsParallel);
+            var log = new CombinedLogBuilder(effect.IsParallel);
             foreach (var newTarget in targetDB.GetEntityGroup(effect.Group))
             {
                 targetDB.Add(effect.NewTarget, newTarget);
-                var iterationLog = new CombinedLog(false);
+                var iterationLog = new CombinedLogBuilder(false);
                 foreach (var nestedEffect in effect.Effects)
                 {
                     iterationLog.Add(nestedEffect.Cast(targetDB, state));
                 }
-                log.Add(iterationLog);
+                log.Add(iterationLog.Build());
             }
-            return log;
+            return log.Build();
         }
     }
 }

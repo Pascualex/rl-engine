@@ -15,10 +15,10 @@ namespace RLEngine.Actions
             var actualDamage = target.Damage(damage);
             if (target.Health == 0)
             {
-                var combinedLog = new CombinedLog(false);
+                var combinedLog = new CombinedLogBuilder(false);
                 combinedLog.Add(new DamageLog(target, attacker, damage, actualDamage));
                 combinedLog.Add(state.Destroy(target));
-                return combinedLog;
+                return combinedLog.Build();
             }
             return new DamageLog(target, attacker, damage, actualDamage);
         }

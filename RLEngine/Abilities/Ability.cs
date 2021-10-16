@@ -20,12 +20,12 @@ namespace RLEngine.Abilities
             if (TargetType != TargetType.Entity) throw new InvalidOperationException();
 
             var targetDB = new TargetDB(caster, target);
-            var log = new CombinedLog(false);
+            var log = new CombinedLogBuilder(false);
             foreach (var effect in Effects)
             {
                 log.Add(effect.Cast(targetDB, state));
             }
-            return log;
+            return log.Build();
         }
     }
 }

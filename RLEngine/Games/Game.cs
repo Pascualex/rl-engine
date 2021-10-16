@@ -34,7 +34,7 @@ namespace RLEngine.Games
 
         public CombinedLog SetupExample()
         {
-            var log = new CombinedLog(false);
+            var log = new CombinedLogBuilder(false);
 
             log.Add(state.Modify(Content.WallType, new Coords(4, 4)));
             log.Add(state.Modify(Content.WallType, new Coords(5, 4)));
@@ -42,23 +42,23 @@ namespace RLEngine.Games
             log.Add(state.Modify(Content.WallType, new Coords(5, 5)));
 
             log.Add(state.Spawn(Content.PlayerType, new Coords(1, 0), out var player));
-            if (player is null) return log;
+            if (player is null) return log.ForceBuild();
             player.IsPlayer = true;
             log.Add(state.Spawn(Content.GoblinType, new Coords(3, 0), out var goblinA));
-            if (goblinA is null) return log;
+            if (goblinA is null) return log.ForceBuild();
             log.Add(state.Spawn(Content.GoblinType, new Coords(5, 0), out var goblinB));
-            if (goblinB is null) return log;
+            if (goblinB is null) return log.ForceBuild();
             log.Add(state.Spawn(Content.GoblinType, new Coords(3, 2), out var goblinC));
-            if (goblinC is null) return log;
+            if (goblinC is null) return log.ForceBuild();
             log.Add(state.Spawn(Content.GoblinType, new Coords(5, 2), out var goblinD));
-            if (goblinD is null) return log;
+            if (goblinD is null) return log.ForceBuild();
 
-            return log;
+            return log.ForceBuild();
         }
 
         public CombinedLog ProcessTurns()
         {
-            var log = new CombinedLog(false);
+            var log = new CombinedLogBuilder(false);
             var processed = new HashSet<Entity>();
 
             while (state.TurnManager.Current != null)
@@ -74,7 +74,7 @@ namespace RLEngine.Games
                 state.TurnManager.Next(100);
             }
 
-            return log;
+            return log.ForceBuild();
         }
     }
 }

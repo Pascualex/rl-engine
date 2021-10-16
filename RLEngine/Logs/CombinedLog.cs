@@ -4,19 +4,13 @@ namespace RLEngine.Logs
 {
     public class CombinedLog : Log
     {
-        private readonly IList<Log> logs = new List<Log>();
-
-        public IEnumerable<Log> Logs => logs;
+        public IEnumerable<Log> Logs { get; }
         public bool IsParallel { get; }
 
-        public CombinedLog(bool isParallel)
+        public CombinedLog(IEnumerable<Log> logs, bool isParallel)
         {
+            Logs = logs;
             IsParallel = isParallel;
-        }
-
-        public void Add(Log? log)
-        {
-            if (log is not null) logs.Add(log);
         }
     }
 }
