@@ -2,10 +2,7 @@
 using RLEngine.Yaml.Utils;
 
 using RLEngine.Games;
-using RLEngine.Input;
 using RLEngine.Utils;
-
-using System;
 
 namespace RLEngine.Runner
 {
@@ -26,60 +23,12 @@ namespace RLEngine.Runner
 
             while (true)
             {
-                var input = GetInput(game);
+                var input = InputManager.GetInput();
                 if (input == null) break;
                 game.Input = input;
                 log = game.ProcessTurns();
                 logger.Write(log);
             }
-        }
-
-        private static PlayerInput? GetInput(Game game)
-        {
-            while (true)
-            {
-                var valid = AskForInput(game, out var input);
-                if (valid) return input;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(" ## Invalid syntax");
-                Console.ResetColor();
-            }
-        }
-
-        private static bool AskForInput(Game game, out PlayerInput? input)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(" #> ");
-            Console.ResetColor();
-            const StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries;
-            var words = Console.ReadLine().Trim().Split(new char[] { ' ' }, options);
-
-            input = null;
-
-            if (words.Length < 1) return false;
-            var action = words[0];
-
-            var ability = game.Content.Ability;
-            if      (action == "e" || action ==   "exit") return true;
-            else if (action == "a" || action == "attack") input = new AttackInput();
-
-            if (input != null) return true;
-
-            if (words.Length < 2) return false;
-            var dir = words[1];
-
-            Coords coords = Coords.Zero;
-            if      (dir == "u" || dir ==    "up") coords =    Coords.Up;
-            else if (dir == "r" || dir == "right") coords = Coords.Right;
-            else if (dir == "d" || dir ==  "down") coords =  Coords.Down;
-            else if (dir == "l" || dir ==  "left") coords =  Coords.Left;
-
-            if (coords == Coords.Zero) return false;
-
-            if      (action == "m" || action ==   "move") input = new MoveInput(coords, true);
-            else if (action == "s" || action ==  "spell") input = new AbilityInput(ability, coords);
-
-            return input != null;
         }
     }
 }
