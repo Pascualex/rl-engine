@@ -1,14 +1,24 @@
 cost: 100
 targetType: entity
 effects:
-- type: projectile
-  target: "target"
-  source: "caster"
-- type: damage
-  amount: {base: 20}
-  target: "target"
-- type: heal
-  amount: {base: 5}
+- type: areaTarget
+  source: "target"
+  radius: 2
+  newGroup: "area"
+- type: group
+  group: "area"
+  isParallel: true
+  newTarget: "iterator"
+  effects:
+  - type: projectile
+    target: "iterator"
+    source: "caster"
+  - type: damage
+    amount: {base: 20}
+    target: "iterator"
+  - type: healing
+    amount: {base: 5}
+    target: "caster"
+- type: healing
+  amount: {base: 10}
   target: "caster"
-- type: destroy
-  target: "target"

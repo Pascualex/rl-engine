@@ -11,8 +11,8 @@ namespace RLEngine.Abilities
         public static Log? Shoot(this IProjectileEffect effect,
         TargetDB targetDB, GameState state)
         {
-            var from = targetDB.GetCoords(effect.From);
-            var to = targetDB.GetCoords(effect.To);
+            var from = targetDB.GetCoords(effect.Source);
+            var to = targetDB.GetCoords(effect.Target);
 
             if (from is not null && to is not null)
             {

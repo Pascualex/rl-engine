@@ -2,7 +2,6 @@
 using RLEngine.Logs;
 using RLEngine.State;
 
-using System;
 using NRE = System.NullReferenceException;
 
 namespace RLEngine.Abilities

@@ -4,7 +4,5 @@
     {
         string Target { get; }
         string Source { get; }
-        string From { get; }
-        string To { get; }
     }
 }

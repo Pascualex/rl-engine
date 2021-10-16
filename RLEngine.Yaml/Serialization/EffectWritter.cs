@@ -3,11 +3,10 @@
 using RLEngine.Abilities;
 using RLEngine.Utils;
 
-using System;
-using System.Collections.Generic;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
-using YamlDotNet.Serialization;
+
+using EFE = RLEngine.Yaml.Serialization.EffectSerializationException;
 
 namespace RLEngine.Yaml.Serialization
 {
@@ -28,11 +27,7 @@ namespace RLEngine.Yaml.Serialization
             genericWritter.WriteField(emitter, effect.Type, typeof(EffectType));
 
             var effectType = effect.GetEffectType();
-            if (effectType is null)
-            {
-                emitter.Emit(new MappingEnd());
-                return;
-            }
+            if (effectType is null) throw new EFE(effect.Type);
 
             foreach (var propertyInfo in effectType.GetPublicProperties())
             {
