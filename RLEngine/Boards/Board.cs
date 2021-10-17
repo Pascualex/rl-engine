@@ -14,8 +14,8 @@ namespace RLEngine.Boards
         public Board(Size size, TileType defaultTileType)
         {
             Size = size;
-            tiles = new Tile[Size.Y][];
 
+            tiles = new Tile[Size.Y][];
             for (var i = 0; i < Size.Y; i++)
             {
                 tiles[i] = new Tile[Size.X];

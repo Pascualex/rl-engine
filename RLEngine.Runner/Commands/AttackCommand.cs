@@ -36,7 +36,7 @@ namespace RLEngine.Runner
             var direction = CommandParser.ParseDirection(args.Direction);
             if (direction is null) return false;
 
-            input = new AttackInput(direction);
+            // input = new AttackInput(direction);
             return true;
         }
     }

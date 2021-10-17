@@ -13,7 +13,7 @@ namespace RLEngine.Controllers
 {
     public class PlayerController : IController
     {
-        public PlayerInput? Input { private get; set; } = null;
+        public IPlayerInput? Input { private get; set; } = null;
 
         public bool ProcessTurn(Entity entity, GameState state, out Log? log)
         {
@@ -38,20 +38,12 @@ namespace RLEngine.Controllers
 
         public Log? AttempAttack(Entity entity, GameState state, AttackInput attackInput)
         {
-            if (!state.Board.TryGetCoords(entity, out var position)) return null;
-            var targetPosition = position + attackInput.Coords;
-            var entities = state.Board.GetEntities(targetPosition);
-            if (!entities.Any()) return null;
-            return state.Damage(entities.First(), entity, new ActionAmount { Base = 10 });
+            return state.Damage(attackInput.Target, entity, new ActionAmount { Base = 10 });
         }
 
         public Log? AttemptCast(Entity entity, GameState state, SpellInput spellInput)
         {
-            if (!state.Board.TryGetCoords(entity, out var position)) return null;
-            var targetPosition = position + spellInput.Coords;
-            var entities = state.Board.GetEntities(targetPosition);
-            if (!entities.Any()) return null;
-            return spellInput.Ability.Cast(entity, entities.First(), state);
+            return spellInput.Ability.Cast(entity, spellInput.Target, state);
         }
     }
 }

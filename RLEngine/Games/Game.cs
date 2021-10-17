@@ -27,7 +27,7 @@ namespace RLEngine.Games
 
         public GameContent Content { get; }
 
-        public PlayerInput? Input
+        public IPlayerInput? Input
         {
             set { playerController.Input = value; }
         }

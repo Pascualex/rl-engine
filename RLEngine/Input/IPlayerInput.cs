@@ -1,5 +1,5 @@
 ﻿namespace RLEngine.Input
 {
-    public abstract class PlayerInput
+    public interface IPlayerInput
     { }
 }

@@ -7,7 +7,7 @@ namespace RLEngine.Runner
 {
     public static class InputManager
     {
-        public static PlayerInput? GetInput(Game game)
+        public static IPlayerInput? GetInput(Game game)
         {
             while (true)
             {

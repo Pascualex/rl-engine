@@ -37,7 +37,7 @@ namespace RLEngine.Runner
             var direction = CommandParser.ParseDirection(args.Direction);
             if (direction is null) return false;
 
-            input = new SpellInput(game.Content.Ability, direction);
+            // input = new SpellInput(game.Content.Ability, direction);
             return true;
         }
     }

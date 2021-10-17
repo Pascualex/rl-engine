@@ -2,7 +2,7 @@
 
 namespace RLEngine.Input
 {
-    public class MovementInput : PlayerInput
+    public class MovementInput : IPlayerInput
     {
         public MovementInput(Coords to, bool relative)
         {

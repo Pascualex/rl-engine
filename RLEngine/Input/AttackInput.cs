@@ -1,14 +1,14 @@
-﻿using RLEngine.Utils;
+﻿using RLEngine.Entities;
 
 namespace RLEngine.Input
 {
-    public class AttackInput : PlayerInput
+    public class AttackInput : IPlayerInput
     {
-        public AttackInput(Coords coords)
+        public AttackInput(Entity target)
         {
-            Coords = coords;
+            Target = target;
         }
 
-        public Coords Coords { get; }
+        public Entity Target { get; }
     }
 }

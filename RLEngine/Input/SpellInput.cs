@@ -1,17 +1,17 @@
 ﻿using RLEngine.Abilities;
-using RLEngine.Utils;
+using RLEngine.Entities;
 
 namespace RLEngine.Input
 {
-    public class SpellInput : PlayerInput
+    public class SpellInput : IPlayerInput
     {
-        public SpellInput(Ability ability, Coords coords)
+        public SpellInput(Ability ability, Entity target)
         {
             Ability = ability;
-            Coords = coords;
+            Target = target;
         }
 
         public Ability Ability { get; }
-        public Coords Coords { get; }
+        public Entity Target { get; }
     }
 }
