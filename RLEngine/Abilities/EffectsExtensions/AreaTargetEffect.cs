@@ -15,7 +15,7 @@ namespace RLEngine.Abilities
         TargetDB targetDB, GameState state)
         {
             var from = targetDB.GetCoords(effect.Source);
-            if (from is null)
+            if (from == null)
             {
                 if (!targetDB.TryGetEntity(effect.Source, out var source)) throw new NRE();
                 if (!state.Board.TryGetCoords(source, out from)) throw new NRE();

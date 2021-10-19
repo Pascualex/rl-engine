@@ -14,7 +14,7 @@ namespace RLEngine.Logs
 
         public void Add(Log? log)
         {
-            if (log is null) return;
+            if (log == null) return;
             logs.Add(log);
         }
 

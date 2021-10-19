@@ -40,16 +40,16 @@ namespace RLEngine.Games
             log.Add(state.Modify(Content.WallType, new Coords(5, 5)));
 
             log.Add(state.Spawn(Content.PlayerType, new Coords(1, 0), out var player));
-            if (player is null) return log.ForceBuild();
+            if (player == null) return log.ForceBuild();
             player.IsPlayer = true;
             log.Add(state.Spawn(Content.GoblinType, new Coords(3, 0), out var goblinA));
-            if (goblinA is null) return log.ForceBuild();
+            if (goblinA == null) return log.ForceBuild();
             log.Add(state.Spawn(Content.GoblinType, new Coords(5, 0), out var goblinB));
-            if (goblinB is null) return log.ForceBuild();
+            if (goblinB == null) return log.ForceBuild();
             log.Add(state.Spawn(Content.GoblinType, new Coords(3, 2), out var goblinC));
-            if (goblinC is null) return log.ForceBuild();
+            if (goblinC == null) return log.ForceBuild();
             log.Add(state.Spawn(Content.GoblinType, new Coords(5, 2), out var goblinD));
-            if (goblinD is null) return log.ForceBuild();
+            if (goblinD == null) return log.ForceBuild();
 
             return log.ForceBuild();
         }

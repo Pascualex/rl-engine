@@ -85,7 +85,7 @@ namespace RLEngine.Yaml.Serialization
                 {
                     if (isIdentifiable && propertyInfo.Name == nameof(IIdentifiable.ID)) continue;
                     var propertyValue = (object?)propertyInfo.GetValue(value);
-                    if (propertyValue is null) continue;
+                    if (propertyValue == null) continue;
                     emitter.Format(propertyInfo.Name);
                     WriteField(emitter, propertyValue, propertyInfo.PropertyType);
                 }

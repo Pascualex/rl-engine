@@ -69,8 +69,8 @@ namespace RLEngine.Yaml.Serialization
                 if (serializationQueue.TryGetValue(id, type, out var value)) return value;
                 value = (IIdentifiable)(target ?? Activator.CreateInstance(type));
                 var idProperty = type.GetPublicProperty(nameof(IIdentifiable.ID));
-                if (idProperty is null) throw new DE(type, nameof(IIdentifiable.ID));
-                if (idProperty.SetMethod is null) throw new DE(type, nameof(IIdentifiable.ID));
+                if (idProperty == null) throw new DE(type, nameof(IIdentifiable.ID));
+                if (idProperty.SetMethod == null) throw new DE(type, nameof(IIdentifiable.ID));
                 idProperty.SetValue(value, id);
                 serializationQueue.Enqueue(value, type);
                 return value;
@@ -83,8 +83,8 @@ namespace RLEngine.Yaml.Serialization
                 {
                     var propertyName = parser.Formatted();
                     var propertyInfo = type.GetPublicProperty(propertyName);
-                    if (propertyInfo is null) throw new DE(type, propertyName);
-                    if (propertyInfo.SetMethod is null) throw new DE(type, propertyName);
+                    if (propertyInfo == null) throw new DE(type, propertyName);
+                    if (propertyInfo.SetMethod == null) throw new DE(type, propertyName);
                     var propertyType = propertyInfo.PropertyType;
                     var propertyTarget = propertyInfo.GetValue(value);
                     var propertyValue = ReadField(parser, propertyType, propertyTarget);

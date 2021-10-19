@@ -27,13 +27,13 @@ namespace RLEngine.Yaml.Serialization
             genericWritter.WriteField(emitter, effect.Type, typeof(EffectType));
 
             var effectType = effect.GetEffectType();
-            if (effectType is null) throw new EFE(effect.Type);
+            if (effectType == null) throw new EFE(effect.Type);
 
             foreach (var propertyInfo in effectType.GetPublicProperties())
             {
                 if (propertyInfo.Name == nameof(IIdentifiable.ID)) continue;
                 var propertyValue = (object?)propertyInfo.GetValue(effect);
-                if (propertyValue is null) continue;
+                if (propertyValue == null) continue;
                 if (propertyValue is string str && str.Length == 0) continue;
                 emitter.Format(propertyInfo.Name);
                 genericWritter.WriteField(emitter, propertyValue, propertyInfo.PropertyType);

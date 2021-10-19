@@ -52,7 +52,7 @@ namespace RLEngine.Turns
             entities[nextTurn.Entity] = nextTurn;
 
             var nextEntity = Current;
-            if (nextEntity is null) return;
+            if (nextEntity == null) return;
             if (!nextEntity.IsAgent) Remove(nextEntity);
         }
     }

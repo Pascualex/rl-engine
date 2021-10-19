@@ -14,17 +14,17 @@ namespace RLEngine.Abilities
             var from = targetDB.GetCoords(effect.Source);
             var to = targetDB.GetCoords(effect.Target);
 
-            if (from is not null && to is not null)
+            if (from != null && to != null)
             {
                 return state.Shoot(from, to);
             }
-            else if (from is not null)
+            else if (from != null)
             {
                 if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();
 
                 return state.Shoot(from, target);
             }
-            else if (to is not null)
+            else if (to != null)
             {
                 if (!targetDB.TryGetEntity(effect.Source, out var source)) throw new NRE();
 

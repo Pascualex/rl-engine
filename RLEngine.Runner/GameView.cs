@@ -84,7 +84,7 @@ namespace RLEngine.Runner
 
         private static void Write(DamageLog log)
         {
-            if (log.Attacker is not null)
+            if (log.Attacker != null)
             {
                 Write(log.Attacker);
                 Console.Write(" attacks. ");
@@ -103,7 +103,7 @@ namespace RLEngine.Runner
 
         private static void Write(HealingLog log)
         {
-            if (log.Healer is not null)
+            if (log.Healer != null)
             {
                 Write(log.Healer);
                 Console.Write(" heals. ");
@@ -123,12 +123,12 @@ namespace RLEngine.Runner
         private static void Write(ProjectileLog log)
         {
             Console.Write("A projectile goes from ");
-            if (log.From is not null) Write(log.From);
-            else if (log.Source is not null) Write(log.Source);
+            if (log.From != null) Write(log.From);
+            else if (log.Source != null) Write(log.Source);
             else WriteNull();
             Console.Write(" to ");
-            if (log.To is not null) Write(log.To);
-            else if (log.Target is not null) Write(log.Target);
+            if (log.To != null) Write(log.To);
+            else if (log.Target != null) Write(log.Target);
             else WriteNull();
             Console.WriteLine(".");
         }
@@ -183,7 +183,7 @@ namespace RLEngine.Runner
         private static void Write(object obj, ConsoleColor color)
         {
             var text = obj.ToString();
-            if (text is not null) Write(text, color);
+            if (text != null) Write(text, color);
         }
 
         private static void Write(string text, ConsoleColor color)

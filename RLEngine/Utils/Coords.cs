@@ -56,12 +56,12 @@ namespace RLEngine.Utils
             return new Coords(a.X - b.X, a.Y - b.Y);
         }
 
-        public static bool operator ==(Coords a, Coords b)
+        public static bool operator ==(Coords? a, Coords? b)
         {
             return Equals(a, b);
         }
 
-        public static bool operator !=(Coords a, Coords b)
+        public static bool operator !=(Coords? a, Coords? b)
         {
             return !Equals(a, b);
         }

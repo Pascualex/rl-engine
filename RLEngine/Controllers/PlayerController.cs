@@ -18,7 +18,7 @@ namespace RLEngine.Controllers
         public bool ProcessTurn(Entity entity, GameState state, out Log? log)
         {
             log = null;
-            if (Input is null) return false;
+            if (Input == null) return false;
 
             if (Input is MovementInput mi) log = AttemptMove(entity, state, mi);
             else if (Input is AttackInput ai) log = AttempAttack(entity, state, ai);
