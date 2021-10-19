@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace RLEngine.Boards
 {
-    public class Board
+    internal class Board
     {
         private readonly Tile[][] tiles;
         private readonly Dictionary<Entity, Coords> entities = new();

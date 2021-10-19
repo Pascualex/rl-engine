@@ -6,7 +6,7 @@ using RLEngine.Utils;
 
 namespace RLEngine.Controllers
 {
-    public class AIController : IController
+    internal class AIController : IController
     {
         public bool ProcessTurn(Entity entity, GameState state, out Log? log)
         {

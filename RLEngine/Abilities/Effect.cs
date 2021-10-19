@@ -27,7 +27,7 @@ namespace RLEngine.Abilities
         public bool IsParallel { get; init; } = false;
         public IEnumerable<Effect> Effects { get; init; } = new List<Effect>();
 
-        public Log? Cast(TargetDB targetDB, GameState state) => Type switch
+        internal Log? Cast(TargetDB targetDB, GameState state) => Type switch
         {
             EffectType. AreaTarget => this.    TargetArea(targetDB, state),
             EffectType.   Combined => this.CastSubeffects(targetDB, state),

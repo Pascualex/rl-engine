@@ -7,7 +7,7 @@ namespace RLEngine.Logs
         public IEnumerable<Log> Logs { get; }
         public bool IsParallel { get; }
 
-        public CombinedLog(IEnumerable<Log> logs, bool isParallel)
+        internal CombinedLog(IEnumerable<Log> logs, bool isParallel)
         {
             Logs = logs;
             IsParallel = isParallel;

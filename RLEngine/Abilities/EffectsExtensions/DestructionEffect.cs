@@ -6,7 +6,7 @@ using NRE = System.NullReferenceException;
 
 namespace RLEngine.Abilities
 {
-    public static class DestructionEffect
+    internal static class DestructionEffect
     {
         public static Log? Destroy(this IDestructionEffect effect,
         TargetDB targetDB, GameState state)

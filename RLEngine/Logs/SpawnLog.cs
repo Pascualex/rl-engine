@@ -5,7 +5,7 @@ namespace RLEngine.Logs
 {
     public class SpawnLog : Log
     {
-        public SpawnLog(Entity entity, Coords at)
+        internal SpawnLog(Entity entity, Coords at)
         {
             Entity = entity;
             At = at;

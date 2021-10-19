@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace RLEngine.Boards
 {
-    public class Tile
+    internal class Tile
     {
         private readonly HashSet<Entity> entities = new();
 

@@ -2,9 +2,9 @@
 
 namespace RLEngine.Entities
 {
-    public class Entity : IEntityAttributes
+    public class Entity
     {
-        public Entity(EntityType type)
+        internal Entity(EntityType type)
         {
             // TODO: support inheritance in types and overridden attributes
             Name = type.Name;
@@ -19,35 +19,35 @@ namespace RLEngine.Entities
             Type = type;
         }
 
-        public string Name { get; }
-        public bool IsAgent { get; }
-        public bool IsPlayer { get; set; } = false;
-        public bool IsDestroyed { get; private set; } = false;
-        public int Health { get; private set; }
-        public int MissingHealth => MaxHealth - Health;
-        public int MaxHealth { get; }
-        public int Speed { get; }
-        public bool BlocksGround { get; }
-        public bool BlocksAir { get; }
-        public bool IsGhost { get; }
-        public bool IsRoamer { get; }
+        internal string Name { get; }
+        internal bool IsAgent { get; }
+        internal bool IsPlayer { get; set; } = false;
+        internal bool IsDestroyed { get; private set; } = false;
+        internal int Health { get; private set; }
+        internal int MissingHealth => MaxHealth - Health;
+        internal int MaxHealth { get; }
+        internal int Speed { get; }
+        internal bool BlocksGround { get; }
+        internal bool BlocksAir { get; }
+        internal bool IsGhost { get; }
+        internal bool IsRoamer { get; }
         public EntityType Type { get; }
 
-        public int Damage(int damage)
+        internal int Damage(int damage)
         {
             damage = damage.Clamp(0, Health);
             Health -= damage;
             return damage;
         }
 
-        public int Heal(int heal)
+        internal int Heal(int heal)
         {
             heal = heal.Clamp(0, MissingHealth);
             Health += heal;
             return heal;
         }
 
-        public void OnDestroy()
+        internal void OnDestroy()
         {
             IsDestroyed = true;
         }

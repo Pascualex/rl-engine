@@ -2,7 +2,7 @@
 
 namespace RLEngine.Utils
 {
-    public static class RandomExtensions
+    internal static class RandomExtensions
     {
         public static void Shuffle<T>(this Random random, T[] array)
         {

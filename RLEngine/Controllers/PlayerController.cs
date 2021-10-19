@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace RLEngine.Controllers
 {
-    public class PlayerController : IController
+    internal class PlayerController : IController
     {
         public IPlayerInput? Input { private get; set; } = null;
 

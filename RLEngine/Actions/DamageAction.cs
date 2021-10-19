@@ -4,7 +4,7 @@ using RLEngine.Entities;
 
 namespace RLEngine.Actions
 {
-    public static class DamageAction
+    internal static class DamageAction
     {
         public static Log? Damage(this GameState state,
         Entity target, Entity? attacker, ActionAmount amount)

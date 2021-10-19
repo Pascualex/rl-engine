@@ -4,7 +4,7 @@ using RLEngine.Entities;
 
 namespace RLEngine.Controllers
 {
-    public interface IController
+    internal interface IController
     {
         bool ProcessTurn(Entity entity, GameState state, out Log? log);
     }

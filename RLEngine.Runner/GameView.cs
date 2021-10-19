@@ -1,4 +1,7 @@
-﻿using RLEngine.Logs;
+﻿using RLEngine.ViewState.Games;
+
+using RLEngine.Games;
+using RLEngine.Logs;
 using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
@@ -7,30 +10,40 @@ using System;
 
 namespace RLEngine.Runner
 {
-    public class Logger
+    public class GameView
     {
+        private readonly GameViewState state;
         private readonly int delayMS;
 
-        public Logger(int delayMS)
+        public GameView(GameContent content, int delayMS)
         {
             this.delayMS = delayMS;
+
+            state = new GameViewState(content);
         }
 
-        public void Write(CombinedLog log)
+        public void Process(CombinedLog log)
         {
-            foreach (var currentLog in log.Logs)
+            foreach (var sublog in log.Logs)
             {
-                if      (currentLog is     CombinedLog     combinedLog) Write(    combinedLog);
-                else if (currentLog is        SpawnLog        spawnLog) Write(       spawnLog);
-                else if (currentLog is     MovementLog     movementLog) Write(    movementLog);
-                else if (currentLog is  DestructionLog  destructionLog) Write( destructionLog);
-                else if (currentLog is ModificationLog modificationLog) Write(modificationLog);
-                else if (currentLog is       DamageLog       damageLog) Write(      damageLog);
-                else if (currentLog is      HealingLog      healingLog) Write(     healingLog);
-                else if (currentLog is   ProjectileLog   projectileLog) Write(  projectileLog);
-                else WriteUnsupported(currentLog);
+                if (sublog is CombinedLog combinedLog)
+                {
+                    Process(combinedLog);
+                    continue;
+                }
 
-                if (currentLog is CombinedLog) continue;
+                if (state.Update(sublog)) WriteUnsupportedByState(sublog);
+
+                if      (sublog is        SpawnLog        spawnLog) Write(       spawnLog);
+                else if (sublog is     MovementLog     movementLog) Write(    movementLog);
+                else if (sublog is  DestructionLog  destructionLog) Write( destructionLog);
+                else if (sublog is ModificationLog modificationLog) Write(modificationLog);
+                else if (sublog is       DamageLog       damageLog) Write(      damageLog);
+                else if (sublog is      HealingLog      healingLog) Write(     healingLog);
+                else if (sublog is   ProjectileLog   projectileLog) Write(  projectileLog);
+                else WriteUnsupported(sublog);
+
+                if (sublog is CombinedLog) continue;
                 if (delayMS > 0) System.Threading.Thread.Sleep(delayMS);
             }
         }
@@ -54,7 +67,8 @@ namespace RLEngine.Runner
         private static void Write(DestructionLog log)
         {
             Write(log.Entity);
-            var verb = log.Entity.IsAgent ? "dies" : "is destroyed";
+            var verb = "XXX";
+            // TODO: var verb = log.Entity.IsAgent ? "dies" : "is destroyed";
             Console.WriteLine($" {verb}.");
         }
 
@@ -126,9 +140,24 @@ namespace RLEngine.Runner
             Console.WriteLine($"] {log.GetType().Name} is not supported.");
         }
 
+        private static void WriteUnsupportedByState(Log log)
+        {
+            Console.Write("[");
+            Write("error", ConsoleColor.Red);
+            Console.WriteLine($"] {log.GetType().Name} is not supported by the view state.");
+        }
+
+        private static void WriteStateSynchronizationError(Log log)
+        {
+            Console.Write("[");
+            Write("error", ConsoleColor.Red);
+            Console.WriteLine("] The game view state is not synchronized with the game.");
+        }
+
         private static void Write(Entity entity)
         {
-            Write(entity.Name, ConsoleColor.Yellow);
+            Write("XXX", ConsoleColor.Yellow);
+            // TODO: Write(entity.Name, ConsoleColor.Yellow);
         }
 
         private static void Write(TileType tileType)

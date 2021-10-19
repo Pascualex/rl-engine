@@ -4,7 +4,7 @@ using RLEngine.Entities;
 
 namespace RLEngine.Actions
 {
-    public static class DestructionAction
+    internal static class DestructionAction
     {
         public static Log? Destroy(this GameState state,
         Entity entity)

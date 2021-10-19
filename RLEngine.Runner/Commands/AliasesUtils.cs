@@ -1,6 +1,4 @@
-﻿using RLEngine.Input;
-
-using System;
+﻿using System;
 
 namespace RLEngine.Runner
 {

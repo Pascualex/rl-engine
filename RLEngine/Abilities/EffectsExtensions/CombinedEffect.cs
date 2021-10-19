@@ -3,7 +3,7 @@ using RLEngine.State;
 
 namespace RLEngine.Abilities
 {
-    public static class CombinedEffect
+    internal static class CombinedEffect
     {
         public static Log? CastSubeffects(this ICombinedEffect effect,
         TargetDB targetDB, GameState state)

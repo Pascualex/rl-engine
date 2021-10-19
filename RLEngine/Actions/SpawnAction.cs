@@ -5,7 +5,7 @@ using RLEngine.Utils;
 
 namespace RLEngine.Actions
 {
-    public static class SpawnAction
+    internal static class SpawnAction
     {
         public static Log? Spawn(this GameState state,
         EntityType entityType, Coords at, out Entity? entity)

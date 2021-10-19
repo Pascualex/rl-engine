@@ -4,7 +4,7 @@ namespace RLEngine.Logs
 {
     public class DestructionLog : Log
     {
-        public DestructionLog(Entity entity)
+        internal DestructionLog(Entity entity)
         {
             Entity = entity;
         }

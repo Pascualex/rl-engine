@@ -6,7 +6,7 @@ using NRE = System.NullReferenceException;
 
 namespace RLEngine.Abilities
 {
-    public static class HealingEffect
+    internal static class HealingEffect
     {
         public static Log? Heal(this IHealingEffect effect,
         TargetDB targetDB, GameState state)

@@ -4,7 +4,7 @@ namespace RLEngine.Logs
 {
     public class DamageLog : Log
     {
-        public DamageLog(Entity target, Entity? attacker, int damage, int actualDamage)
+        internal DamageLog(Entity target, Entity? attacker, int damage, int actualDamage)
         {
             Target = target;
             Attacker = attacker;

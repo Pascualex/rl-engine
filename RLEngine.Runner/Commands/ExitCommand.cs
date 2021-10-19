@@ -1,8 +1,4 @@
-﻿using RLEngine.Input;
-
-using System;
-
-namespace RLEngine.Runner
+﻿namespace RLEngine.Runner
 {
     public static class ExitCommand
     {

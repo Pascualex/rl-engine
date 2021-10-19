@@ -5,7 +5,7 @@ using RLEngine.Utils;
 
 namespace RLEngine.Actions
 {
-    public static class ProjectileAction
+    internal static class ProjectileAction
     {
         public static Log? Shoot(this GameState state,
         Coords from, Coords to)

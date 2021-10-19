@@ -15,7 +15,7 @@ namespace RLEngine.Abilities
         public TargetType TargetType { get; init; } = TargetType.Unset;
         public IEnumerable<Effect> Effects { get; init; } = new List<Effect>();
 
-        public Log? Cast(Entity caster, Entity target, GameState state)
+        internal Log? Cast(Entity caster, Entity target, GameState state)
         {
             if (TargetType != TargetType.Entity) throw new InvalidOperationException();
 

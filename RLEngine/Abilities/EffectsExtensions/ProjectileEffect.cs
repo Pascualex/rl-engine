@@ -8,7 +8,7 @@ namespace RLEngine.Abilities
 {
     public static class ProjectileEffect
     {
-        public static Log? Shoot(this IProjectileEffect effect,
+        internal static Log? Shoot(this IProjectileEffect effect,
         TargetDB targetDB, GameState state)
         {
             var from = targetDB.GetCoords(effect.Source);

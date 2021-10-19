@@ -5,7 +5,7 @@ using RLEngine.Utils;
 
 namespace RLEngine.Actions
 {
-    public static class MovementAction
+    internal static class MovementAction
     {
         public static Log? Move(this GameState state,
         Entity entity, Coords to, bool relative)

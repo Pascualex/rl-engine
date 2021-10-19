@@ -4,7 +4,7 @@ namespace RLEngine.Logs
 {
     public class HealingLog : Log
     {
-        public HealingLog(Entity target, Entity? healer, int healing, int actualHealing)
+        internal HealingLog(Entity target, Entity? healer, int healing, int actualHealing)
         {
             Target = target;
             Healer = healer;

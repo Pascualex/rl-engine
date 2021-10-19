@@ -5,7 +5,7 @@ namespace RLEngine.Logs
 {
     public class MovementLog : Log
     {
-        public MovementLog(Entity entity, Coords to)
+        internal MovementLog(Entity entity, Coords to)
         {
             Entity = entity;
             To = to;

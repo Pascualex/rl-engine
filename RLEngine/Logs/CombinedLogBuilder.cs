@@ -2,7 +2,7 @@
 
 namespace RLEngine.Logs
 {
-    public class CombinedLogBuilder
+    internal class CombinedLogBuilder
     {
         private readonly IList<Log> logs = new List<Log>();
         private readonly bool isParallel;

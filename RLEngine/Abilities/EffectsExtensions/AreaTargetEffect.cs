@@ -9,7 +9,7 @@ using NRE = System.NullReferenceException;
 
 namespace RLEngine.Abilities
 {
-    public static class AreaTargetEffect
+    internal static class AreaTargetEffect
     {
         public static Log? TargetArea(this IAreaTargetEffect effect,
         TargetDB targetDB, GameState state)

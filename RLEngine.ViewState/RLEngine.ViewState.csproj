@@ -2,16 +2,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RLEngine\RLEngine.csproj" />
-    <ProjectReference Include="..\RLEngine.ViewState\RLEngine.ViewState.csproj" />
-    <ProjectReference Include="..\RLEngine.Yaml\RLEngine.Yaml.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.8.0" />
   </ItemGroup>
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net471</TargetFramework>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>

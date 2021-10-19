@@ -5,25 +5,25 @@ namespace RLEngine.Logs
 {
     public class ProjectileLog : Log
     {
-        public ProjectileLog(Coords from, Coords to)
+        internal ProjectileLog(Coords from, Coords to)
         {
             From = from;
             To = to;
         }
 
-        public ProjectileLog(Coords from, Entity target)
+        internal ProjectileLog(Coords from, Entity target)
         {
             From = from;
             Target = target;
         }
 
-        public ProjectileLog(Entity source, Coords to)
+        internal ProjectileLog(Entity source, Coords to)
         {
             Source = source;
             To = to;
         }
 
-        public ProjectileLog(Entity source, Entity target)
+        internal ProjectileLog(Entity source, Entity target)
         {
             Source = source;
             Target = target;

@@ -5,7 +5,7 @@ namespace RLEngine.Logs
 {
     public class ModificationLog : Log
     {
-        public ModificationLog(TileType newType, TileType previousType, Coords at)
+        internal ModificationLog(TileType newType, TileType previousType, Coords at)
         {
             NewType = newType;
             PreviousType = previousType;

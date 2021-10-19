@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace RLEngine.Abilities
 {
-    public class TargetDB
+    internal class TargetDB
     {
         private readonly Dictionary<string, Entity> entitiesDB = new();
         private readonly Dictionary<string, IEnumerable<Entity>> entityGroupsDB = new();

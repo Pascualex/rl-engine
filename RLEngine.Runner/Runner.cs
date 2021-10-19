@@ -16,10 +16,10 @@ namespace RLEngine.Runner
             YamlSerializer.Serialize(gameContent);
 
             var game = new Game(gameContent);
-            var logger = new Logger(250);
+            var gameView = new GameView(gameContent, 250);
 
             var log = game.SetupExample();
-            logger.Write(log);
+            gameView.Process(log);
 
             while (true)
             {
@@ -27,7 +27,7 @@ namespace RLEngine.Runner
                 if (input == null) break;
                 game.Input = input;
                 log = game.ProcessTurns();
-                logger.Write(log);
+                gameView.Process(log);
             }
         }
     }

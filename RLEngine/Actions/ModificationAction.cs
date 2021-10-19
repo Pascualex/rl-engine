@@ -5,7 +5,7 @@ using RLEngine.Utils;
 
 namespace RLEngine.Actions
 {
-    public static class ModificationAction
+    internal static class ModificationAction
     {
         public static Log? Modify(this GameState state,
         TileType tileType, Coords at)

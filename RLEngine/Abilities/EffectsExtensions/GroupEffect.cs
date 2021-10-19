@@ -3,7 +3,7 @@ using RLEngine.State;
 
 namespace RLEngine.Abilities
 {
-    public static class GroupEffect
+    internal static class GroupEffect
     {
         public static Log? CastGroup(this IGroupEffect effect,
         TargetDB targetDB, GameState state)

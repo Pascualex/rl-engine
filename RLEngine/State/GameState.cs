@@ -4,7 +4,7 @@ using RLEngine.Utils;
 
 namespace RLEngine.State
 {
-    public class GameState
+    internal class GameState
     {
         public GameState(Size boardSize, TileType defaultTileType)
         {
