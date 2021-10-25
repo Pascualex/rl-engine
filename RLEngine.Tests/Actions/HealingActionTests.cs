@@ -1,6 +1,7 @@
-using RLEngine.Actions;
+using RLEngine.Events;
 using RLEngine.Logs;
-using RLEngine.State;
+using RLEngine.Turns;
+using RLEngine.Boards;
 using RLEngine.Utils;
 using RLEngine.Tests.Utils;
 
@@ -20,16 +21,17 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var position = new Coords(1, 1);
-            state.Spawn(f.UnparentedEntityType, position, out var entity);
+            ctx.Spawn(f.UnparentedEntityType, position, out var entity);
             entity = entity.FailIfNull();
             var damageAmount = new ActionAmount { Base = damage };
-            state.Damage(entity, damageAmount);
+            ctx.Damage(entity, damageAmount);
             var healingAmount = new ActionAmount { Base = healing };
 
             // Act
-            var log = state.Heal(entity, healingAmount);
+            var log = ctx.Heal(entity, healingAmount);
 
             // Assert
             var expectedHealing = healing.Clamp(0, damage);

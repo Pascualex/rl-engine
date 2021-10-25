@@ -6,12 +6,12 @@ using System.Linq;
 
 namespace RLEngine.Boards
 {
-    internal class Board
+    public class Board
     {
         private readonly Tile[][] tiles;
-        private readonly Dictionary<Entity, Coords> entities = new();
+        private readonly HashSet<Entity> entities = new();
 
-        public Board(Size size, TileType defaultTileType)
+        internal Board(Size size, TileType defaultTileType)
         {
             Size = size;
 
@@ -28,34 +28,39 @@ namespace RLEngine.Boards
 
         public Size Size { get; }
 
-        public bool Add(Entity entity, Coords at)
+        internal bool Add(Entity entity, Coords at)
         {
-            if (entities.ContainsKey(entity)) return false;
+            if (entities.Contains(entity)) return false;
             if (!Size.Contains(at)) return false;
 
             if (!tiles[at.Y][at.X].Add(entity)) return false;
-            entities.Add(entity, at);
+            entities.Add(entity);
+            entity.OnMove(at);
 
             return true;
         }
 
-        public bool Move(Entity entity, Coords to)
+        internal bool Move(Entity entity, Coords to)
         {
-            if (!entities.TryGetValue(entity, out var from)) return false;
+            if (!entities.Contains(entity)) return false;
             if (!Size.Contains(to)) return false;
+
+            var from = entity.Position;
 
             if (to == from) return true;
 
             if (!tiles[to.Y][to.X].Add(entity)) return false;
             tiles[from.Y][from.X].Remove(entity);
-            entities[entity] = to;
+            entity.OnMove(to);
 
             return true;
         }
 
-        public bool Remove(Entity entity)
+        internal bool Remove(Entity entity)
         {
-            if (!entities.TryGetValue(entity, out var at)) return false;
+            if (!entities.Contains(entity)) return false;
+
+            var at = entity.Position;
 
             tiles[at.Y][at.X].Remove(entity);
             entities.Remove(entity);
@@ -63,7 +68,7 @@ namespace RLEngine.Boards
             return true;
         }
 
-        public bool Modify(TileType tileType, Coords at)
+        internal bool Modify(TileType tileType, Coords at)
         {
             if (!Size.Contains(at)) return false;
 
@@ -72,33 +77,24 @@ namespace RLEngine.Boards
 
         public bool CanAdd(Entity entity, Coords at)
         {
-            if (entities.ContainsKey(entity)) return false;
+            if (entities.Contains(entity)) return false;
             if (!Size.Contains(at)) return false;
             return tiles[at.Y][at.X].CanAdd(entity);
         }
 
         public bool CanMove(Entity entity, Coords to)
         {
-            if (!entities.TryGetValue(entity, out var from)) return false;
+            if (!entities.Contains(entity)) return false;
             if (!Size.Contains(to)) return false;
+            var from = entity.Position;
             if (to == from) return true;
             return tiles[to.Y][to.X].CanAdd(entity);
-        }
-
-        public bool CanRemove(Entity entity)
-        {
-            return entities.ContainsKey(entity);
         }
 
         public bool CanModify(TileType tileType, Coords at)
         {
             if (!Size.Contains(at)) return false;
             return tiles[at.Y][at.X].CanModify(tileType);
-        }
-
-        public bool TryGetCoords(Entity entity, out Coords position)
-        {
-            return entities.TryGetValue(entity, out position);
         }
 
         public IEnumerable<Entity> GetEntities(Coords at)

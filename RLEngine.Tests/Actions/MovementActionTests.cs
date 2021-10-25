@@ -1,6 +1,6 @@
-using RLEngine.Actions;
+using RLEngine.Events;
 using RLEngine.Logs;
-using RLEngine.State;
+using RLEngine.Turns;
 using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
@@ -24,23 +24,22 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var initialPosition = new Coords(ix, iy);
             var finalPosition = new Coords(fx, fy);
-            state.Spawn(f.GroundEntityType, initialPosition, out var entity);
+            ctx.Spawn(f.GroundEntityType, initialPosition, out var entity);
             entity = entity.FailIfNull();
 
             // Act
-            var log = state.Move(entity, finalPosition, relative);
+            var log = ctx.Move(entity, finalPosition, relative);
 
             // Assert
             if (relative) finalPosition += initialPosition;
             var movementLog = (MovementLog)log.FailIfNull();
             Assert.That(movementLog.Entity, Is.SameAs(entity));
             Assert.That(movementLog.To, Is.EqualTo(finalPosition));
-            var found = state.Board.TryGetCoords(entity, out var entityPosition);
-            Assert.That(found, Is.True);
-            Assert.That(entityPosition, Is.EqualTo(finalPosition));
+            Assert.That(entity.Position, Is.EqualTo(finalPosition));
         }
 
         [Test]
@@ -54,20 +53,19 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var initialPosition = new Coords(ix, iy);
             var finalPosition = new Coords(fx, fy);
-            state.Spawn(f.GroundEntityType, initialPosition, out var entity);
+            ctx.Spawn(f.GroundEntityType, initialPosition, out var entity);
             entity = entity.FailIfNull();
 
             // Act
-            var log = state.Move(entity, finalPosition, relative);
+            var log = ctx.Move(entity, finalPosition, relative);
 
             // Assert
             Assert.That(log, Is.Null);
-            var found = state.Board.TryGetCoords(entity, out var entityPosition);
-            Assert.That(found, Is.True);
-            Assert.That(entityPosition, Is.EqualTo(initialPosition));
+            Assert.That(entity.Position, Is.EqualTo(initialPosition));
         }
 
         [Test]
@@ -75,17 +73,16 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var finalPosition = new Coords(1, 1);
             var entity = new Entity(f.GroundEntityType);
 
             // Act
-            var log = state.Move(entity, finalPosition, false);
+            var log = ctx.Move(entity, finalPosition, false);
 
             // Assert
             Assert.That(log, Is.Null);
-            var found = state.Board.TryGetCoords(entity, out _);
-            Assert.That(found, Is.False);
         }
 
         [Test]
@@ -93,27 +90,24 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var initialPosition = new Coords(0, 1);
             var finalPosition = new Coords(2, 1);
-            state.Spawn(f.GroundEntityType, finalPosition, out var entityA);
+            ctx.Spawn(f.GroundEntityType, finalPosition, out var entityA);
             entityA = entityA.FailIfNull();
-            state.Spawn(f.GhostAgentType, initialPosition, out var entityB);
+            ctx.Spawn(f.GhostAgentType, initialPosition, out var entityB);
             entityB = entityB.FailIfNull();
 
             // Act
-            var log = state.Move(entityB, finalPosition, false);
+            var log = ctx.Move(entityB, finalPosition, false);
 
             // Assert
             var movementLog = (MovementLog)log.FailIfNull();
             Assert.That(movementLog.Entity, Is.SameAs(entityB));
             Assert.That(movementLog.To, Is.EqualTo(finalPosition));
-            var entityAFound = state.Board.TryGetCoords(entityA, out var entityAPosition);
-            Assert.That(entityAFound, Is.True);
-            Assert.That(entityAPosition, Is.EqualTo(finalPosition));
-            var entityBFound = state.Board.TryGetCoords(entityB, out var entityBPosition);
-            Assert.That(entityBFound, Is.True);
-            Assert.That(entityBPosition, Is.EqualTo(finalPosition));
+            Assert.That(entityA.Position, Is.EqualTo(finalPosition));
+            Assert.That(entityB.Position, Is.EqualTo(finalPosition));
         }
 
         [Test]
@@ -121,25 +115,22 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var initialPosition = new Coords(0, 1);
             var finalPosition = new Coords(2, 1);
-            state.Spawn(f.GroundEntityType, finalPosition, out var entityA);
+            ctx.Spawn(f.GroundEntityType, finalPosition, out var entityA);
             entityA = entityA.FailIfNull();
-            state.Spawn(f.GroundEntityType, initialPosition, out var entityB);
+            ctx.Spawn(f.GroundEntityType, initialPosition, out var entityB);
             entityB = entityB.FailIfNull();
 
             // Act
-            var log = state.Move(entityB, finalPosition, false);
+            var log = ctx.Move(entityB, finalPosition, false);
 
             // Assert
             Assert.That(log, Is.Null);
-            var entityAFound = state.Board.TryGetCoords(entityA, out var entityAPosition);
-            Assert.That(entityAFound, Is.True);
-            Assert.That(entityAPosition, Is.EqualTo(finalPosition));
-            var entityBFound = state.Board.TryGetCoords(entityB, out var entityBPosition);
-            Assert.That(entityBFound, Is.True);
-            Assert.That(entityBPosition, Is.EqualTo(initialPosition));
+            Assert.That(entityA.Position, Is.EqualTo(finalPosition));
+            Assert.That(entityB.Position, Is.EqualTo(initialPosition));
         }
 
         [Test]
@@ -147,21 +138,20 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var initialPosition = new Coords(0, 1);
             var finalPosition = new Coords(2, 1);
-            state.Spawn(f.GroundEntityType, initialPosition, out var entity);
+            ctx.Spawn(f.GroundEntityType, initialPosition, out var entity);
             entity = entity.FailIfNull();
-            state.Modify(f.WallTileType, finalPosition);
+            ctx.Modify(f.WallTileType, finalPosition);
 
             // Act
-            var log = state.Move(entity, finalPosition, false);
+            var log = ctx.Move(entity, finalPosition, false);
 
             // Assert
             Assert.That(log, Is.Null);
-            var found = state.Board.TryGetCoords(entity, out var entityPosition);
-            Assert.That(found, Is.True);
-            Assert.That(entityPosition, Is.EqualTo(initialPosition));
+            Assert.That(entity.Position, Is.EqualTo(initialPosition));
         }
     }
 }

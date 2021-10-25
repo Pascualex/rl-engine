@@ -1,8 +1,9 @@
 ﻿using RLEngine.Controllers;
 using RLEngine.Input;
-using RLEngine.Actions;
+using RLEngine.Events;
 using RLEngine.Logs;
-using RLEngine.State;
+using RLEngine.Turns;
+using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
 
@@ -14,65 +15,82 @@ namespace RLEngine.Games
     {
         private readonly PlayerController playerController = new();
         private readonly AIController aiController = new();
-        private readonly GameState state;
+        private readonly EventQueue eventQueue = new();
+        private readonly EventContext eventCtx;
+        private readonly TurnManager turnManager = new();
 
         public Game(GameContent content)
         {
             Content = content;
 
-            state = new(content.BoardSize, content.FloorType);
+            Board = new Board(content.BoardSize, Content.FloorType);
+            eventCtx = new(eventQueue, turnManager, Board);
         }
 
+        public Board Board { get; }
         public GameContent Content { get; }
+        public Entity? CurrentAgent => turnManager.Current;
+        public bool ExpectsInput => eventQueue.Count == 0 && (CurrentAgent?.IsPlayer ?? false);
 
         public IPlayerInput? Input
         {
             set { playerController.Input = value; }
         }
 
-        public CombinedLog SetupExample()
+        public IEnumerable<Log> SetupExample()
         {
-            var log = new CombinedLogBuilder(false);
+            Log? log = eventCtx.Modify(Content.WallType, new Coords(4, 4));
+            if (log != null) yield return log;
+            log = eventCtx.Modify(Content.WallType, new Coords(5, 4));
+            if (log != null) yield return log;
+            log = eventCtx.Modify(Content.WallType, new Coords(4, 5));
+            if (log != null) yield return log;
+            log = eventCtx.Modify(Content.WallType, new Coords(5, 5));
+            if (log != null) yield return log;
 
-            log.Add(state.Modify(Content.WallType, new Coords(4, 4)));
-            log.Add(state.Modify(Content.WallType, new Coords(5, 4)));
-            log.Add(state.Modify(Content.WallType, new Coords(4, 5)));
-            log.Add(state.Modify(Content.WallType, new Coords(5, 5)));
+            log = eventCtx.Spawn(Content.PlayerType, new Coords(1, 0), out var entity);
+            if (entity != null) entity.IsPlayer = true;
+            if (log != null) yield return log;
 
-            log.Add(state.Spawn(Content.PlayerType, new Coords(1, 0), out var player));
-            if (player == null) return log.ForceBuild();
-            player.IsPlayer = true;
-            log.Add(state.Spawn(Content.GoblinType, new Coords(3, 0), out var goblinA));
-            if (goblinA == null) return log.ForceBuild();
-            log.Add(state.Spawn(Content.GoblinType, new Coords(5, 0), out var goblinB));
-            if (goblinB == null) return log.ForceBuild();
-            log.Add(state.Spawn(Content.GoblinType, new Coords(3, 2), out var goblinC));
-            if (goblinC == null) return log.ForceBuild();
-            log.Add(state.Spawn(Content.GoblinType, new Coords(5, 2), out var goblinD));
-            if (goblinD == null) return log.ForceBuild();
-
-            return log.ForceBuild();
+            log = eventCtx.Spawn(Content.GoblinType, new Coords(3, 0));
+            if (log != null) yield return log;
+            log = eventCtx.Spawn(Content.GoblinType, new Coords(5, 0));
+            if (log != null) yield return log;
+            log = eventCtx.Spawn(Content.GoblinType, new Coords(3, 2));
+            if (log != null) yield return log;
+            log = eventCtx.Spawn(Content.GoblinType, new Coords(5, 2));
+            if (log != null) yield return log;
         }
 
-        public CombinedLog ProcessTurns()
+        public Log? ProcessStep()
         {
-            var log = new CombinedLogBuilder(false);
-            var processed = new HashSet<Entity>();
-
-            while (state.TurnManager.Current != null)
+            bool unsuccessfulTurn;
+            do
             {
-                var current = state.TurnManager.Current;
-                if (processed.Contains(current)) break;
+                while (eventQueue.Count > 0)
+                {
+                    var eventLog = eventQueue.Invoke();
+                    if (eventLog != null) return eventLog;
+                }
+                unsuccessfulTurn = !TryProcessTurn(out var turnLog);
+                Input = null;
+                if (turnLog != null) return turnLog;
+            } while (!unsuccessfulTurn);
+            return null;
+        }
 
-                IController controller = current.IsPlayer ? playerController : aiController;
-                if (!controller.ProcessTurn(current, state, out var turnLog)) break;
-                log.Add(turnLog);
+        private bool TryProcessTurn(out Log? log)
+        {
+            log = null;
+            if (turnManager.Current == null) return false;
 
-                processed.Add(current);
-                state.TurnManager.Next(100);
-            }
+            var current = turnManager.Current;
+            var controller = (IController)(current.IsPlayer ? playerController : aiController);
+            if (!controller.TryProcessTurn(current, eventCtx, out log)) return false;
 
-            return log.ForceBuild();
+            turnManager.Next(100);
+
+            return true;
         }
     }
 }

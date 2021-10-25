@@ -12,15 +12,21 @@ namespace RLEngine.Abilities
         private readonly Dictionary<string, IEnumerable<Entity>> entityGroupsDB = new();
         private readonly Dictionary<string, Coords> coordsDB = new();
 
+        public TargetDB(Entity caster)
+        {
+            entitiesDB.Add("caster", caster);
+        }
+
         public TargetDB(Entity caster, Entity target)
         : this(caster)
         {
             entitiesDB.Add("target", target);
         }
 
-        public TargetDB(Entity caster)
+        public TargetDB(Entity caster, Coords target)
+        : this(caster)
         {
-            entitiesDB.Add("caster", caster);
+            coordsDB.Add("target", target);
         }
 
         public void Add(string id, Entity entity)

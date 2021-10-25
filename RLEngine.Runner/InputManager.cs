@@ -31,14 +31,30 @@ namespace RLEngine.Runner
                 Array.Copy(fullArgs, 1, args, 0, args.Length);
 
                 if (ExitCommand.Execute(command)) return null;
-                if (MovementCommand.Execute(command, args, out var mi)) return mi;
-                if (AttackCommand.Execute(command, args, out var ai)) return ai;
-                if (SpellCommand.Execute(command, args, game, out var si)) return si;
+                if (GetInput(command, args, game, out var input))
+                {
+                    if (input != null) return input;
 
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(" ## Invalid syntax");
-                Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(" ## Invalid command");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(" ## Invalid syntax");
+                    Console.ResetColor();
+                }
             }
+        }
+
+        private static bool GetInput(string command, string[] args, Game game,
+        out IPlayerInput? input)
+        {
+            if (MovementCommand.Execute(command, args, out input)) return true;
+            if (AttackCommand.Execute(command, args, game, out input)) return true;
+            if (AbilityCommand.Execute(command, args, game, out input)) return true;
+            return false;
         }
     }
 }

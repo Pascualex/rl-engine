@@ -1,8 +1,8 @@
-﻿using RLEngine.Actions;
+﻿using RLEngine.Events;
 
 namespace RLEngine.Abilities
 {
-    public interface IHealingEffect
+    public interface IHealingEffect : IEffect
     {
         string Source { get; }
         string Target { get; }

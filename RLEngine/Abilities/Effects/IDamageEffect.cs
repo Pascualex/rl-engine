@@ -1,8 +1,8 @@
-﻿using RLEngine.Actions;
+﻿using RLEngine.Events;
 
 namespace RLEngine.Abilities
 {
-    public interface IDamageEffect
+    public interface IDamageEffect : IEffect
     {
         string Source { get; }
         string Target { get; }

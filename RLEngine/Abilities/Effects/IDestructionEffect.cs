@@ -1,6 +1,6 @@
 ﻿namespace RLEngine.Abilities
 {
-    public interface IDestructionEffect
+    public interface IDestructionEffect : IEffect
     {
         string Target { get; }
     }

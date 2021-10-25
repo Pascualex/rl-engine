@@ -1,6 +1,8 @@
-﻿using RLEngine.Input;
+﻿using RLEngine.Games;
+using RLEngine.Input;
 
 using CommandLine;
+using System.Linq;
 
 namespace RLEngine.Runner
 {
@@ -14,28 +16,36 @@ namespace RLEngine.Runner
             public string Direction { get; set; } = string.Empty;
         }
 
-        public static bool Execute(string command, string[] argsStr, out AttackInput? input)
+        public static bool Execute(string command, string[] argsStr, Game game,
+        out IPlayerInput? input)
         {
             input = null;
             if (!AliasesUtils.Accepts(command, aliases)) return false;
 
             var valid = false;
-            AttackInput? newInput = null;
+            IPlayerInput? newInput = null;
             var args = CommandParser.ParseArguments<Args>(argsStr)
-                .WithParsed(args => valid = Execute(args, out newInput));
+                .WithParsed(args => valid = Execute(args, game, out newInput));
 
             input = newInput;
             return valid;
         }
 
-        private static bool Execute(Args args, out AttackInput? input)
+        private static bool Execute(Args args, Game game, out IPlayerInput? input)
         {
             input = null;
 
             var direction = CommandParser.ParseDirection(args.Direction);
             if (direction == null) return false;
 
-            // input = new AttackInput(direction);
+            var currentAgent = game.CurrentAgent;
+            if (currentAgent == null) return true;
+
+            var position = currentAgent.Position + direction;
+            var entities = game.Board.GetEntities(position);
+            if (!entities.Any()) return true;
+
+            input = new AttackInput(entities.First());
             return true;
         }
     }

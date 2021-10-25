@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RLEngine.Utils;
+
+using System;
 
 namespace RLEngine.Entities
 {
@@ -19,10 +21,9 @@ namespace RLEngine.Entities
             Type = type;
         }
 
-        internal string Name { get; }
-        internal bool IsAgent { get; }
-        internal bool IsPlayer { get; set; } = false;
-        internal bool IsDestroyed { get; private set; } = false;
+        public string Name { get; }
+        public bool IsAgent { get; }
+        public bool IsPlayer { get; internal set; } = false;
         internal int Health { get; private set; }
         internal int MissingHealth => MaxHealth - Health;
         internal int MaxHealth { get; }
@@ -32,6 +33,8 @@ namespace RLEngine.Entities
         internal bool IsGhost { get; }
         internal bool IsRoamer { get; }
         public EntityType Type { get; }
+        public Coords Position { get; private set; } = Coords.MinusOne;
+        internal bool IsDestroyed { get; private set; } = false;
 
         internal int Damage(int damage)
         {
@@ -45,6 +48,11 @@ namespace RLEngine.Entities
             heal = heal.Clamp(0, MissingHealth);
             Health += heal;
             return heal;
+        }
+
+        internal void OnMove(Coords to)
+        {
+            Position = to;
         }
 
         internal void OnDestroy()

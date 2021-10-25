@@ -1,8 +1,6 @@
-﻿using RLEngine.Actions;
-
-namespace RLEngine.Abilities
+﻿namespace RLEngine.Abilities
 {
-    public interface IAreaTargetEffect
+    public interface IAreaTargetEffect : IEffect
     {
         string Source { get; }
         int Radius { get; }

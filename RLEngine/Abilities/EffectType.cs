@@ -4,7 +4,6 @@
     {
         Unset,
         AreaTarget,
-        Combined,
         Damage,
         Destruction,
         Group,

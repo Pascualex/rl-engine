@@ -2,11 +2,10 @@
 
 namespace RLEngine.Abilities
 {
-    public interface IGroupEffect
+    public interface IGroupEffect : IEffect
     {
-        bool IsParallel { get; }
-        IEnumerable<Effect> Effects { get; }
         string Group { get; }
         string NewTarget { get; }
+        IEnumerable<Effect> Effects { get; }
     }
 }

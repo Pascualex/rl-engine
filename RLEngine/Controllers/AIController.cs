@@ -1,6 +1,5 @@
-using RLEngine.Actions;
+using RLEngine.Events;
 using RLEngine.Logs;
-using RLEngine.State;
 using RLEngine.Entities;
 using RLEngine.Utils;
 
@@ -8,36 +7,31 @@ namespace RLEngine.Controllers
 {
     internal class AIController : IController
     {
-        public bool ProcessTurn(Entity entity, GameState state, out Log? log)
+        public bool TryProcessTurn(Entity entity, EventContext ctx, out Log? log)
         {
-            if (RandomMovement(entity, state, out log)) return true;
-            log = null;
+            log = RandomMovement(entity, ctx);
             return true;
         }
 
-        private bool RandomMovement(Entity entity, GameState state, out Log? log)
+        private Log? RandomMovement(Entity entity, EventContext ctx)
         {
-            log = null;
-            if (!entity.IsRoamer) return false;
-
-            if (state.Board.TryGetCoords(entity, out var position)) return false;
+            if (!entity.IsRoamer) return null;
 
             var directions = Coords.RandomizedDirections();
             var selectedDirection = Coords.Zero;
             foreach (var direction in directions)
             {
-                var to = position + direction;
-                if (!state.Board.CanMove(entity, to))
+                var to = entity.Position + direction;
+                if (!ctx.Board.CanMove(entity, to))
                 {
                     selectedDirection = direction;
                     break;
                 }
             }
 
-            if (selectedDirection == Coords.Zero) return false;
+            if (selectedDirection == Coords.Zero) return null;
 
-            log = state.Move(entity, selectedDirection, true);
-            return true;
+            return ctx.Move(entity, selectedDirection, true);
         }
     }
 }

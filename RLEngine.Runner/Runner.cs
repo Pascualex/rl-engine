@@ -4,6 +4,8 @@ using RLEngine.Yaml.Utils;
 using RLEngine.Games;
 using RLEngine.Utils;
 
+using System;
+
 namespace RLEngine.Runner
 {
     public static class Runner
@@ -16,18 +18,25 @@ namespace RLEngine.Runner
             YamlSerializer.Serialize(gameContent);
 
             var game = new Game(gameContent);
-            var gameView = new GameView(gameContent, 250);
+            var gameView = new GameView(250);
 
-            var log = game.SetupExample();
-            gameView.Process(log);
+            var setupLogs = game.SetupExample();
+            foreach (var log in setupLogs)
+            {
+                gameView.Process(log);
+            }
 
             while (true)
             {
-                var input = InputManager.GetInput(game);
-                if (input == null) break;
-                game.Input = input;
-                log = game.ProcessTurns();
-                gameView.Process(log);
+                if (game.ExpectsInput)
+                {
+                    var input = InputManager.GetInput(game);
+                    if (input == null) break;
+                    game.Input = input;
+                }
+
+                var log = game.ProcessStep();
+                if (log != null) gameView.Process(log);
             }
         }
     }

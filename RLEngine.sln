@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Yaml", "RLEngine.Y
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Runner", "RLEngine.Runner\RLEngine.Runner.csproj", "{E3656781-FE04-4925-BBA1-818A8BD18341}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.ViewState", "RLEngine.ViewState\RLEngine.ViewState.csproj", "{25E39E55-CB5C-4F00-863C-F67EE6EA2947}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,17 +72,5 @@ Global
 		{E3656781-FE04-4925-BBA1-818A8BD18341}.Release|x64.Build.0 = Release|Any CPU
 		{E3656781-FE04-4925-BBA1-818A8BD18341}.Release|x86.ActiveCfg = Release|Any CPU
 		{E3656781-FE04-4925-BBA1-818A8BD18341}.Release|x86.Build.0 = Release|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Debug|x64.Build.0 = Debug|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Debug|x86.Build.0 = Debug|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Release|Any CPU.Build.0 = Release|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Release|x64.ActiveCfg = Release|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Release|x64.Build.0 = Release|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Release|x86.ActiveCfg = Release|Any CPU
-		{25E39E55-CB5C-4F00-863C-F67EE6EA2947}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

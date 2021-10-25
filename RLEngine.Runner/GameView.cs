@@ -1,7 +1,5 @@
-﻿using RLEngine.ViewState.Games;
-
-using RLEngine.Games;
-using RLEngine.Logs;
+﻿using RLEngine.Logs;
+using RLEngine.Abilities;
 using RLEngine.Boards;
 using RLEngine.Entities;
 using RLEngine.Utils;
@@ -12,40 +10,37 @@ namespace RLEngine.Runner
 {
     public class GameView
     {
-        private readonly GameViewState state;
         private readonly int delayMS;
 
-        public GameView(GameContent content, int delayMS)
+        public GameView(int delayMS)
         {
             this.delayMS = delayMS;
-
-            state = new GameViewState(content);
         }
 
-        public void Process(CombinedLog log)
+        public void Process(Log log)
         {
-            foreach (var sublog in log.Logs)
-            {
-                if (sublog is CombinedLog combinedLog)
-                {
-                    Process(combinedLog);
-                    continue;
-                }
+            if      (log is      AbilityLog      abilityLog) Write(     abilityLog);
+            else if (log is        SpawnLog        spawnLog) Write(       spawnLog);
+            else if (log is     MovementLog     movementLog) Write(    movementLog);
+            else if (log is  DestructionLog  destructionLog) Write( destructionLog);
+            else if (log is ModificationLog modificationLog) Write(modificationLog);
+            else if (log is       DamageLog       damageLog) Write(      damageLog);
+            else if (log is      HealingLog      healingLog) Write(     healingLog);
+            else if (log is   ProjectileLog   projectileLog) Write(  projectileLog);
+            else WriteUnsupported(log);
 
-                if (state.Update(sublog)) WriteUnsupportedByState(sublog);
+            if (delayMS > 0) System.Threading.Thread.Sleep(delayMS);
+        }
 
-                if      (sublog is        SpawnLog        spawnLog) Write(       spawnLog);
-                else if (sublog is     MovementLog     movementLog) Write(    movementLog);
-                else if (sublog is  DestructionLog  destructionLog) Write( destructionLog);
-                else if (sublog is ModificationLog modificationLog) Write(modificationLog);
-                else if (sublog is       DamageLog       damageLog) Write(      damageLog);
-                else if (sublog is      HealingLog      healingLog) Write(     healingLog);
-                else if (sublog is   ProjectileLog   projectileLog) Write(  projectileLog);
-                else WriteUnsupported(sublog);
-
-                if (sublog is CombinedLog) continue;
-                if (delayMS > 0) System.Threading.Thread.Sleep(delayMS);
-            }
+        private static void Write(AbilityLog log)
+        {
+            Write(log.Caster);
+            Console.Write(" casts ");
+            Write(log.Ability);
+            if (log.Target is EntityTarget or CoordsTarget) Console.Write(" targeted at ");
+            if (log.Target is EntityTarget eTarget) Write(eTarget.Entity);
+            if (log.Target is CoordsTarget cTarget) Write(cTarget.Coords);
+            Console.WriteLine(".");
         }
 
         private static void Write(SpawnLog log)
@@ -67,8 +62,7 @@ namespace RLEngine.Runner
         private static void Write(DestructionLog log)
         {
             Write(log.Entity);
-            var verb = "XXX";
-            // TODO: var verb = log.Entity.IsAgent ? "dies" : "is destroyed";
+            var verb = log.Entity.IsAgent ? "dies" : "is destroyed";
             Console.WriteLine($" {verb}.");
         }
 
@@ -123,12 +117,12 @@ namespace RLEngine.Runner
         private static void Write(ProjectileLog log)
         {
             Console.Write("A projectile goes from ");
-            if (log.From != null) Write(log.From);
-            else if (log.Source != null) Write(log.Source);
+            if (log.Source is EntityTarget eSource) Write(eSource.Entity);
+            else if (log.Source is CoordsTarget cSource) Write(cSource.Coords);
             else WriteNull();
             Console.Write(" to ");
-            if (log.To != null) Write(log.To);
-            else if (log.Target != null) Write(log.Target);
+            if (log.Target is EntityTarget eTarget) Write(eTarget.Entity);
+            else if (log.Target is CoordsTarget cTarget) Write(cTarget.Coords);
             else WriteNull();
             Console.WriteLine(".");
         }
@@ -140,29 +134,19 @@ namespace RLEngine.Runner
             Console.WriteLine($"] {log.GetType().Name} is not supported.");
         }
 
-        private static void WriteUnsupportedByState(Log log)
+        private static void Write(Ability ability)
         {
-            Console.Write("[");
-            Write("error", ConsoleColor.Red);
-            Console.WriteLine($"] {log.GetType().Name} is not supported by the view state.");
-        }
-
-        private static void WriteStateSynchronizationError(Log log)
-        {
-            Console.Write("[");
-            Write("error", ConsoleColor.Red);
-            Console.WriteLine("] The game view state is not synchronized with the game.");
-        }
-
-        private static void Write(Entity entity)
-        {
-            Write("XXX", ConsoleColor.Yellow);
-            // TODO: Write(entity.Name, ConsoleColor.Yellow);
+            Write(ability.Name, ConsoleColor.Yellow);
         }
 
         private static void Write(TileType tileType)
         {
             Write(tileType.Name, ConsoleColor.Yellow);
+        }
+
+        private static void Write(Entity entity)
+        {
+            Write(entity.Name, ConsoleColor.Yellow);
         }
 
         private static void Write(Coords coords)

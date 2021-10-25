@@ -52,9 +52,7 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(added, Is.True);
-            var found = board.TryGetCoords(entity, out var entityPosition);
-            Assert.That(found, Is.True);
-            Assert.That(entityPosition, Is.EqualTo(position));
+            Assert.That(entity.Position, Is.EqualTo(position));
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.Member(entity));
         }
@@ -76,8 +74,7 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(added, Is.False);
-            var found = board.TryGetCoords(entity, out _);
-            Assert.That(found, Is.False);
+            Assert.That(entity.Position, Is.EqualTo(Coords.MinusOne));
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.No.Member(entity));
         }
@@ -98,12 +95,8 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(added, Is.True);
-            var entityAFound = board.TryGetCoords(entityA, out var entityAPosition);
-            Assert.That(entityAFound, Is.True);
-            Assert.That(entityAPosition, Is.EqualTo(position));
-            var entityBFound = board.TryGetCoords(entityB, out var entityBPosition);
-            Assert.That(entityBFound, Is.True);
-            Assert.That(entityBPosition, Is.EqualTo(position));
+            Assert.That(entityA.Position, Is.EqualTo(position));
+            Assert.That(entityB.Position, Is.EqualTo(position));
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.Member(entityA));
             Assert.That(entities, Has.Member(entityB));
@@ -125,11 +118,8 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(added, Is.False);
-            var entityAFound = board.TryGetCoords(entityA, out var entityAPosition);
-            Assert.That(entityAFound, Is.True);
-            Assert.That(entityAPosition, Is.EqualTo(position));
-            var entityBFound = board.TryGetCoords(entityB, out _);
-            Assert.That(entityBFound, Is.False);
+            Assert.That(entityA.Position, Is.EqualTo(position));
+            Assert.That(entityB.Position, Is.EqualTo(Coords.MinusOne));
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.Member(entityA));
             Assert.That(entities, Has.No.Member(entityB));
@@ -149,8 +139,7 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(added, Is.False);
-            var found = board.TryGetCoords(entity, out _);
-            Assert.That(found, Is.False);
+            Assert.That(entity.Position, Is.EqualTo(Coords.MinusOne));
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.No.Member(entity));
         }
@@ -174,9 +163,7 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(moved, Is.True);
-            var found = board.TryGetCoords(entity, out var entityPosition);
-            Assert.That(found, Is.True);
-            Assert.That(entityPosition, Is.EqualTo(finalPosition));
+            Assert.That(entity.Position, Is.EqualTo(finalPosition));
             if (initialPosition != finalPosition)
             {
                 var initialEntities = board.GetEntities(initialPosition);
@@ -205,9 +192,7 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(moved, Is.False);
-            var found = board.TryGetCoords(entity, out var entityPosition);
-            Assert.That(found, Is.True);
-            Assert.That(entityPosition, Is.EqualTo(initialPosition));
+            Assert.That(entity.Position, Is.EqualTo(initialPosition));
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.Member(entity));
             var finalEntities = board.GetEntities(finalPosition);
@@ -228,8 +213,7 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(moved, Is.False);
-            var found = board.TryGetCoords(entity, out _);
-            Assert.That(found, Is.False);
+            Assert.That(entity.Position, Is.EqualTo(Coords.MinusOne));
             var finalEntities = board.GetEntities(finalPosition);
             Assert.That(finalEntities, Has.No.Member(entity));
         }
@@ -252,12 +236,8 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(moved, Is.True);
-            var entityAFound = board.TryGetCoords(entityA, out var entityAPosition);
-            Assert.That(entityAFound, Is.True);
-            Assert.That(entityAPosition, Is.EqualTo(finalPosition));
-            var entityBFound = board.TryGetCoords(entityB, out var entityBPosition);
-            Assert.That(entityBFound, Is.True);
-            Assert.That(entityBPosition, Is.EqualTo(finalPosition));
+            Assert.That(entityA.Position, Is.EqualTo(finalPosition));
+            Assert.That(entityB.Position, Is.EqualTo(finalPosition));
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.No.Member(entityB));
             var finalEntities = board.GetEntities(finalPosition);
@@ -283,12 +263,8 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(moved, Is.False);
-            var entityAFound = board.TryGetCoords(entityA, out var entityAPosition);
-            Assert.That(entityAFound, Is.True);
-            Assert.That(entityAPosition, Is.EqualTo(finalPosition));
-            var entityBFound = board.TryGetCoords(entityB, out var entityBPosition);
-            Assert.That(entityBFound, Is.True);
-            Assert.That(entityBPosition, Is.EqualTo(initialPosition));
+            Assert.That(entityA.Position, Is.EqualTo(finalPosition));
+            Assert.That(entityB.Position, Is.EqualTo(initialPosition));
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.Member(entityB));
             var finalEntities = board.GetEntities(finalPosition);
@@ -313,9 +289,7 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(moved, Is.False);
-            var found = board.TryGetCoords(entity, out var entityPosition);
-            Assert.That(found, Is.True);
-            Assert.That(entityPosition, Is.EqualTo(initialPosition));
+            Assert.That(entity.Position, Is.EqualTo(initialPosition));
             var initialEntities = board.GetEntities(initialPosition);
             Assert.That(initialEntities, Has.Member(entity));
             var finalEntities = board.GetEntities(finalPosition);
@@ -337,8 +311,7 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(removed, Is.True);
-            var found = board.TryGetCoords(entity, out _);
-            Assert.That(found, Is.False);
+            Assert.That(entity.Position, Is.EqualTo(position));
             var entities = board.GetEntities(position);
             Assert.That(entities, Has.No.Member(entity));
         }
@@ -356,8 +329,7 @@ namespace RLEngine.Tests.Boards
 
             // Assert
             Assert.That(removed, Is.False);
-            var found = board.TryGetCoords(entity, out _);
-            Assert.That(found, Is.False);
+            Assert.That(entity.Position, Is.EqualTo(Coords.MinusOne));
         }
 
         [Test]

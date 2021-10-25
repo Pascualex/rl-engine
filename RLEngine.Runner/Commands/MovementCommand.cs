@@ -14,13 +14,13 @@ namespace RLEngine.Runner
             public string Direction { get; set; } = string.Empty;
         }
 
-        public static bool Execute(string command, string[] argsStr, out MovementInput? input)
+        public static bool Execute(string command, string[] argsStr, out IPlayerInput? input)
         {
             input = null;
             if (!AliasesUtils.Accepts(command, aliases)) return false;
 
             var valid = false;
-            MovementInput? newInput = null;
+            IPlayerInput? newInput = null;
             var args = CommandParser.ParseArguments<Args>(argsStr)
                 .WithParsed(args => valid = Execute(args, out newInput));
 
@@ -28,7 +28,7 @@ namespace RLEngine.Runner
             return valid;
         }
 
-        private static bool Execute(Args args, out MovementInput? input)
+        private static bool Execute(Args args, out IPlayerInput? input)
         {
             input = null;
 

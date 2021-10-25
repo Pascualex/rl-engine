@@ -1,5 +1,6 @@
+name: "Test Ability"
 cost: 100
-targetType: entity
+type: entityTarget
 effects:
 - type: areaTarget
   source: "target"
@@ -7,7 +8,6 @@ effects:
   newGroup: "area"
 - type: group
   group: "area"
-  isParallel: true
   newTarget: "iterator"
   effects:
   - type: projectile

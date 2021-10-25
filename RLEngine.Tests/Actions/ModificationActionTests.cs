@@ -1,8 +1,7 @@
-using RLEngine.Actions;
+using RLEngine.Events;
 using RLEngine.Logs;
-using RLEngine.State;
+using RLEngine.Turns;
 using RLEngine.Boards;
-using RLEngine.Entities;
 using RLEngine.Utils;
 using RLEngine.Tests.Utils;
 
@@ -21,18 +20,19 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var position = new Coords(x, y);
 
             // Act
-            var log = state.Modify(f.WallTileType, position);
+            var log = ctx.Modify(f.WallTileType, position);
 
             // Assert
             var modificationLog = (ModificationLog)log.FailIfNull();
             Assert.That(modificationLog.NewType, Is.SameAs(f.WallTileType));
             Assert.That(modificationLog.PreviousType, Is.SameAs(f.FloorTileType));
             Assert.That(modificationLog.At, Is.EqualTo(position));
-            var tileType = state.Board.GetTileType(position);
+            var tileType = ctx.Board.GetTileType(position);
             Assert.That(tileType, Is.SameAs(f.WallTileType));
         }
 
@@ -45,15 +45,16 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var position = new Coords(x, y);
 
             // Act
-            var log = state.Modify(f.WallTileType, position);
+            var log = ctx.Modify(f.WallTileType, position);
 
             // Assert
             Assert.That(log, Is.Null);
-            var tileType = state.Board.GetTileType(position);
+            var tileType = ctx.Board.GetTileType(position);
             Assert.That(tileType, Is.Null);
         }
     }

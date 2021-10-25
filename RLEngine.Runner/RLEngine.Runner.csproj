@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RLEngine\RLEngine.csproj" />
-    <ProjectReference Include="..\RLEngine.ViewState\RLEngine.ViewState.csproj" />
     <ProjectReference Include="..\RLEngine.Yaml\RLEngine.Yaml.csproj" />
   </ItemGroup>
 

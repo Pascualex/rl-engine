@@ -1,6 +1,7 @@
-using RLEngine.Actions;
+using RLEngine.Events;
 using RLEngine.Logs;
-using RLEngine.State;
+using RLEngine.Turns;
+using RLEngine.Boards;
 using RLEngine.Utils;
 using RLEngine.Tests.Utils;
 
@@ -21,14 +22,15 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var position = new Coords(1, 1);
-            state.Spawn(f.UnparentedEntityType, position, out var entity);
+            ctx.Spawn(f.UnparentedEntityType, position, out var entity);
             entity = entity.FailIfNull();
             var amount = new ActionAmount { Base = damage };
 
             // Act
-            var log = state.Damage(entity, amount);
+            var log = ctx.Damage(entity, amount);
 
             // Assert
             var expectedDamage = damage.Clamp(0, entity.MaxHealth);
@@ -39,11 +41,9 @@ namespace RLEngine.Tests.Actions
             Assert.That(damageLog.ActualDamage, Is.EqualTo(expectedDamage));
             Assert.That(entity.Health, Is.EqualTo(entity.MaxHealth - expectedDamage));
             Assert.That(entity.IsDestroyed, Is.False);
-            var currentEntity = state.TurnManager.Current;
+            var currentEntity = ctx.TurnManager.Current;
             Assert.That(currentEntity, Is.SameAs(entity));
-            var found = state.Board.TryGetCoords(entity, out var entityPosition);
-            Assert.That(found, Is.True);
-            Assert.That(entityPosition, Is.EqualTo(position));
+            Assert.That(entity.Position, Is.EqualTo(position));
         }
 
         [Test]
@@ -53,31 +53,25 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
-            var state = new GameState(new Size(3, 3), f.FloorTileType);
+            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
             var position = new Coords(1, 1);
-            state.Spawn(f.UnparentedEntityType, position, out var entity);
+            ctx.Spawn(f.UnparentedEntityType, position, out var entity);
             entity = entity.FailIfNull();
             var amount = new ActionAmount { Base = damage };
 
             // Act
-            var log = state.Damage(entity, amount);
+            var log = ctx.Damage(entity, amount);
 
             // Assert
             var expectedDamage = damage.Clamp(0, entity.MaxHealth);
-            var combinedLog = (CombinedLog)log.FailIfNull();
-            var damageLog = (DamageLog)combinedLog.Logs.ElementAt(0);
+            var damageLog = (DamageLog)log.FailIfNull();
             Assert.That(damageLog.Target, Is.SameAs(entity));
             Assert.That(damageLog.Attacker, Is.Null);
             Assert.That(damageLog.Damage, Is.EqualTo(Math.Max(0, damage)));
             Assert.That(damageLog.ActualDamage, Is.EqualTo(expectedDamage));
             Assert.That(entity.Health, Is.EqualTo(0));
-            Assert.That(entity.IsDestroyed, Is.True);
-            var destructionLog = (DestructionLog)combinedLog.Logs.ElementAt(1);
-            Assert.That(destructionLog.Entity, Is.SameAs(entity));
-            var currentEntity = state.TurnManager.Current;
-            Assert.That(currentEntity, Is.Null);
-            var found = state.Board.TryGetCoords(entity, out _);
-            Assert.That(found, Is.False);
+            Assert.That(entity.IsDestroyed, Is.False);
         }
     }
 }
