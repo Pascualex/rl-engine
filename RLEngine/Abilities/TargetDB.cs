@@ -1,41 +1,24 @@
 ﻿using RLEngine.Entities;
 using RLEngine.Utils;
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RLEngine.Abilities
 {
     internal class TargetDB
     {
-        private readonly Dictionary<string, Entity> entitiesDB = new();
-        private readonly Dictionary<string, IEnumerable<Entity>> entityGroupsDB = new();
+        private readonly Dictionary<string, IEntity> entitiesDB = new();
+        private readonly Dictionary<string, IReadOnlyCollection<IEntity>> entityGroupsDB = new();
         private readonly Dictionary<string, Coords> coordsDB = new();
 
-        public TargetDB(Entity caster)
-        {
-            entitiesDB.Add("caster", caster);
-        }
-
-        public TargetDB(Entity caster, Entity target)
-        : this(caster)
-        {
-            entitiesDB.Add("target", target);
-        }
-
-        public TargetDB(Entity caster, Coords target)
-        : this(caster)
-        {
-            coordsDB.Add("target", target);
-        }
-
-        public void Add(string id, Entity entity)
+        public void Add(string id, IEntity entity)
         {
             if (id.Length == 0) return;
             entitiesDB[id] = entity;
         }
 
-        public void Add(string id, IEnumerable<Entity> entityGroup)
+        public void Add(string id, IReadOnlyCollection<IEntity> entityGroup)
         {
             if (id.Length == 0) return;
             entityGroupsDB[id] = entityGroup;
@@ -47,15 +30,14 @@ namespace RLEngine.Abilities
             coordsDB[id] = coords;
         }
 
-        public Entity? GetEntity(string id)
+        public IEntity? GetEntity(string id)
         {
             return TryGetEntity(id, out var entity) ? entity : null;
         }
 
-        public IEnumerable<Entity> GetEntityGroup(string id)
+        public IReadOnlyCollection<IEntity> GetEntityGroup(string id)
         {
-            var emptyEntityGroup = Enumerable.Empty<Entity>();
-            if (!entityGroupsDB.TryGetValue(id, out var entityGroup)) return emptyEntityGroup;
+            if (!entityGroupsDB.TryGetValue(id, out var entityGroup)) return Array.Empty<IEntity>();
             return entityGroup;
         }
 
@@ -64,7 +46,7 @@ namespace RLEngine.Abilities
             return TryGetCoords(id, out var coords) ? coords : null;
         }
 
-        public bool TryGetEntity(string id, out Entity entity)
+        public bool TryGetEntity(string id, out IEntity entity)
         {
             entity = null!;
             if (id.Length == 0) return false;

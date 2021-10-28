@@ -5,11 +5,14 @@ using RLEngine.Entities;
 
 namespace RLEngine.Controllers
 {
-    internal class PlayerController : IController
+    internal class PlayerController : Controller
     {
+        public PlayerController(EventContext ctx)
+        : base(ctx) { }
+
         public IPlayerInput? Input { private get; set; } = null;
 
-        public bool TryProcessTurn(Entity entity, EventContext ctx, out Log? log)
+        public override bool TryProcessTurn(IEntity entity, out ILog? log)
         {
             log = null;
             if (Input == null) return false;
@@ -22,19 +25,19 @@ namespace RLEngine.Controllers
             return log != null;
         }
 
-        public Log? AttemptMove(Entity entity, EventContext ctx, MovementInput input)
+        public ILog? AttemptMove(IEntity entity, EventContext ctx, MovementInput input)
         {
-            return ctx.Move(entity, input.To, input.Relative);
+            return ctx.ActionExecutor.Move(entity, input.To, input.Relative);
         }
 
-        public Log? AttempAttack(Entity entity, EventContext ctx, AttackInput input)
+        public ILog? AttempAttack(IEntity entity, EventContext ctx, AttackInput input)
         {
-            return ctx.Damage(input.Target, entity, new ActionAmount { Base = 10 });
+            return ctx.ActionExecutor.Damage(input.Target, entity, new Amount { Base = 10 });
         }
 
-        public Log? AttemptCast(Entity entity, EventContext ctx, AbilityInput input)
+        public ILog? AttemptCast(IEntity entity, EventContext ctx, AbilityInput input)
         {
-            return ctx.Cast(entity, input.Target, input.Ability);
+            return ctx.ActionExecutor.Cast(entity, input.Target, input.Ability);
         }
     }
 }

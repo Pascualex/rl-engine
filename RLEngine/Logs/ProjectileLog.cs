@@ -1,11 +1,10 @@
-﻿using RLEngine.Entities;
-using RLEngine.Utils;
+﻿using RLEngine.Utils;
 
 namespace RLEngine.Logs
 {
-    public class ProjectileLog : Log
+    public class ProjectileLog : ILog
     {
-        internal ProjectileLog(ITarget source, ITarget target)
+        public ProjectileLog(ITarget source, ITarget target)
         {
             Source = source;
             Target = target;

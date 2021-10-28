@@ -1,7 +1,7 @@
 ﻿using RLEngine.Yaml.Utils;
 
-using RLEngine.Events;
 using RLEngine.Abilities;
+using RLEngine.Entities;
 using RLEngine.Utils;
 
 using System;
@@ -19,7 +19,7 @@ namespace RLEngine.Yaml.Serialization
         private readonly EffectWritter effectWritter;
         private readonly Type[] inlineTypes = new[]
         {
-            typeof(ActionAmount),
+            typeof(Amount),
             typeof(Coords),
             typeof(Size),
         };

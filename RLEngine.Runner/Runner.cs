@@ -18,7 +18,7 @@ namespace RLEngine.Runner
             YamlSerializer.Serialize(gameContent);
 
             var game = new Game(gameContent);
-            var gameView = new GameView(250);
+            var gameView = new GameView(50);
 
             var setupLogs = game.SetupExample();
             foreach (var log in setupLogs)

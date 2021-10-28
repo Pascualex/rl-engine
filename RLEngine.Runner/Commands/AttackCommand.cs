@@ -43,7 +43,7 @@ namespace RLEngine.Runner
 
             var position = currentAgent.Position + direction;
             var entities = game.Board.GetEntities(position);
-            if (!entities.Any()) return true;
+            if (entities.Count == 0) return true;
 
             input = new AttackInput(entities.First());
             return true;

@@ -4,11 +4,11 @@ namespace RLEngine.Input
 {
     public class AttackInput : IPlayerInput
     {
-        public AttackInput(Entity target)
+        public AttackInput(IEntity target)
         {
             Target = target;
         }
 
-        public Entity Target { get; }
+        public IEntity Target { get; }
     }
 }

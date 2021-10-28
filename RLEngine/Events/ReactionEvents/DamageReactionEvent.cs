@@ -4,15 +4,14 @@ namespace RLEngine.Events
 {
     internal class DamageReactionEvent : ReactionEvent<DamageLog>
     {
-        public DamageReactionEvent(DamageLog actionLog, EventContext ctx)
-        : base(actionLog, ctx)
-        { }
+        public DamageReactionEvent(DamageLog log)
+        : base(log) { }
 
-        protected override Log? InternalInvoke()
+        protected override ILog? InternalInvoke(EventContext ctx)
         {
             if (actionLog.Target.Health == 0)
             {
-                return ctx.Destroy(actionLog.Target);
+                return ctx.ActionExecutor.Destroy(actionLog.Target);
             }
 
             return null;

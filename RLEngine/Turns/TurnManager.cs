@@ -8,12 +8,12 @@ namespace RLEngine.Turns
     internal class TurnManager
     {
         private readonly SortedSet<Turn> turns = new();
-        private readonly Dictionary<Entity, Turn> entities = new();
+        private readonly Dictionary<IEntity, Turn> entities = new();
         private int nextEntityId = 0;
 
-        public Entity? Current => turns.Count > 0 ? turns.Min.Entity : null;
+        public IEntity? Current => turns.Count > 0 ? turns.Min.Entity : null;
 
-        public bool Add(Entity entity)
+        public bool Add(IEntity entity)
         {
             if (!entity.IsAgent) return false;
             if (entities.ContainsKey(entity)) return false;
@@ -27,7 +27,7 @@ namespace RLEngine.Turns
             return true;
         }
 
-        public bool Remove(Entity entity)
+        public bool Remove(IEntity entity)
         {
             if (!entities.TryGetValue(entity, out var turn)) return false;
 

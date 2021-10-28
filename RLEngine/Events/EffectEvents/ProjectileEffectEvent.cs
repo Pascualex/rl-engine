@@ -1,5 +1,6 @@
 ﻿using RLEngine.Logs;
 using RLEngine.Abilities;
+using RLEngine.Utils;
 
 using NRE = System.NullReferenceException;
 
@@ -7,23 +8,20 @@ namespace RLEngine.Events
 {
     internal class ProjectileEffectEvent : EffectEvent<IProjectileEffect>
     {
-        public ProjectileEffectEvent(IProjectileEffect effect, TargetDB targetDB, EventContext ctx)
-        : base(effect, targetDB, ctx)
-        { }
+        public ProjectileEffectEvent(IProjectileEffect effect, TargetDB targetDB)
+        : base(effect, targetDB) { }
 
-        protected override Log? InternalInvoke()
+        protected override ILog? InternalInvoke(EventContext ctx)
         {
             var from = targetDB.GetCoords(effect.Source);
             var sourceE = targetDB.GetEntity(effect.Source);
-            if (from == null && sourceE == null) throw new NRE();
-            ITarget source = from != null ? new CoordsTarget(from) : new EntityTarget(sourceE!);
+            var source = (ITarget?)from ?? sourceE ?? throw new NRE();
 
             var to = targetDB.GetCoords(effect.Target);
             var targetE = targetDB.GetEntity(effect.Target);
-            if (to == null && targetE == null) throw new NRE();
-            ITarget target = to != null ? new CoordsTarget(to) : new EntityTarget(targetE!);
+            var target = (ITarget?)to ?? targetE ?? throw new NRE();
 
-            return ctx.Shoot(source, target);
+            return ctx.ActionExecutor.Shoot(source, target);
         }
     }
 }

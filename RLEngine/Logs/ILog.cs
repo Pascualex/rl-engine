@@ -1,5 +1,5 @@
 ﻿namespace RLEngine.Logs
 {
-    public abstract class Log
+    public interface ILog
     { }
 }

@@ -3,15 +3,15 @@ using RLEngine.Utils;
 
 namespace RLEngine.Logs
 {
-    public class SpawnLog : Log
+    public class SpawnLog : ILog
     {
-        internal SpawnLog(Entity entity, Coords at)
+        public SpawnLog(IEntity entity, Coords at)
         {
             Entity = entity;
             At = at;
         }
 
-        public Entity Entity { get; }
+        public IEntity Entity { get; }
         public Coords At { get; }
     }
 }

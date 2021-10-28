@@ -4,9 +4,9 @@ using System;
 
 namespace RLEngine.Entities
 {
-    public class Entity
+    internal class Entity : IEntity
     {
-        internal Entity(EntityType type)
+        public Entity(EntityType type)
         {
             // TODO: support inheritance in types and overridden attributes
             Name = type.Name;
@@ -23,39 +23,39 @@ namespace RLEngine.Entities
 
         public string Name { get; }
         public bool IsAgent { get; }
-        public bool IsPlayer { get; internal set; } = false;
-        internal int Health { get; private set; }
-        internal int MissingHealth => MaxHealth - Health;
-        internal int MaxHealth { get; }
-        internal int Speed { get; }
-        internal bool BlocksGround { get; }
-        internal bool BlocksAir { get; }
-        internal bool IsGhost { get; }
-        internal bool IsRoamer { get; }
+        public bool IsPlayer { get; set; } = false;
+        public int Health { get; private set; }
+        public int MissingHealth => MaxHealth - Health;
+        public int MaxHealth { get; }
+        public int Speed { get; }
+        public bool BlocksGround { get; }
+        public bool BlocksAir { get; }
+        public bool IsGhost { get; }
+        public bool IsRoamer { get; }
         public EntityType Type { get; }
         public Coords Position { get; private set; } = Coords.MinusOne;
-        internal bool IsDestroyed { get; private set; } = false;
+        public bool IsDestroyed { get; private set; } = false;
 
-        internal int Damage(int damage)
+        public int Damage(int damage)
         {
             damage = damage.Clamp(0, Health);
             Health -= damage;
             return damage;
         }
 
-        internal int Heal(int heal)
+        public int Heal(int heal)
         {
             heal = heal.Clamp(0, MissingHealth);
             Health += heal;
             return heal;
         }
 
-        internal void OnMove(Coords to)
+        public void OnMove(Coords to)
         {
             Position = to;
         }
 
-        internal void OnDestroy()
+        public void OnDestroy()
         {
             IsDestroyed = true;
         }

@@ -2,15 +2,15 @@
 
 namespace RLEngine.Logs
 {
-    public class PlayerLog : Log
+    public class PlayerLog : ILog
     {
-        internal PlayerLog(Entity entity, bool madePlayer)
+        public PlayerLog(IEntity entity, bool madePlayer)
         {
             Entity = entity;
             MadePlayer = madePlayer;
         }
 
-        public Entity Entity { get; }
+        public IEntity Entity { get; }
         public bool MadePlayer { get; }
     }
 }

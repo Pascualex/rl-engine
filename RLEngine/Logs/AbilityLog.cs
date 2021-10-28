@@ -1,19 +1,23 @@
 ﻿using RLEngine.Abilities;
 using RLEngine.Entities;
+using RLEngine.Utils;
 
 namespace RLEngine.Logs
 {
-    public class AbilityLog : Log
+    public class AbilityLog : ILog
     {
-        internal AbilityLog(Entity caster, Ability ability, ITarget target)
+        public AbilityLog(IEntity caster, Ability ability)
+        : this(caster, ability, null) { }
+
+        public AbilityLog(IEntity caster, Ability ability, ITarget? target)
         {
             Caster = caster;
             Ability = ability;
             Target = target;
         }
 
-        public Entity Caster { get; }
+        public IEntity Caster { get; }
         public Ability Ability { get; }
-        public ITarget Target { get; }
+        public ITarget? Target { get; }
     }
 }

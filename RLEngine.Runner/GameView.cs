@@ -17,7 +17,7 @@ namespace RLEngine.Runner
             this.delayMS = delayMS;
         }
 
-        public void Process(Log log)
+        public void Process(ILog log)
         {
             if      (log is      AbilityLog      abilityLog) Write(     abilityLog);
             else if (log is        SpawnLog        spawnLog) Write(       spawnLog);
@@ -37,9 +37,9 @@ namespace RLEngine.Runner
             Write(log.Caster);
             Console.Write(" casts ");
             Write(log.Ability);
-            if (log.Target is EntityTarget or CoordsTarget) Console.Write(" targeted at ");
-            if (log.Target is EntityTarget eTarget) Write(eTarget.Entity);
-            if (log.Target is CoordsTarget cTarget) Write(cTarget.Coords);
+            if (log.Target is IEntity or Coords) Console.Write(" targeted at ");
+            if (log.Target is IEntity eTarget) Write(eTarget);
+            if (log.Target is Coords cTarget) Write(cTarget);
             Console.WriteLine(".");
         }
 
@@ -117,17 +117,17 @@ namespace RLEngine.Runner
         private static void Write(ProjectileLog log)
         {
             Console.Write("A projectile goes from ");
-            if (log.Source is EntityTarget eSource) Write(eSource.Entity);
-            else if (log.Source is CoordsTarget cSource) Write(cSource.Coords);
+            if (log.Source is IEntity eSource) Write(eSource);
+            else if (log.Source is Coords cSource) Write(cSource);
             else WriteNull();
             Console.Write(" to ");
-            if (log.Target is EntityTarget eTarget) Write(eTarget.Entity);
-            else if (log.Target is CoordsTarget cTarget) Write(cTarget.Coords);
+            if (log.Target is IEntity eTarget) Write(eTarget);
+            else if (log.Target is Coords cTarget) Write(cTarget);
             else WriteNull();
             Console.WriteLine(".");
         }
 
-        private static void WriteUnsupported(Log log)
+        private static void WriteUnsupported(ILog log)
         {
             Console.Write("[");
             Write("error", ConsoleColor.Red);
@@ -144,7 +144,7 @@ namespace RLEngine.Runner
             Write(tileType.Name, ConsoleColor.Yellow);
         }
 
-        private static void Write(Entity entity)
+        private static void Write(IEntity entity)
         {
             Write(entity.Name, ConsoleColor.Yellow);
         }

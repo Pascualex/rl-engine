@@ -7,14 +7,13 @@ namespace RLEngine.Events
 {
     internal class DestructionEffectEvent : EffectEvent<IDestructionEffect>
     {
-        public DestructionEffectEvent(IDestructionEffect effect,
-        TargetDB targetDB, EventContext ctx) : base(effect, targetDB, ctx)
-        { }
+        public DestructionEffectEvent(IDestructionEffect effect, TargetDB targetDB)
+        : base(effect, targetDB) { }
 
-        protected override Log? InternalInvoke()
+        protected override ILog? InternalInvoke(EventContext ctx)
         {
             if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();
-            return ctx.Destroy(target);
+            return ctx.ActionExecutor.Destroy(target);
         }
     }
 }

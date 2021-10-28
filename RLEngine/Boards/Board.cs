@@ -1,17 +1,17 @@
 using RLEngine.Entities;
 using RLEngine.Utils;
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RLEngine.Boards
 {
-    public class Board
+    internal class Board : IBoard
     {
         private readonly Tile[][] tiles;
-        private readonly HashSet<Entity> entities = new();
+        private readonly HashSet<IEntity> entities = new();
 
-        internal Board(Size size, TileType defaultTileType)
+        public Board(Size size, TileType defaultTileType)
         {
             Size = size;
 
@@ -28,7 +28,7 @@ namespace RLEngine.Boards
 
         public Size Size { get; }
 
-        internal bool Add(Entity entity, Coords at)
+        public bool Add(IEntity entity, Coords at)
         {
             if (entities.Contains(entity)) return false;
             if (!Size.Contains(at)) return false;
@@ -40,7 +40,7 @@ namespace RLEngine.Boards
             return true;
         }
 
-        internal bool Move(Entity entity, Coords to)
+        public bool Move(IEntity entity, Coords to)
         {
             if (!entities.Contains(entity)) return false;
             if (!Size.Contains(to)) return false;
@@ -56,7 +56,7 @@ namespace RLEngine.Boards
             return true;
         }
 
-        internal bool Remove(Entity entity)
+        public bool Remove(IEntity entity)
         {
             if (!entities.Contains(entity)) return false;
 
@@ -68,21 +68,21 @@ namespace RLEngine.Boards
             return true;
         }
 
-        internal bool Modify(TileType tileType, Coords at)
+        public bool Modify(TileType tileType, Coords at)
         {
             if (!Size.Contains(at)) return false;
 
             return tiles[at.Y][at.X].Modify(tileType);
         }
 
-        public bool CanAdd(Entity entity, Coords at)
+        public bool CanAdd(IEntity entity, Coords at)
         {
             if (entities.Contains(entity)) return false;
             if (!Size.Contains(at)) return false;
             return tiles[at.Y][at.X].CanAdd(entity);
         }
 
-        public bool CanMove(Entity entity, Coords to)
+        public bool CanMove(IEntity entity, Coords to)
         {
             if (!entities.Contains(entity)) return false;
             if (!Size.Contains(to)) return false;
@@ -97,9 +97,9 @@ namespace RLEngine.Boards
             return tiles[at.Y][at.X].CanModify(tileType);
         }
 
-        public IEnumerable<Entity> GetEntities(Coords at)
+        public IReadOnlyCollection<IEntity> GetEntities(Coords at)
         {
-            if (!Size.Contains(at)) return Enumerable.Empty<Entity>();
+            if (!Size.Contains(at)) return Array.Empty<IEntity>();
 
             return tiles[at.Y][at.X].Entities;
         }

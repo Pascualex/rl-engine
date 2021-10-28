@@ -2,7 +2,7 @@ using System;
 
 namespace RLEngine.Utils
 {
-    public class Coords
+    public class Coords : ITarget
     {
         public static Coords Zero { get; } = new Coords(0, 0);
         public static Coords One { get; } = new Coords(1, 1);
@@ -24,6 +24,8 @@ namespace RLEngine.Utils
             X = x;
             Y = y;
         }
+
+        public Coords Position => this;
 
         public int GetDistance()
         {

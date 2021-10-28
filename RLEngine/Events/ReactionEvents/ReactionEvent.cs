@@ -2,12 +2,14 @@
 
 namespace RLEngine.Events
 {
-    internal abstract class ReactionEvent<T> : Event where T : Log
+    internal abstract class ReactionEvent : Event
+    { }
+
+    internal abstract class ReactionEvent<T> : ReactionEvent where T : ILog
     {
         protected T actionLog;
 
-        protected ReactionEvent(T actionLog, EventContext ctx)
-        : base(ctx)
+        protected ReactionEvent(T actionLog)
         {
             this.actionLog = actionLog;
         }

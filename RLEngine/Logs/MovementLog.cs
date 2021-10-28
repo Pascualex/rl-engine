@@ -3,15 +3,15 @@ using RLEngine.Utils;
 
 namespace RLEngine.Logs
 {
-    public class MovementLog : Log
+    public class MovementLog : ILog
     {
-        internal MovementLog(Entity entity, Coords to)
+        public MovementLog(IEntity entity, Coords to)
         {
             Entity = entity;
             To = to;
         }
 
-        public Entity Entity { get; }
+        public IEntity Entity { get; }
         public Coords To { get; }
     }
 }

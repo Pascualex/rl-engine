@@ -1,6 +1,6 @@
 namespace RLEngine.Entities
 {
-    internal interface IEntityAttributes
+    public interface IEntityAttributes
     {
         string Name { get; }
         bool IsAgent { get; }

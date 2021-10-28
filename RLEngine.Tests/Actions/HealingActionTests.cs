@@ -1,7 +1,8 @@
-using RLEngine.Events;
+using RLEngine.Actions;
 using RLEngine.Logs;
 using RLEngine.Turns;
 using RLEngine.Boards;
+using RLEngine.Entities;
 using RLEngine.Utils;
 using RLEngine.Tests.Utils;
 
@@ -21,25 +22,26 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
+            var turnManager = new TurnManager();
             var board = new Board(new Size(3, 3), f.FloorTileType);
-            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
+            var executor = new ActionExecutor(turnManager, board);
             var position = new Coords(1, 1);
-            ctx.Spawn(f.UnparentedEntityType, position, out var entity);
+            executor.Spawn(f.UnparentedEntityType, position, out var entity);
             entity = entity.FailIfNull();
-            var damageAmount = new ActionAmount { Base = damage };
-            ctx.Damage(entity, damageAmount);
-            var healingAmount = new ActionAmount { Base = healing };
+            var damageAmount = new Amount { Base = damage };
+            executor.Damage(entity, damageAmount);
+            var healingAmount = new Amount { Base = healing };
 
             // Act
-            var log = ctx.Heal(entity, healingAmount);
+            var log = executor.Heal(entity, healingAmount);
 
             // Assert
             var expectedHealing = healing.Clamp(0, damage);
-            var healingLog = (HealingLog)log.FailIfNull();
-            Assert.That(healingLog.Target, Is.SameAs(entity));
-            Assert.That(healingLog.Healer, Is.Null);
-            Assert.That(healingLog.Healing, Is.EqualTo(Math.Max(0, healing)));
-            Assert.That(healingLog.ActualHealing, Is.EqualTo(expectedHealing));
+            log = log.FailIfNull();
+            Assert.That(log.Target, Is.SameAs(entity));
+            Assert.That(log.Healer, Is.Null);
+            Assert.That(log.Healing, Is.EqualTo(Math.Max(0, healing)));
+            Assert.That(log.ActualHealing, Is.EqualTo(expectedHealing));
             Assert.That(entity.Health, Is.EqualTo(entity.MaxHealth - damage + expectedHealing));
         }
     }

@@ -1,5 +1,4 @@
-﻿using RLEngine.Events;
-using RLEngine.Logs;
+﻿using RLEngine.Entities;
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +17,7 @@ namespace RLEngine.Abilities
         public string Target { get; init; } = string.Empty;
         public string Source { get; init; } = string.Empty;
         public string Group { get; init; } = string.Empty;
-        public ActionAmount Amount { get; init; } = new();
+        public Amount Amount { get; init; } = new();
         public int Radius { get; init; } = 0;
         public string NewGroup { get; init; } = string.Empty;
         public string NewTarget { get; init; } = string.Empty;

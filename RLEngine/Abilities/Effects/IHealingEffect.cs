@@ -1,4 +1,4 @@
-﻿using RLEngine.Events;
+﻿using RLEngine.Entities;
 
 namespace RLEngine.Abilities
 {
@@ -6,6 +6,6 @@ namespace RLEngine.Abilities
     {
         string Source { get; }
         string Target { get; }
-        ActionAmount Amount { get; }
+        Amount Amount { get; }
     }
 }

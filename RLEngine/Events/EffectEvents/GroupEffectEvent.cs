@@ -7,22 +7,22 @@ namespace RLEngine.Events
 {
     internal class GroupEffectEvent : EffectEvent<IGroupEffect>
     {
-        public GroupEffectEvent(IGroupEffect effect, TargetDB targetDB, EventContext ctx)
-        : base(effect, targetDB, ctx)
+        public GroupEffectEvent(IGroupEffect effect, TargetDB targetDB)
+        : base(effect, targetDB)
         { }
 
-        protected override Log? InternalInvoke()
+        protected override ILog? InternalInvoke(EventContext ctx)
         {
             var events = new List<Event>();
             foreach (var target in targetDB.GetEntityGroup(effect.Group))
             {
-                events.Add(new GroupEffectIteratorEvent(effect.NewTarget, target, targetDB, ctx));
+                events.Add(new GroupEffectIteratorEvent(effect.NewTarget, target, targetDB));
                 foreach (var effect in effect.Effects)
                 {
-                    events.Add(EffectEvent.FromEffect(effect, targetDB, ctx));
+                    events.Add(FromEffect(effect, targetDB));
                 }
             }
-            ctx.EventQueue.AddFirst(events);
+            ctx.EventStack.Push(events);
             return null;
         }
     }

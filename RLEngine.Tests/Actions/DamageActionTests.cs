@@ -1,13 +1,12 @@
-using RLEngine.Events;
-using RLEngine.Logs;
+using RLEngine.Actions;
 using RLEngine.Turns;
 using RLEngine.Boards;
+using RLEngine.Entities;
 using RLEngine.Utils;
 using RLEngine.Tests.Utils;
 
 using NUnit.Framework;
 using System;
-using System.Linq;
 
 namespace RLEngine.Tests.Actions
 {
@@ -22,26 +21,27 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
+            var turnManager = new TurnManager();
             var board = new Board(new Size(3, 3), f.FloorTileType);
-            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
+            var executor = new ActionExecutor(turnManager, board);
             var position = new Coords(1, 1);
-            ctx.Spawn(f.UnparentedEntityType, position, out var entity);
+            executor.Spawn(f.UnparentedEntityType, position, out var entity);
             entity = entity.FailIfNull();
-            var amount = new ActionAmount { Base = damage };
+            var amount = new Amount { Base = damage };
 
             // Act
-            var log = ctx.Damage(entity, amount);
+            var log = executor.Damage(entity, amount);
 
             // Assert
             var expectedDamage = damage.Clamp(0, entity.MaxHealth);
-            var damageLog = (DamageLog)log.FailIfNull();
-            Assert.That(damageLog.Target, Is.SameAs(entity));
-            Assert.That(damageLog.Attacker, Is.Null);
-            Assert.That(damageLog.Damage, Is.EqualTo(Math.Max(0, damage)));
-            Assert.That(damageLog.ActualDamage, Is.EqualTo(expectedDamage));
+            log = log.FailIfNull();
+            Assert.That(log.Target, Is.SameAs(entity));
+            Assert.That(log.Attacker, Is.Null);
+            Assert.That(log.Damage, Is.EqualTo(Math.Max(0, damage)));
+            Assert.That(log.ActualDamage, Is.EqualTo(expectedDamage));
             Assert.That(entity.Health, Is.EqualTo(entity.MaxHealth - expectedDamage));
             Assert.That(entity.IsDestroyed, Is.False);
-            var currentEntity = ctx.TurnManager.Current;
+            var currentEntity = turnManager.Current;
             Assert.That(currentEntity, Is.SameAs(entity));
             Assert.That(entity.Position, Is.EqualTo(position));
         }
@@ -53,23 +53,24 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
+            var turnManager = new TurnManager();
             var board = new Board(new Size(3, 3), f.FloorTileType);
-            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
+            var executor = new ActionExecutor(turnManager, board);
             var position = new Coords(1, 1);
-            ctx.Spawn(f.UnparentedEntityType, position, out var entity);
+            executor.Spawn(f.UnparentedEntityType, position, out var entity);
             entity = entity.FailIfNull();
-            var amount = new ActionAmount { Base = damage };
+            var amount = new Amount { Base = damage };
 
             // Act
-            var log = ctx.Damage(entity, amount);
+            var log = executor.Damage(entity, amount);
 
             // Assert
             var expectedDamage = damage.Clamp(0, entity.MaxHealth);
-            var damageLog = (DamageLog)log.FailIfNull();
-            Assert.That(damageLog.Target, Is.SameAs(entity));
-            Assert.That(damageLog.Attacker, Is.Null);
-            Assert.That(damageLog.Damage, Is.EqualTo(Math.Max(0, damage)));
-            Assert.That(damageLog.ActualDamage, Is.EqualTo(expectedDamage));
+            log = log.FailIfNull();
+            Assert.That(log.Target, Is.SameAs(entity));
+            Assert.That(log.Attacker, Is.Null);
+            Assert.That(log.Damage, Is.EqualTo(Math.Max(0, damage)));
+            Assert.That(log.ActualDamage, Is.EqualTo(expectedDamage));
             Assert.That(entity.Health, Is.EqualTo(0));
             Assert.That(entity.IsDestroyed, Is.False);
         }

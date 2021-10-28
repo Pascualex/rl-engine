@@ -5,15 +5,18 @@ using RLEngine.Utils;
 
 namespace RLEngine.Controllers
 {
-    internal class AIController : IController
+    internal class AIController : Controller
     {
-        public bool TryProcessTurn(Entity entity, EventContext ctx, out Log? log)
+        public AIController(EventContext ctx)
+        : base(ctx) { }
+
+        public override bool TryProcessTurn(IEntity entity, out ILog? log)
         {
-            log = RandomMovement(entity, ctx);
+            log = RandomMovement(entity);
             return true;
         }
 
-        private Log? RandomMovement(Entity entity, EventContext ctx)
+        private ILog? RandomMovement(IEntity entity)
         {
             if (!entity.IsRoamer) return null;
 
@@ -31,7 +34,7 @@ namespace RLEngine.Controllers
 
             if (selectedDirection == Coords.Zero) return null;
 
-            return ctx.Move(entity, selectedDirection, true);
+            return ctx.ActionExecutor.Move(entity, selectedDirection, true);
         }
     }
 }

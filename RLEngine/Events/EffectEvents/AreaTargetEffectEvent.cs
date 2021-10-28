@@ -3,8 +3,8 @@ using RLEngine.Abilities;
 using RLEngine.Entities;
 using RLEngine.Utils;
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using NRE = System.NullReferenceException;
 
@@ -12,11 +12,11 @@ namespace RLEngine.Events
 {
     internal class AreaTargetEffectEvent : EffectEvent<IAreaTargetEffect>
     {
-        public AreaTargetEffectEvent(IAreaTargetEffect effect, TargetDB targetDB, EventContext ctx)
-        : base(effect, targetDB, ctx)
+        public AreaTargetEffectEvent(IAreaTargetEffect effect, TargetDB targetDB)
+        : base(effect, targetDB)
         { }
 
-        protected override Log? InternalInvoke()
+        protected override ILog? InternalInvoke(EventContext ctx)
         {
             var from = targetDB.GetCoords(effect.Source);
             if (from == null)
@@ -24,7 +24,7 @@ namespace RLEngine.Events
                 if (!targetDB.TryGetEntity(effect.Source, out var source)) throw new NRE();
                 if (source.IsDestroyed)
                 {
-                    targetDB.Add(effect.NewGroup, Enumerable.Empty<Entity>());
+                    targetDB.Add(effect.NewGroup, Array.Empty<Entity>());
                     return null;
                 }
                 from = source.Position;
@@ -33,7 +33,7 @@ namespace RLEngine.Events
             var downLeft = from - new Coords(effect.Radius, effect.Radius);
             var  upRight = from + new Coords(effect.Radius, effect.Radius);
 
-            var entities = new List<Entity>();
+            var entities = new List<IEntity>();
 
             for (var i = downLeft.Y; i <= upRight.Y; i++)
             {

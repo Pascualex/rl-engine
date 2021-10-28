@@ -1,19 +1,23 @@
-﻿using RLEngine.Turns;
+﻿using RLEngine.Actions;
+using RLEngine.Turns;
 using RLEngine.Boards;
 
 namespace RLEngine.Events
 {
     internal class EventContext
     {
-        public EventContext(EventQueue eventQueue, TurnManager turnManager, Board board)
+        public EventContext(EventStack eventStack, ActionExecutor actionExecutor,
+        TurnManager turnManager, IBoard board)
         {
-            EventQueue = eventQueue;
+            ActionExecutor = actionExecutor;
+            EventStack = eventStack;
             TurnManager = turnManager;
             Board = board;
         }
 
-        public EventQueue EventQueue { get; }
+        public ActionExecutor ActionExecutor { get; }
+        public EventStack EventStack { get; }
         public TurnManager TurnManager { get; }
-        public Board Board { get; }
+        public IBoard Board { get; }
     }
 }

@@ -4,13 +4,13 @@ using System;
 
 namespace RLEngine.Turns
 {
-    internal class Turn : IComparable<Turn>
+    public class Turn : IComparable<Turn>
     {
         public int Tick { get; }
         public int EntityId { get; }
-        public Entity Entity { get; }
+        public IEntity Entity { get; }
 
-        public Turn(int tick, int entityId, Entity entity)
+        public Turn(int tick, int entityId, IEntity entity)
         {
             Tick = tick;
             EntityId = entityId;

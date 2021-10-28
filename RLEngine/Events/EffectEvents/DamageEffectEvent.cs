@@ -7,15 +7,15 @@ namespace RLEngine.Events
 {
     internal class DamageEffectEvent : EffectEvent<IDamageEffect>
     {
-        public DamageEffectEvent(IDamageEffect effect, TargetDB targetDB, EventContext ctx)
-        : base(effect, targetDB, ctx)
+        public DamageEffectEvent(IDamageEffect effect, TargetDB targetDB)
+        : base(effect, targetDB)
         { }
 
-        protected override Log? InternalInvoke()
+        protected override ILog? InternalInvoke(EventContext ctx)
         {
             if (!targetDB.TryGetEntity(effect.Target, out var target)) throw new NRE();
             var attacker = targetDB.GetEntity(effect.Source);
-            return ctx.Damage(target, attacker, effect.Amount);
+            return ctx.ActionExecutor.Damage(target, attacker, effect.Amount);
         }
     }
 }

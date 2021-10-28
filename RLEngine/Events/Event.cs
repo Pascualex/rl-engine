@@ -1,28 +1,20 @@
 ﻿using RLEngine.Logs;
 
 using System;
-using System.Collections.Generic;
 
 namespace RLEngine.Events
 {
     internal abstract class Event
     {
-        protected EventContext ctx;
-        private bool isInvoked = false;
+        private bool hasBeenInvoked = false;
 
-        protected Event(EventContext ctx)
+        public ILog? Invoke(EventContext ctx)
         {
-            this.ctx = ctx;
+            if (hasBeenInvoked) throw new InvalidOperationException();
+            hasBeenInvoked = true;
+            return InternalInvoke(ctx);
         }
 
-        public Log? Invoke()
-        {
-            if (isInvoked) throw new InvalidOperationException();
-            isInvoked = true;
-
-            return InternalInvoke();
-        }
-
-        protected abstract Log? InternalInvoke();
+        protected abstract ILog? InternalInvoke(EventContext ctx);
     }
 }

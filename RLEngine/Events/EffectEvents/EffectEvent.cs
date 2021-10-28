@@ -6,19 +6,18 @@ namespace RLEngine.Events
 {
     internal abstract class EffectEvent : Event
     {
-        protected EffectEvent(EventContext ctx)
-        : base(ctx)
+        protected EffectEvent()
         { }
 
-        public static EffectEvent FromEffect(Effect effect, TargetDB targetDB, EventContext ctx)
+        public static EffectEvent FromEffect(Effect effect, TargetDB targetDB)
         => effect.Type switch
         {
-            EffectType. AreaTarget => new  AreaTargetEffectEvent(effect, targetDB, ctx),
-            EffectType.     Damage => new      DamageEffectEvent(effect, targetDB, ctx),
-            EffectType.Destruction => new DestructionEffectEvent(effect, targetDB, ctx),
-            EffectType.      Group => new       GroupEffectEvent(effect, targetDB, ctx),
-            EffectType.    Healing => new     HealingEffectEvent(effect, targetDB, ctx),
-            EffectType. Projectile => new  ProjectileEffectEvent(effect, targetDB, ctx),
+            EffectType. AreaTarget => new  AreaTargetEffectEvent(effect, targetDB),
+            EffectType.     Damage => new      DamageEffectEvent(effect, targetDB),
+            EffectType.Destruction => new DestructionEffectEvent(effect, targetDB),
+            EffectType.      Group => new       GroupEffectEvent(effect, targetDB),
+            EffectType.    Healing => new     HealingEffectEvent(effect, targetDB),
+            EffectType. Projectile => new  ProjectileEffectEvent(effect, targetDB),
             _ => throw new InvalidOperationException(),
         };
     }
@@ -28,8 +27,7 @@ namespace RLEngine.Events
         protected T effect;
         protected TargetDB targetDB;
 
-        protected EffectEvent(T effect, TargetDB targetDB, EventContext ctx)
-        : base(ctx)
+        protected EffectEvent(T effect, TargetDB targetDB)
         {
             this.effect = effect;
             this.targetDB = targetDB;

@@ -2,9 +2,9 @@
 
 namespace RLEngine.Logs
 {
-    public class DamageLog : Log
+    public class DamageLog : ILog
     {
-        internal DamageLog(Entity target, Entity? attacker, int damage, int actualDamage)
+        public DamageLog(IEntity target, IEntity? attacker, int damage, int actualDamage)
         {
             Target = target;
             Attacker = attacker;
@@ -12,8 +12,8 @@ namespace RLEngine.Logs
             ActualDamage = actualDamage;
         }
 
-        public Entity Target { get; }
-        public Entity? Attacker { get; }
+        public IEntity Target { get; }
+        public IEntity? Attacker { get; }
         public int Damage { get; }
         public int ActualDamage { get; }
     }

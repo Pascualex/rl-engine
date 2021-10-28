@@ -2,13 +2,13 @@
 
 namespace RLEngine.Logs
 {
-    public class DestructionLog : Log
+    public class DestructionLog : ILog
     {
-        internal DestructionLog(Entity entity)
+        public DestructionLog(IEntity entity)
         {
             Entity = entity;
         }
 
-        public Entity Entity { get; }
+        public IEntity Entity { get; }
     }
 }

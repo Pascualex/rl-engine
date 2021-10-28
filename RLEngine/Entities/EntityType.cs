@@ -2,7 +2,7 @@ using RLEngine.Utils;
 
 namespace RLEngine.Entities
 {
-    public class EntityType : IIdentifiable
+    public class EntityType : IIdentifiable, IEntityAttributes
     {
         public string ID { get; init; } = string.Empty;
         public string Name { get; init; } = string.Empty;

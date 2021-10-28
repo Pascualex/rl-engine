@@ -3,9 +3,9 @@ using RLEngine.Utils;
 
 namespace RLEngine.Logs
 {
-    public class ModificationLog : Log
+    public class ModificationLog : ILog
     {
-        internal ModificationLog(TileType newType, TileType previousType, Coords at)
+        public ModificationLog(TileType newType, TileType previousType, Coords at)
         {
             NewType = newType;
             PreviousType = previousType;

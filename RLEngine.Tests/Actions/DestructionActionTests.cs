@@ -1,5 +1,4 @@
-using RLEngine.Events;
-using RLEngine.Logs;
+using RLEngine.Actions;
 using RLEngine.Turns;
 using RLEngine.Boards;
 using RLEngine.Entities;
@@ -18,21 +17,22 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
+            var turnManager = new TurnManager();
             var board = new Board(new Size(3, 3), f.FloorTileType);
-            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
+            var executor = new ActionExecutor(turnManager, board);
             var position = new Coords(1, 1);
-            ctx.Spawn(f.AgentType, position, out var entity);
+            executor.Spawn(f.AgentType, position, out var entity);
             entity = entity.FailIfNull();
 
             // Act
-            var log = ctx.Destroy(entity);
+            var log = executor.Destroy(entity);
 
             // Assert
-            var destructionLog = (DestructionLog)log.FailIfNull();
-            Assert.That(destructionLog.Entity, Is.SameAs(entity));
-            var currentEntity = ctx.TurnManager.Current;
+            log = log.FailIfNull();
+            Assert.That(log.Entity, Is.SameAs(entity));
+            var currentEntity = turnManager.Current;
             Assert.That(currentEntity, Is.Null);
-            var found = !ctx.Board.CanAdd(entity, position);
+            var found = !board.CanAdd(entity, position);
             Assert.That(found, Is.False);
             Assert.That(entity.IsDestroyed, Is.True);
         }
@@ -42,18 +42,19 @@ namespace RLEngine.Tests.Actions
         {
             // Arrange
             var f = new ContentFixture();
+            var turnManager = new TurnManager();
             var board = new Board(new Size(3, 3), f.FloorTileType);
-            var ctx = new EventContext(new EventQueue(), new TurnManager(), board);
+            var executor = new ActionExecutor(turnManager, board);
             var entity = new Entity(f.AgentType);
 
             // Act
-            var log = ctx.Destroy(entity);
+            var log = executor.Destroy(entity);
 
             // Assert
             Assert.That(log, Is.Null);
-            var currentEntity = ctx.TurnManager.Current;
+            var currentEntity = turnManager.Current;
             Assert.That(currentEntity, Is.Null);
-            var found = !ctx.Board.CanAdd(entity, new Coords(1, 1));
+            var found = !board.CanAdd(entity, new Coords(1, 1));
             Assert.That(found, Is.False);
             Assert.That(entity.IsDestroyed, Is.False);
         }

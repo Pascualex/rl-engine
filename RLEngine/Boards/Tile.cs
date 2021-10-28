@@ -6,24 +6,24 @@ namespace RLEngine.Boards
 {
     internal class Tile
     {
-        private readonly HashSet<Entity> entities = new();
+        private readonly HashSet<IEntity> entities = new();
 
         public Tile(TileType type)
         {
             Type = type;
         }
 
-        public IEnumerable<Entity> Entities => entities;
+        public IReadOnlyCollection<IEntity> Entities => entities;
         public TileType Type { get; private set; }
 
-        public bool Add(Entity entity)
+        public bool Add(IEntity entity)
         {
             if (!CanAdd(entity)) return false;
             entities.Add(entity);
             return true;
         }
 
-        public void Remove(Entity entity)
+        public void Remove(IEntity entity)
         {
             entities.Remove(entity);
         }
@@ -35,7 +35,7 @@ namespace RLEngine.Boards
             return true;
         }
 
-        public bool CanAdd(Entity entity)
+        public bool CanAdd(IEntity entity)
         {
             if (entities.Contains(entity)) return false;
             foreach (var other in entities)
@@ -55,7 +55,7 @@ namespace RLEngine.Boards
             return true;
         }
 
-        private static bool AreCompatible(Entity entityA, Entity entityB)
+        private static bool AreCompatible(IEntity entityA, IEntity entityB)
         {
             var shareIsAgent = entityA.IsAgent == entityB.IsAgent;
             var shareIsGhost = entityA.IsGhost == entityB.IsGhost;
@@ -67,7 +67,7 @@ namespace RLEngine.Boards
             return true;
         }
 
-        private static bool AreCompatible(Entity entity, TileType tileType)
+        private static bool AreCompatible(IEntity entity, TileType tileType)
         {
             if (entity.Type.IsGhost) return true;
 
