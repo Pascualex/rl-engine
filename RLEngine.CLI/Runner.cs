@@ -10,10 +10,8 @@ namespace RLEngine.CLI
     {
         public static void Main()
         {
-            var gameContent = YamlDeserializer.Deserialize("Content");
-            var propertyInfo = typeof(GameContent).GetPublicProperty(nameof(IIdentifiable.ID))!;
-            propertyInfo.SetValue(gameContent, "ContentCopy");
-            YamlSerializer.Serialize(gameContent);
+            var gameContent = YamlDeserializer.Deserialize("../Content");
+            YamlSerializer.Serialize(gameContent, "../ContentCopy");
 
             var game = new Game(gameContent);
             var gameView = new GameView(50);

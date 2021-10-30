@@ -10,17 +10,20 @@ namespace RLEngine.Yaml.Serialization
 {
     public static class YamlSerializer
     {
-        public static void Serialize(GameContent gameContent)
+        public static void Serialize(GameContent gameContent, string path)
         {
             var serializationQueue = new SerializationQueue();
             var writter = new GenericWritter(serializationQueue);
 
-            Directory.CreateDirectory(gameContent.ID);
-            Serialize(writter, gameContent.ID, gameContent, typeof(GameContent));
+            Directory.CreateDirectory(path);
+            var gameContentID = Path.GetFileName(path);
+            var propertyInfo = typeof(GameContent).GetPublicProperty(nameof(GameContent.ID))!;
+            propertyInfo.SetValue(gameContent, gameContentID);
+            Serialize(writter, path, gameContent, typeof(GameContent));
             while (serializationQueue.Count > 0)
             {
                 var (element, type) = serializationQueue.Dequeue();
-                var typePath = Path.Combine(gameContent.ID, SerializationPaths.Get(type));
+                var typePath = Path.Combine(path, SerializationPaths.Get(type));
                 Serialize(writter, typePath, element, type);
             }
         }

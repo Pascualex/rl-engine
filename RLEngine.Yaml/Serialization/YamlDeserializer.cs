@@ -21,7 +21,7 @@ namespace RLEngine.Yaml.Serialization
             while (serializationQueue.Count > 0)
             {
                 var (target, type) = serializationQueue.Dequeue();
-                var typePath = Path.Combine(gameContent.ID, SerializationPaths.Get(type));
+                var typePath = Path.Combine(path, SerializationPaths.Get(type));
                 Deserialize(reader, typePath, target, type);
             }
             return gameContent;
