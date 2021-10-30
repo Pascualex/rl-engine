@@ -4,7 +4,7 @@ using RLEngine.Yaml.Utils;
 using RLEngine.Core.Games;
 using RLEngine.Core.Utils;
 
-namespace RLEngine.Runner
+namespace RLEngine.CLI
 {
     public static class Runner
     {

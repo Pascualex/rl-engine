@@ -3,7 +3,7 @@ using RLEngine.Core.Input;
 
 using System;
 
-namespace RLEngine.Runner
+namespace RLEngine.CLI
 {
     public static class InputManager
     {

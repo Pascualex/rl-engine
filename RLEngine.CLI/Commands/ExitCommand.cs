@@ -1,4 +1,4 @@
-﻿namespace RLEngine.Runner
+﻿namespace RLEngine.CLI
 {
     public static class ExitCommand
     {

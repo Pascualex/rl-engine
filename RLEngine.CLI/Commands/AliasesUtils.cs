@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RLEngine.Runner
+namespace RLEngine.CLI
 {
     public static class AliasesUtils
     {

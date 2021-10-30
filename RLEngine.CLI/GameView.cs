@@ -6,7 +6,7 @@ using RLEngine.Core.Utils;
 
 using System;
 
-namespace RLEngine.Runner
+namespace RLEngine.CLI
 {
     public class GameView
     {

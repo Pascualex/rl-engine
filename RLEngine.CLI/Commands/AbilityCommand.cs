@@ -4,11 +4,11 @@ using RLEngine.Core.Input;
 using CommandLine;
 using System.Linq;
 
-namespace RLEngine.Runner
+namespace RLEngine.CLI
 {
-    public static class AttackCommand
+    public static class AbilityCommand
     {
-        private static readonly string[] aliases = { "attack", "a" };
+        private static readonly string[] aliases = { "cast", "c" };
 
         private class Args
         {
@@ -45,7 +45,7 @@ namespace RLEngine.Runner
             var entities = game.Board.GetEntities(position);
             if (entities.Count == 0) return true;
 
-            input = new AttackInput(entities.First());
+            input = new AbilityInput(game.Content.Ability, entities.First());
             return true;
         }
     }
