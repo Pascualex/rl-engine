@@ -1,4 +1,4 @@
-﻿using RLEngine.Abilities;
+﻿using RLEngine.Core.Abilities;
 
 using System;
 

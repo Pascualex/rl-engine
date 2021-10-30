@@ -1,5 +1,5 @@
-using RLEngine.Boards;
-using RLEngine.Entities;
+using RLEngine.Core.Boards;
+using RLEngine.Core.Entities;
 
 namespace RLEngine.Tests.Utils
 {

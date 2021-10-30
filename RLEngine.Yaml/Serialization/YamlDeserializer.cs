@@ -1,7 +1,7 @@
 ﻿using RLEngine.Yaml.Utils;
 
-using RLEngine.Games;
-using RLEngine.Utils;
+using RLEngine.Core.Games;
+using RLEngine.Core.Utils;
 
 using System;
 using System.IO;

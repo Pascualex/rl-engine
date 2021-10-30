@@ -1,5 +1,5 @@
-using RLEngine.Turns;
-using RLEngine.Entities;
+using RLEngine.Core.Turns;
+using RLEngine.Core.Entities;
 using RLEngine.Tests.Utils;
 
 using NUnit.Framework;

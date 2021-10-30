@@ -1,5 +1,5 @@
-﻿using RLEngine.Games;
-using RLEngine.Input;
+﻿using RLEngine.Core.Games;
+using RLEngine.Core.Input;
 
 using CommandLine;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿using RLEngine.Input;
+﻿using RLEngine.Core.Input;
 
 using CommandLine;
 

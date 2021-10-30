@@ -1,8 +1,8 @@
 ﻿using RLEngine.Yaml.Utils;
 
-using RLEngine.Abilities;
-using RLEngine.Entities;
-using RLEngine.Utils;
+using RLEngine.Core.Abilities;
+using RLEngine.Core.Entities;
+using RLEngine.Core.Utils;
 
 using System;
 using System.Collections;

@@ -1,6 +1,6 @@
-using RLEngine.Boards;
-using RLEngine.Entities;
-using RLEngine.Utils;
+using RLEngine.Core.Boards;
+using RLEngine.Core.Entities;
+using RLEngine.Core.Utils;
 using RLEngine.Tests.Utils;
 
 using NUnit.Framework;

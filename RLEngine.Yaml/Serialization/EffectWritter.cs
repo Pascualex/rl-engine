@@ -1,7 +1,7 @@
 ﻿using RLEngine.Yaml.Utils;
 
-using RLEngine.Abilities;
-using RLEngine.Utils;
+using RLEngine.Core.Abilities;
+using RLEngine.Core.Utils;
 
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;

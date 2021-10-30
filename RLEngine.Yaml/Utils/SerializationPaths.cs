@@ -1,6 +1,6 @@
-using RLEngine.Abilities;
-using RLEngine.Boards;
-using RLEngine.Entities;
+using RLEngine.Core.Abilities;
+using RLEngine.Core.Boards;
+using RLEngine.Core.Entities;
 
 using System;
 

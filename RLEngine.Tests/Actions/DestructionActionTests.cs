@@ -1,8 +1,8 @@
-using RLEngine.Actions;
-using RLEngine.Turns;
-using RLEngine.Boards;
-using RLEngine.Entities;
-using RLEngine.Utils;
+using RLEngine.Core.Actions;
+using RLEngine.Core.Turns;
+using RLEngine.Core.Boards;
+using RLEngine.Core.Entities;
+using RLEngine.Core.Utils;
 using RLEngine.Tests.Utils;
 
 using NUnit.Framework;

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\RLEngine\RLEngine.csproj" />
+    <ProjectReference Include="..\RLEngine.Core\RLEngine.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

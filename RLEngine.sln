@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine", "RLEngine\RLEngine.csproj", "{73A038A3-C4C4-4316-A837-6805B8ADE4DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Core", "RLEngine.Core\RLEngine.Core.csproj", "{73A038A3-C4C4-4316-A837-6805B8ADE4DB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEngine.Tests", "RLEngine.Tests\RLEngine.Tests.csproj", "{D271958E-2480-4C37-B15E-10D0948985F1}"
 EndProject

@@ -1,8 +1,8 @@
-﻿using RLEngine.Logs;
-using RLEngine.Abilities;
-using RLEngine.Boards;
-using RLEngine.Entities;
-using RLEngine.Utils;
+﻿using RLEngine.Core.Logs;
+using RLEngine.Core.Abilities;
+using RLEngine.Core.Boards;
+using RLEngine.Core.Entities;
+using RLEngine.Core.Utils;
 
 using System;
 
