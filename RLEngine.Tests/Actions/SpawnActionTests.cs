@@ -1,131 +1,63 @@
 using RLEngine.Core.Actions;
-using RLEngine.Core.Logs;
 using RLEngine.Core.Turns;
 using RLEngine.Core.Boards;
+using RLEngine.Core.Entities;
 using RLEngine.Core.Utils;
-using RLEngine.Tests.Utils;
 
-using NUnit.Framework;
+using Xunit;
+using FluentAssertions;
+using NSubstitute;
 
 namespace RLEngine.Tests.Actions
 {
-    [TestFixture]
     public class SpawnActionTests
     {
-        [Test]
-        [TestCase(0, 0)]
-        [TestCase(0, 1)]
-        [TestCase(2, 2)]
-        public void SpawnPasses(int x, int y)
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void SpawnActionPasses(bool isAgent)
         {
+            var position = Coords.Zero;
+
             // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var entityType = new EntityType { IsAgent = isAgent };
+            var board = Substitute.For<IBoard>();
+            board.Add(Arg.Is<Entity>(x => x.Type == entityType), position).Returns(true);
+            var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(x, y);
 
             // Act
-            var log = executor.Spawn(f.AgentType, position, out var entity);
+            var log = executor.Spawn(entityType, position)!;
 
             // Assert
-            log = log.FailIfNull();
-            Assert.That(log.Entity, Is.SameAs(entity));
-            Assert.That(log.At, Is.EqualTo(position));
-            entity = entity.FailIfNull();
-            var currentEntity = turnManager.Current;
-            Assert.That(currentEntity, Is.SameAs(entity));
-            Assert.That(entity.Position, Is.EqualTo(position));
+            log.Should().NotBeNull();
+            log.Entity.Type.Should().Be(entityType);
+            log.Entity.IsActive.Should().Be(false);
+            log.At.Should().Be(position);
+            board.Received().Add(Arg.Is<Entity>(x => x.Type == entityType), position);
+            if (isAgent) turnManager.Received().Add(Arg.Is<Entity>(x => x.Type == entityType));
+            else turnManager.DidNotReceive().Add(Arg.Any<Entity>());
         }
 
-        [Test]
-        [TestCase(0, -1)]
-        [TestCase(-1, -1)]
-        [TestCase(3, 0)]
-        public void SpawnFailsOutOfBounds(int x, int y)
+        [Fact]
+        public void SpawnActionFailsWhenBoardCanNotAdd()
         {
+            var position = Coords.Zero;
+
             // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var entityType = new EntityType();
+            var board = Substitute.For<IBoard>();
+            board.Add(Arg.Is<Entity>(x => x.Type == entityType), position).Returns(false);
+            var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(x, y);
 
             // Act
-            var log = executor.Spawn(f.GroundEntityType, position, out var entity);
+            var log = executor.Spawn(entityType, position);
 
             // Assert
-            Assert.That(log, Is.Null);
-            Assert.That(entity, Is.Null);
-            var currentEntity = turnManager.Current;
-            Assert.That(currentEntity, Is.Null);
-            var entities = board.GetEntities(position);
-            Assert.That(entities, Is.Empty);
-        }
-
-        [Test]
-        public void SpawnPassesWithCompatibleEntity()
-        {
-            // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(1, 1);
-            executor.Spawn(f.GroundEntityType, position, out var entityA);
-            entityA = entityA.FailIfNull();
-
-            // Act
-            var log = executor.Spawn(f.GhostAgentType, position, out var entityB);
-
-            // Assert
-            log = log.FailIfNull();
-            Assert.That(log.Entity, Is.SameAs(entityB));
-            Assert.That(log.At, Is.EqualTo(position));
-            Assert.That(entityA.Position, Is.EqualTo(position));
-            entityB = entityB.FailIfNull();
-            Assert.That(entityB.Position, Is.EqualTo(position));
-        }
-
-        [Test]
-        public void SpawnFailsWithIncompatibleEntity()
-        {
-            // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(1, 1);
-            executor.Spawn(f.GroundEntityType, position, out var entityA);
-            entityA = entityA.FailIfNull();
-
-            // Act
-            var log = executor.Spawn(f.GroundEntityType, position, out var entityB);
-
-            // Assert
-            Assert.That(log, Is.Null);
-            Assert.That(entityB, Is.Null);
-            Assert.That(entityA.Position, Is.EqualTo(position));
-        }
-
-        [Test]
-        public void SpawnFailsWithIncompatibleTile()
-        {
-            // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.WallTileType);
-            var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(1, 1);
-
-            // Act
-            var log = executor.Spawn(f.GroundEntityType, position, out var entity);
-
-            // Assert
-            Assert.That(log, Is.Null);
-            Assert.That(entity, Is.Null);
-            var entities = board.GetEntities(position);
-            Assert.That(entities, Is.Empty);
+            log.Should().BeNull();
+            board.Received().Add(Arg.Is<Entity>(x => x.Type == entityType), position);
+            turnManager.DidNotReceive().Add(Arg.Any<Entity>());
         }
     }
 }

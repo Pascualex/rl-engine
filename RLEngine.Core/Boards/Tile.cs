@@ -69,7 +69,7 @@ namespace RLEngine.Core.Boards
 
         private static bool AreCompatible(IEntity entity, TileType tileType)
         {
-            if (entity.Type.IsGhost) return true;
+            if (entity.IsGhost) return true;
 
             if (entity.BlocksGround && tileType.BlocksGround) return false;
             if (entity.BlocksAir && tileType.BlocksAir) return false;

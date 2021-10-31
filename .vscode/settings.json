@@ -8,6 +8,7 @@
         "deserializable",
         "triggerer",
         "unparented",
+        "xunit",
         "zongband"
     ]
 }

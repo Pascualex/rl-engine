@@ -2,77 +2,111 @@ using RLEngine.Core.Actions;
 using RLEngine.Core.Turns;
 using RLEngine.Core.Boards;
 using RLEngine.Core.Entities;
-using RLEngine.Core.Utils;
-using RLEngine.Tests.Utils;
 
-using NUnit.Framework;
-using System;
+using Xunit;
+using FluentAssertions;
+using NSubstitute;
 
 namespace RLEngine.Tests.Actions
 {
-    [TestFixture]
     public class DamageActionTests
     {
-        [Test]
-        [TestCase(-20)]
-        [TestCase(0)]
-        [TestCase(79)]
-        public void DamagePassesWithoutDeath(int damage)
+        [Fact]
+        public void DamageActionPassesWithoutAttacker()
         {
+            const int damage = 20;
+            const int actualDamage = 10;
+
             // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var target = Substitute.For<IEntity>();
+            target.IsActive.Returns(true);
+            target.Damage(damage).Returns(actualDamage);
+            var amount = Substitute.For<IAmount>();
+            amount.Calculate(target, null).Returns(damage);
+            var board = Substitute.For<IBoard>();
+            var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(1, 1);
-            executor.Spawn(f.UnparentedEntityType, position, out var entity);
-            entity = entity.FailIfNull();
-            var amount = new Amount { Base = damage };
 
             // Act
-            var log = executor.Damage(entity, amount);
+            var log = executor.Damage(target, amount)!;
 
             // Assert
-            var expectedDamage = damage.Clamp(0, entity.MaxHealth);
-            log = log.FailIfNull();
-            Assert.That(log.Target, Is.SameAs(entity));
-            Assert.That(log.Attacker, Is.Null);
-            Assert.That(log.Damage, Is.EqualTo(Math.Max(0, damage)));
-            Assert.That(log.ActualDamage, Is.EqualTo(expectedDamage));
-            Assert.That(entity.Health, Is.EqualTo(entity.MaxHealth - expectedDamage));
-            Assert.That(entity.IsDestroyed, Is.False);
-            var currentEntity = turnManager.Current;
-            Assert.That(currentEntity, Is.SameAs(entity));
-            Assert.That(entity.Position, Is.EqualTo(position));
+            log.Should().NotBeNull();
+            log.Target.Should().Be(target);
+            log.Attacker.Should().BeNull();
+            log.Damage.Should().Be(damage);
+            log.ActualDamage.Should().Be(actualDamage);
+            target.Received().Damage(damage);
         }
 
-        [Test]
-        [TestCase(80)]
-        [TestCase(1000)]
-        public void DamagePassesWithDeath(int damage)
+        [Fact]
+        public void DamageActionPassesWithAttacker()
         {
+            const int damage = 20;
+            const int actualDamage = 10;
+
             // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var target = Substitute.For<IEntity>();
+            target.IsActive.Returns(true);
+            target.Damage(damage).Returns(actualDamage);
+            var attacker = Substitute.For<IEntity>();
+            attacker.IsActive.Returns(true);
+            var amount = Substitute.For<IAmount>();
+            amount.Calculate(target, attacker).Returns(damage);
+            var board = Substitute.For<IBoard>();
+            var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(1, 1);
-            executor.Spawn(f.UnparentedEntityType, position, out var entity);
-            entity = entity.FailIfNull();
-            var amount = new Amount { Base = damage };
 
             // Act
-            var log = executor.Damage(entity, amount);
+            var log = executor.Damage(target, attacker, amount)!;
 
             // Assert
-            var expectedDamage = damage.Clamp(0, entity.MaxHealth);
-            log = log.FailIfNull();
-            Assert.That(log.Target, Is.SameAs(entity));
-            Assert.That(log.Attacker, Is.Null);
-            Assert.That(log.Damage, Is.EqualTo(Math.Max(0, damage)));
-            Assert.That(log.ActualDamage, Is.EqualTo(expectedDamage));
-            Assert.That(entity.Health, Is.EqualTo(0));
-            Assert.That(entity.IsDestroyed, Is.False);
+            log.Should().NotBeNull();
+            log.Target.Should().Be(target);
+            log.Attacker.Should().Be(attacker);
+            log.Damage.Should().Be(damage);
+            log.ActualDamage.Should().Be(actualDamage);
+            target.Received().Damage(damage);
+        }
+
+        [Fact]
+        public void DamageActionFailsWithNotActiveTarget()
+        {
+            // Arrange
+            var target = Substitute.For<IEntity>();
+            target.IsActive.Returns(false);
+            var amount = Substitute.For<IAmount>();
+            var board = Substitute.For<IBoard>();
+            var turnManager = Substitute.For<ITurnManager>();
+            var executor = new ActionExecutor(turnManager, board);
+
+            // Act
+            var log = executor.Damage(target, amount);
+
+            // Assert
+            log.Should().BeNull();
+            target.DidNotReceive().Damage(Arg.Any<int>());
+        }
+
+        [Fact]
+        public void DamageActionFailsWithNotActiveAttacker()
+        {
+            // Arrange
+            var target = Substitute.For<IEntity>();
+            target.IsActive.Returns(true);
+            var attacker = Substitute.For<IEntity>();
+            attacker.IsActive.Returns(false);
+            var amount = Substitute.For<IAmount>();
+            var board = Substitute.For<IBoard>();
+            var turnManager = Substitute.For<ITurnManager>();
+            var executor = new ActionExecutor(turnManager, board);
+
+            // Act
+            var log = executor.Damage(target, attacker, amount);
+
+            // Assert
+            log.Should().BeNull();
+            target.DidNotReceive().Damage(Arg.Any<int>());
         }
     }
 }

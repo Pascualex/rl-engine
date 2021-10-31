@@ -15,7 +15,7 @@ namespace RLEngine.Core.Events
 
         public int Count => eventStack.Count;
 
-        public EventStack(ActionExecutor actionExecutor, TurnManager turnManager, IBoard board)
+        public EventStack(ActionExecutor actionExecutor, ITurnManager turnManager, IBoard board)
         {
             eventContext = new EventContext(this, actionExecutor, turnManager, board);
         }

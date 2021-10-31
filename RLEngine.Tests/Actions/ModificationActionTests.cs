@@ -1,63 +1,61 @@
 using RLEngine.Core.Actions;
-using RLEngine.Core.Logs;
 using RLEngine.Core.Turns;
 using RLEngine.Core.Boards;
 using RLEngine.Core.Utils;
-using RLEngine.Tests.Utils;
 
-using NUnit.Framework;
+using Xunit;
+using FluentAssertions;
+using NSubstitute;
 
 namespace RLEngine.Tests.Actions
 {
-    [TestFixture]
     public class ModificationActionTests
     {
-        [Test]
-        [TestCase(0, 0)]
-        [TestCase(0, 1)]
-        [TestCase(2, 2)]
-        public void ModifyPasses(int x, int y)
+        [Fact]
+        public void ModifyPasses()
         {
+            var position = Coords.Zero;
+
             // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var tileTypeA = new TileType();
+            var tileTypeB = new TileType();
+            var board = Substitute.For<IBoard>();
+            board.GetTileType(position).Returns(tileTypeA);
+            board.Modify(tileTypeB, position).Returns(true);
+            var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(x, y);
 
             // Act
-            var log = executor.Modify(f.WallTileType, position);
+            var log = executor.Modify(tileTypeB, position)!;
 
             // Assert
-            log = log.FailIfNull();
-            Assert.That(log.NewType, Is.SameAs(f.WallTileType));
-            Assert.That(log.PreviousType, Is.SameAs(f.FloorTileType));
-            Assert.That(log.At, Is.EqualTo(position));
-            var tileType = board.GetTileType(position);
-            Assert.That(tileType, Is.SameAs(f.WallTileType));
+            log.Should().NotBeNull();
+            log.NewType.Should().Be(tileTypeB);
+            log.PreviousType.Should().Be(tileTypeA);
+            log.At.Should().Be(position);
+            board.Received().Modify(tileTypeB, position);
         }
 
-        [Test]
-        [TestCase(0, -1)]
-        [TestCase(-1, -1)]
-        [TestCase(3, 0)]
-        [TestCase(20, 30)]
-        public void ModifyFailsOutOfBounds(int x, int y)
+        [Fact]
+        public void ModifyFailsWhenBoardCanNotModify()
         {
+            var position = Coords.Zero;
+
             // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var tileTypeA = new TileType();
+            var tileTypeB = new TileType();
+            var board = Substitute.For<IBoard>();
+            board.GetTileType(position).Returns(tileTypeA);
+            board.Modify(tileTypeB, position).Returns(false);
+            var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(x, y);
 
             // Act
-            var log = executor.Modify(f.WallTileType, position);
+            var log = executor.Modify(tileTypeB, position);
 
             // Assert
-            Assert.That(log, Is.Null);
-            var tileType = board.GetTileType(position);
-            Assert.That(tileType, Is.Null);
+            log.Should().BeNull();
+            board.Received().Modify(tileTypeB, position);
         }
     }
 }

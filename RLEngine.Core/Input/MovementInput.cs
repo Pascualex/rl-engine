@@ -4,13 +4,13 @@ namespace RLEngine.Core.Input
 {
     public class MovementInput : IPlayerInput
     {
-        public MovementInput(Coords to, bool relative)
+        public MovementInput(Coords to, bool isRelative)
         {
             To = to;
-            Relative = relative;
+            IsRelative = isRelative;
         }
 
         public Coords To { get; }
-        public bool Relative { get; }
+        public bool IsRelative { get; }
     }
 }

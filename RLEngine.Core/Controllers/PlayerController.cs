@@ -27,7 +27,9 @@ namespace RLEngine.Core.Controllers
 
         public ILog? AttemptMove(IEntity entity, EventContext ctx, MovementInput input)
         {
-            return ctx.ActionExecutor.Move(entity, input.To, input.Relative);
+            var to = input.To;
+            if (input.IsRelative) to += entity.Position;
+            return ctx.ActionExecutor.Move(entity, to);
         }
 
         public ILog? AttempAttack(IEntity entity, EventContext ctx, AttackInput input)

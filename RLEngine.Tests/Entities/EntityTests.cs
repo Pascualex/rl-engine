@@ -1,58 +1,101 @@
 using RLEngine.Core.Entities;
-using RLEngine.Tests.Utils;
+using RLEngine.Core.Utils;
 
-using NUnit.Framework;
+using Xunit;
+using FluentAssertions;
 using System;
 
 namespace RLEngine.Tests.Entities
 {
-    [TestFixture]
     public class EntityTests
     {
-        [Test]
-        public void InheritUnparentedEntityTypeAttributesPasses()
+        [Fact]
+        public void EntityCreationPasses()
         {
+            const string name = "Name";
+            const bool isAgent = true;
+            const int maxHealth = 100;
+            const int speed = 80;
+            const bool blocksGround = true;
+            const bool blocksAir = false;
+            const bool isGhost = false;
+
             // Arrange
-            var f = new ContentFixture();
+            var entityType = new EntityType()
+            {
+                Name = name,
+                IsAgent = isAgent,
+                MaxHealth = maxHealth,
+                Speed = speed,
+                BlocksGround = blocksGround,
+                BlocksAir = blocksAir,
+                IsGhost = isGhost,
+            };
 
             // Act
-            var entity = new Entity(f.UnparentedEntityType);
+            var entity = new Entity(entityType);
 
             // Assert
-            Assert.That(entity.Name, Is.EqualTo("Unparented entity type"));
-            Assert.That(entity.IsAgent, Is.True);
-            Assert.That(entity.MaxHealth, Is.EqualTo(80));
-            Assert.That(entity.Health, Is.EqualTo(80));
-            Assert.That(entity.MissingHealth, Is.EqualTo(0));
-            Assert.That(entity.IsDestroyed, Is.EqualTo(false));
-            Assert.That(entity.Speed, Is.EqualTo(120));
-            Assert.That(entity.BlocksGround, Is.True);
-            Assert.That(entity.BlocksAir, Is.False);
-            Assert.That(entity.IsGhost, Is.False);
-            Assert.That(entity.Type, Is.SameAs(f.UnparentedEntityType));
-            Assert.That(entity.Type.Parent, Is.Null);
+            entity.Name.Should().Be(name);
+            entity.IsAgent.Should().Be(isAgent);
+            entity.MaxHealth.Should().Be(maxHealth);
+            entity.Health.Should().Be(maxHealth);
+            entity.MissingHealth.Should().Be(0);
+            entity.Speed.Should().Be(speed);
+            entity.BlocksGround.Should().Be(blocksGround);
+            entity.BlocksAir.Should().Be(blocksAir);
+            entity.IsGhost.Should().Be(isGhost);
+            entity.Type.Should().Be(entityType);
+            entity.IsActive.Should().BeFalse();
+            entity.Position.Should().Be(Coords.MinusOne);
         }
 
-        [Test]
-        [TestCase(-20)]
-        [TestCase(60)]
-        [TestCase(80)]
-        [TestCase(1000)]
-        public void DamageEntityPasses(int damage)
+        [Theory]
+        [InlineData(-20)]
+        [InlineData(60)]
+        [InlineData(80)]
+        [InlineData(1000)]
+        public void EntityDamagePasses(int damage)
         {
+            const int maxHealth = 80;
+
             // Arrange
-            var f = new ContentFixture();
-            var entity = new Entity(f.UnparentedEntityType);
+            var entityType = new EntityType { MaxHealth = maxHealth };
+            var entity = new Entity(entityType);
 
             // Act
             var actualDamage = entity.Damage(damage);
 
             // Assert
-            var expectedDamage = damage.Clamp(0, entity.MaxHealth);
-            Assert.That(actualDamage, Is.EqualTo(expectedDamage));
-            Assert.That(entity.Health, Is.EqualTo(entity.MaxHealth - expectedDamage));
-            Assert.That(entity.MissingHealth, Is.EqualTo(expectedDamage));
-            Assert.That(entity.IsDestroyed, Is.EqualTo(false));
+            var expectedDamage = damage.Clamp(0, maxHealth);
+            actualDamage.Should().Be(expectedDamage);
+            entity.Health.Should().Be(maxHealth - expectedDamage);
+            entity.MissingHealth.Should().Be(expectedDamage);
+        }
+
+        [Theory]
+        [InlineData(-20)]
+        [InlineData(60)]
+        [InlineData(80)]
+        [InlineData(1000)]
+        public void EntityHealPasses(int healing)
+        {
+            const int maxHealth = 80;
+            const int missingHealth = 30;
+
+            // Arrange
+            var entityType = new EntityType { MaxHealth = maxHealth };
+            var entity = new Entity(entityType);
+            entity.Damage(missingHealth);
+
+            // Act
+            var actualHealing = entity.Heal(healing);
+
+            // Assert
+            var expectedHealing = healing.Clamp(0, missingHealth);
+            actualHealing.Should().Be(expectedHealing);
+            entity.Health.Should().Be(maxHealth - (missingHealth - expectedHealing));
+            entity.MissingHealth.Should().Be(missingHealth - expectedHealing);
         }
     }
 }

@@ -5,10 +5,10 @@ namespace RLEngine.Core.Actions
 {
     internal partial class ActionExecutor
     {
-        protected TurnManager turnManager;
+        protected ITurnManager turnManager;
         protected IBoard board;
 
-        public ActionExecutor(TurnManager turnManager, IBoard board)
+        public ActionExecutor(ITurnManager turnManager, IBoard board)
         {
             this.turnManager = turnManager;
             this.board = board;

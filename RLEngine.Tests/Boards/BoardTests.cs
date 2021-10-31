@@ -1,376 +1,440 @@
 using RLEngine.Core.Boards;
 using RLEngine.Core.Entities;
 using RLEngine.Core.Utils;
-using RLEngine.Tests.Utils;
 
-using NUnit.Framework;
+using Xunit;
+using FluentAssertions;
+using NSubstitute;
 
 namespace RLEngine.Tests.Boards
 {
-    [TestFixture]
     public class BoardsTests
     {
-        [Test]
-        [TestCase(0, 0)]
-        [TestCase(1, 1)]
-        [TestCase(2, 4)]
-        public void BoardCreatedPasses(int width, int height)
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(1, 1)]
+        [InlineData(2, 4)]
+        public void BoardInitializationPasses(int width, int height)
         {
             // Arrange
-            var f = new ContentFixture();
             var size = new Size(width, height);
+            var defaultTileType = new TileType();
 
             // Act
-            var board = new Board(size, f.FloorTileType);
+            var board = new Board(size, defaultTileType);
 
             // Assert
-            Assert.That(board.Size, Is.EqualTo(size));
+            board.Size.Should().Be(size);
             for (var i = 0; i < board.Size.Y; i++)
             {
                 for (var j = 0; j < board.Size.X; j++)
                 {
-                    var tileType = board.GetTileType(new Coords(j, i)).FailIfNull();
-                    Assert.That(tileType, Is.SameAs(f.FloorTileType));
+                    board.GetTileType(new Coords(j, i)).Should().Be(defaultTileType);
                 }
             }
         }
 
-        [Test]
-        [TestCase(0, 0)]
-        [TestCase(0, 1)]
-        [TestCase(2, 2)]
-        public void AddPasses(int x, int y)
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(0, 1)]
+        [InlineData(2, 2)]
+        public void BoardAddPasses(int x, int y)
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entity = new Entity(f.GroundEntityType);
+            var size = new Size(3, 3);
             var position = new Coords(x, y);
+
+            // Arrange
+            var entity = Substitute.For<IEntity>();
+            entity.BlocksGround.Returns(true);
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
 
             // Act
             var added = board.Add(entity, position);
 
             // Assert
-            Assert.That(added, Is.True);
-            Assert.That(entity.Position, Is.EqualTo(position));
-            var entities = board.GetEntities(position);
-            Assert.That(entities, Has.Member(entity));
+            added.Should().BeTrue();
+            board.GetEntities(position).Should().Equal(entity);
+            entity.Received().OnSpawn(position);
         }
 
-        [Test]
-        [TestCase(0, -1)]
-        [TestCase(-1, -1)]
-        [TestCase(3, 0)]
-        public void AddFailsOutOfBounds(int x, int y)
+        [Theory]
+        [InlineData(0, -1)]
+        [InlineData(-1, -1)]
+        [InlineData(3, 0)]
+        public void BoardAddFailsWhenOutOfBounds(int x, int y)
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entity = new Entity(f.GroundEntityType);
+            var size = new Size(3, 3);
             var position = new Coords(x, y);
+
+            // Arrange
+            var entity = Substitute.For<IEntity>();
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
 
             // Act
             var added = board.Add(entity, position);
 
             // Assert
-            Assert.That(added, Is.False);
-            Assert.That(entity.Position, Is.EqualTo(Coords.MinusOne));
-            var entities = board.GetEntities(position);
-            Assert.That(entities, Has.No.Member(entity));
+            added.Should().BeFalse();
+            board.GetEntities(position).Should().BeEmpty();
+            entity.DidNotReceive().OnSpawn(position);
         }
 
-        [Test]
-        public void AddPassesWithCompatibleEntity()
+        [Fact]
+        public void BoardAddPassesWithCompatibleEntity()
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entityA = new Entity(f.GroundEntityType);
-            var entityB = new Entity(f.GhostAgentType);
+            var size = new Size(3, 3);
             var position = new Coords(1, 1);
+
+            // Arrange
+            var entityA = Substitute.For<IEntity>();
+            entityA.BlocksGround.Returns(true);
+            entityA.IsAgent.Returns(false);
+            entityA.IsGhost.Returns(false);
+            var entityB = Substitute.For<IEntity>();
+            entityB.BlocksGround.Returns(true);
+            entityB.IsAgent.Returns(true);
+            entityB.IsGhost.Returns(true);
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
+            board.Add(entityA, position);
+            entityA.ClearReceivedCalls();
+
+            // Act
+            var added = board.Add(entityB, position);
+
+            // Assert
+            added.Should().BeTrue();
+            board.GetEntities(position).Should().Equal(entityA, entityB);
+            entityA.DidNotReceive().OnSpawn(Arg.Any<Coords>());
+            entityB.Received().OnSpawn(position);
+        }
+
+        [Fact]
+        public void BoardAddFailsWithIncompatibleEntity()
+        {
+            var size = new Size(3, 3);
+            var position = new Coords(1, 1);
+
+            // Arrange
+            var entityA = Substitute.For<IEntity>();
+            entityA.BlocksGround.Returns(true);
+            var entityB = Substitute.For<IEntity>();
+            entityB.BlocksGround.Returns(true);
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
             board.Add(entityA, position);
 
             // Act
             var added = board.Add(entityB, position);
 
             // Assert
-            Assert.That(added, Is.True);
-            Assert.That(entityA.Position, Is.EqualTo(position));
-            Assert.That(entityB.Position, Is.EqualTo(position));
-            var entities = board.GetEntities(position);
-            Assert.That(entities, Has.Member(entityA));
-            Assert.That(entities, Has.Member(entityB));
+            added.Should().BeFalse();
+            board.GetEntities(position).Should().Equal(entityA);
+            entityA.Received().OnSpawn(position);
+            entityB.DidNotReceive().OnSpawn(position);
         }
 
-        [Test]
-        public void AddFailsWithIncompatibleEntity()
+        [Fact]
+        public void BoardAddFailsWithIncompatibleTile()
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entityA = new Entity(f.GroundEntityType);
-            var entityB = new Entity(f.GroundEntityType);
+            var size = new Size(3, 3);
             var position = new Coords(1, 1);
-            board.Add(entityA, position);
 
-            // Act
-            var added = board.Add(entityB, position);
-
-            // Assert
-            Assert.That(added, Is.False);
-            Assert.That(entityA.Position, Is.EqualTo(position));
-            Assert.That(entityB.Position, Is.EqualTo(Coords.MinusOne));
-            var entities = board.GetEntities(position);
-            Assert.That(entities, Has.Member(entityA));
-            Assert.That(entities, Has.No.Member(entityB));
-        }
-
-        [Test]
-        public void AddFailsWithIncompatibleTile()
-        {
             // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.WallTileType);
-            var entity = new Entity(f.GroundEntityType);
-            var position = new Coords(1, 1);
+            var entity = Substitute.For<IEntity>();
+            entity.BlocksGround.Returns(true);
+            var defaultTileType = new TileType { BlocksGround = true };
+            var board = new Board(size, defaultTileType);
 
             // Act
             var added = board.Add(entity, position);
 
             // Assert
-            Assert.That(added, Is.False);
-            Assert.That(entity.Position, Is.EqualTo(Coords.MinusOne));
-            var entities = board.GetEntities(position);
-            Assert.That(entities, Has.No.Member(entity));
+            added.Should().BeFalse();
+            board.GetEntities(position).Should().BeEmpty();
+            entity.DidNotReceive().OnSpawn(position);
         }
 
-        [Test]
-        [TestCase(0, 1, 2, 0)]
-        [TestCase(0, 0, 2, 2)]
-        [TestCase(1, 1, 1, 1)]
-        public void MovePasses(int ix, int iy, int fx, int fy)
+        [Theory]
+        [InlineData(0, 1, 2, 0)]
+        [InlineData(0, 0, 2, 2)]
+        public void BoardMovePasses(int ix, int iy, int fx, int fy)
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entity = new Entity(f.GroundEntityType);
+            var size = new Size(3, 3);
             var initialPosition = new Coords(ix, iy);
             var finalPosition = new Coords(fx, fy);
+
+            // Arrange
+            var entity = Substitute.For<IEntity>();
+            entity.BlocksGround.Returns(true);
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
             board.Add(entity, initialPosition);
+            entity.Position.Returns(initialPosition);
+            entity.ClearReceivedCalls();
 
             // Act
             var moved = board.Move(entity, finalPosition);
 
             // Assert
-            Assert.That(moved, Is.True);
-            Assert.That(entity.Position, Is.EqualTo(finalPosition));
-            if (initialPosition != finalPosition)
-            {
-                var initialEntities = board.GetEntities(initialPosition);
-                Assert.That(initialEntities, Has.No.Member(entity));
-            }
-            var finalEntities = board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.Member(entity));
+            moved.Should().BeTrue();
+            board.GetEntities(initialPosition).Should().BeEmpty();
+            board.GetEntities(finalPosition).Should().Equal(entity);
+            entity.Received().OnMove(finalPosition);
         }
 
-        [Test]
-        [TestCase(0, 0,  0, -1)]
-        [TestCase(1, 1, -1, -1)]
-        [TestCase(1, 2,  3,  0)]
-        public void MoveFailsOutOfBounds(int ix, int iy, int fx, int fy)
+        [Theory]
+        [InlineData(0, 0,  0, -1)]
+        [InlineData(1, 1, -1, -1)]
+        [InlineData(1, 2,  3,  0)]
+        public void BoardMoveFailsWhenOutOfBounds(int ix, int iy, int fx, int fy)
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entity = new Entity(f.GroundEntityType);
+            var size = new Size(3, 3);
             var initialPosition = new Coords(ix, iy);
             var finalPosition = new Coords(fx, fy);
+
+            // Arrange
+            var entity = Substitute.For<IEntity>();
+            entity.BlocksGround.Returns(true);
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
             board.Add(entity, initialPosition);
+            entity.Position.Returns(initialPosition);
+            entity.ClearReceivedCalls();
 
             // Act
             var moved = board.Move(entity, finalPosition);
 
             // Assert
-            Assert.That(moved, Is.False);
-            Assert.That(entity.Position, Is.EqualTo(initialPosition));
-            var initialEntities = board.GetEntities(initialPosition);
-            Assert.That(initialEntities, Has.Member(entity));
-            var finalEntities = board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.No.Member(entity));
+            moved.Should().BeFalse();
+            board.GetEntities(initialPosition).Should().Equal(entity);
+            board.GetEntities(finalPosition).Should().BeEmpty();
+            entity.DidNotReceive().OnMove(Arg.Any<Coords>());
         }
 
-        [Test]
-        public void MoveFailsWhenEntityIsNotAdded()
+        [Fact]
+        public void BoardMoveFailsWhenEntityIsNotAdded()
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entity = new Entity(f.GroundEntityType);
+            var size = new Size(3, 3);
             var finalPosition = new Coords(1, 1);
 
+            // Arrange
+            var entity = Substitute.For<IEntity>();
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
+
             // Act
             var moved = board.Move(entity, finalPosition);
 
             // Assert
-            Assert.That(moved, Is.False);
-            Assert.That(entity.Position, Is.EqualTo(Coords.MinusOne));
-            var finalEntities = board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.No.Member(entity));
+            moved.Should().BeFalse();
+            board.GetEntities(finalPosition).Should().BeEmpty();
+            entity.DidNotReceive().OnMove(Arg.Any<Coords>());
         }
 
-        [Test]
-        public void MovePassesWithCompatibleEntity()
+        [Fact]
+        public void BoardMovePassesWithCompatibleEntity()
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entityA = new Entity(f.GroundEntityType);
-            var entityB = new Entity(f.GhostAgentType);
+            var size = new Size(3, 3);
             var initialPosition = new Coords(0, 1);
             var finalPosition = new Coords(2, 1);
+
+            // Arrange
+            var entityA = Substitute.For<IEntity>();
+            entityA.BlocksGround.Returns(true);
+            entityA.IsGhost.Returns(false);
+            entityA.IsAgent.Returns(false);
+            var entityB = Substitute.For<IEntity>();
+            entityB.BlocksGround.Returns(true);
+            entityB.IsGhost.Returns(true);
+            entityB.IsAgent.Returns(true);
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
             board.Add(entityA, finalPosition);
             board.Add(entityB, initialPosition);
+            entityB.Position.Returns(initialPosition);
+            entityA.ClearReceivedCalls();
+            entityB.ClearReceivedCalls();
 
             // Act
             var moved = board.Move(entityB, finalPosition);
 
             // Assert
-            Assert.That(moved, Is.True);
-            Assert.That(entityA.Position, Is.EqualTo(finalPosition));
-            Assert.That(entityB.Position, Is.EqualTo(finalPosition));
-            var initialEntities = board.GetEntities(initialPosition);
-            Assert.That(initialEntities, Has.No.Member(entityB));
-            var finalEntities = board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.Member(entityA));
-            Assert.That(finalEntities, Has.Member(entityB));
+            moved.Should().BeTrue();
+            board.GetEntities(initialPosition).Should().BeEmpty();
+            board.GetEntities(finalPosition).Should().Equal(entityA, entityB);
+            entityA.DidNotReceive().OnMove(Arg.Any<Coords>());
+            entityB.Received().OnMove(finalPosition);
         }
 
-        [Test]
-        public void MoveFailsWithIncompatibleEntity()
+        [Fact]
+        public void BoardMoveFailsWithIncompatibleEntity()
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entityA = new Entity(f.GroundEntityType);
-            var entityB = new Entity(f.GroundEntityType);
+            var size = new Size(3, 3);
             var initialPosition = new Coords(0, 1);
             var finalPosition = new Coords(2, 1);
+
+            // Arrange
+            var entityA = Substitute.For<IEntity>();
+            entityA.BlocksGround.Returns(true);
+            var entityB = Substitute.For<IEntity>();
+            entityB.BlocksGround.Returns(true);
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
             board.Add(entityA, finalPosition);
             board.Add(entityB, initialPosition);
+            entityB.Position.Returns(initialPosition);
+            entityA.ClearReceivedCalls();
+            entityB.ClearReceivedCalls();
 
             // Act
             var moved = board.Move(entityB, finalPosition);
 
             // Assert
-            Assert.That(moved, Is.False);
-            Assert.That(entityA.Position, Is.EqualTo(finalPosition));
-            Assert.That(entityB.Position, Is.EqualTo(initialPosition));
-            var initialEntities = board.GetEntities(initialPosition);
-            Assert.That(initialEntities, Has.Member(entityB));
-            var finalEntities = board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.Member(entityA));
-            Assert.That(finalEntities, Has.No.Member(entityB));
+            moved.Should().BeFalse();
+            board.GetEntities(initialPosition).Should().Equal(entityB);
+            board.GetEntities(finalPosition).Should().Equal(entityA);
+            entityA.DidNotReceive().OnMove(Arg.Any<Coords>());
+            entityB.DidNotReceive().OnMove(Arg.Any<Coords>());
         }
 
-        [Test]
-        public void MoveFailsWithIncompatibleTile()
+        [Fact]
+        public void BoardMoveFailsWithIncompatibleTile()
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entity = new Entity(f.GroundEntityType);
+            var size = new Size(3, 3);
             var initialPosition = new Coords(0, 1);
             var finalPosition = new Coords(2, 1);
+
+            // Arrange
+            var entity = Substitute.For<IEntity>();
+            entity.BlocksGround.Returns(true);
+            var floorTileType = new TileType { BlocksGround = false };
+            var wallTileType = new TileType { BlocksGround = true };
+            var board = new Board(size, floorTileType);
             board.Add(entity, initialPosition);
-            board.Modify(f.WallTileType, finalPosition);
+            entity.Position.Returns(initialPosition);
+            board.Modify(wallTileType, finalPosition);
+            entity.ClearReceivedCalls();
 
             // Act
             var moved = board.Move(entity, finalPosition);
 
             // Assert
-            Assert.That(moved, Is.False);
-            Assert.That(entity.Position, Is.EqualTo(initialPosition));
-            var initialEntities = board.GetEntities(initialPosition);
-            Assert.That(initialEntities, Has.Member(entity));
-            var finalEntities = board.GetEntities(finalPosition);
-            Assert.That(finalEntities, Has.No.Member(entity));
+            moved.Should().BeFalse();
+            board.GetEntities(initialPosition).Should().Equal(entity);
+            board.GetEntities(finalPosition).Should().BeEmpty();
+            entity.DidNotReceive().OnMove(Arg.Any<Coords>());
         }
 
-        [Test]
-        public void RemovePasses()
+        [Fact]
+        public void BoardRemovePasses()
         {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entity = new Entity(f.GroundEntityType);
+            var size = new Size(3, 3);
             var position = new Coords(1, 1);
+
+            // Arrange
+            var entity = Substitute.For<IEntity>();
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
+            board.Add(entity, position);
+            entity.Position.Returns(position);
+            entity.ClearReceivedCalls();
+
+            // Act
+            var removed = board.Remove(entity);
+
+            // Assert
+            removed.Should().BeTrue();
+            board.GetEntities(position).Should().BeEmpty();
+            entity.Received().OnDestroy();
+        }
+
+        [Fact]
+        public void BoardRemoveFailsWhenEntityIsNotAdded()
+        {
+            var size = new Size(3, 3);
+
+            // Arrange
+            var entity = Substitute.For<IEntity>();
+            var defaultTileType = new TileType { BlocksGround = false };
+            var board = new Board(size, defaultTileType);
+
+            // Act
+            var removed = board.Remove(entity);
+
+            // Assert
+            removed.Should().BeFalse();
+            entity.DidNotReceive().OnDestroy();
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(0, 1)]
+        [InlineData(2, 2)]
+        public void BoardModifyPasses(int x, int y)
+        {
+            var size = new Size(3, 3);
+            var position = new Coords(x, y);
+
+            // Arrange
+            var floorTileType = new TileType { BlocksGround = false };
+            var wallTileType = new TileType { BlocksGround = true };
+            var board = new Board(size, floorTileType);
+
+            // Act
+            var changed = board.Modify(wallTileType, position);
+
+            // Assert
+            changed.Should().BeTrue();
+            board.GetTileType(position).Should().Be(wallTileType);
+        }
+
+        [Theory]
+        [InlineData(0, -1)]
+        [InlineData(-1, -1)]
+        [InlineData(3, 0)]
+        [InlineData(20, 30)]
+        public void BoardModifyFailsWhenOutOfBounds(int x, int y)
+        {
+            var size = new Size(3, 3);
+            var position = new Coords(x, y);
+
+            // Arrange
+            var floorTileType = new TileType { BlocksGround = false };
+            var wallTileType = new TileType { BlocksGround = true };
+            var board = new Board(size, floorTileType);
+
+            // Act
+            var changed = board.Modify(wallTileType, position);
+
+            // Assert
+            changed.Should().BeFalse();
+            board.GetTileType(position).Should().BeNull();
+        }
+
+        [Fact]
+        public void BoardModifyFailsWithIncompatibleEntity()
+        {
+            var size = new Size(3, 3);
+            var position = new Coords(1, 1);
+
+            // Arrange
+            var entity = Substitute.For<IEntity>();
+            entity.BlocksGround.Returns(true);
+            var floorTileType = new TileType { BlocksGround = false };
+            var wallTileType = new TileType { BlocksGround = true };
+            var board = new Board(size, floorTileType);
             board.Add(entity, position);
 
             // Act
-            var removed = board.Remove(entity);
+            var changed = board.Modify(wallTileType, position);
 
             // Assert
-            Assert.That(removed, Is.True);
-            Assert.That(entity.Position, Is.EqualTo(position));
-            var entities = board.GetEntities(position);
-            Assert.That(entities, Has.No.Member(entity));
-        }
-
-        [Test]
-        public void RemoveFailsWhenEntityIsNotAdded()
-        {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var entity = new Entity(f.GroundEntityType);
-
-            // Act
-            var removed = board.Remove(entity);
-
-            // Assert
-            Assert.That(removed, Is.False);
-            Assert.That(entity.Position, Is.EqualTo(Coords.MinusOne));
-        }
-
-        [Test]
-        [TestCase(0, 0)]
-        [TestCase(0, 1)]
-        [TestCase(2, 2)]
-        public void ModifyPasses(int x, int y)
-        {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var position = new Coords(x, y);
-
-            // Act
-            var changed = board.Modify(f.WallTileType, position);
-
-            // Assert
-            Assert.That(changed, Is.True);
-            var tileType = board.GetTileType(position);
-            Assert.That(tileType, Is.SameAs(f.WallTileType));
-        }
-
-        [Test]
-        [TestCase(0, -1)]
-        [TestCase(-1, -1)]
-        [TestCase(3, 0)]
-        [TestCase(20, 30)]
-        public void ModifyFailsOutOfBounds(int x, int y)
-        {
-            // Arrange
-            var f = new ContentFixture();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
-            var position = new Coords(x, y);
-
-            // Act
-            var changed = board.Modify(f.WallTileType, position);
-
-            // Assert
-            Assert.That(changed, Is.False);
-            var tileType = board.GetTileType(position);
-            Assert.That(tileType, Is.Null);
+            changed.Should().BeFalse();
+            board.GetTileType(position).Should().Be(floorTileType);
+            board.GetEntities(position).Should().Equal(entity);
         }
     }
 }

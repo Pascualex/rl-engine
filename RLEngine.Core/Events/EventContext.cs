@@ -7,7 +7,7 @@ namespace RLEngine.Core.Events
     internal class EventContext
     {
         public EventContext(EventStack eventStack, ActionExecutor actionExecutor,
-        TurnManager turnManager, IBoard board)
+        ITurnManager turnManager, IBoard board)
         {
             ActionExecutor = actionExecutor;
             EventStack = eventStack;
@@ -17,7 +17,7 @@ namespace RLEngine.Core.Events
 
         public ActionExecutor ActionExecutor { get; }
         public EventStack EventStack { get; }
-        public TurnManager TurnManager { get; }
+        public ITurnManager TurnManager { get; }
         public IBoard Board { get; }
     }
 }

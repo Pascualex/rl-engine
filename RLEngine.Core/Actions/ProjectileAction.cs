@@ -8,8 +8,8 @@ namespace RLEngine.Core.Actions
     {
         public ProjectileLog? Shoot(ITarget source, ITarget target)
         {
-            if (source is IEntity eSource && eSource.IsDestroyed) return null;
-            if (target is IEntity eTarget && eTarget.IsDestroyed) return null;
+            if (source is IEntity eSource && !eSource.IsActive) return null;
+            if (target is IEntity eTarget && !eTarget.IsActive) return null;
             return new ProjectileLog(source, target);
         }
     }

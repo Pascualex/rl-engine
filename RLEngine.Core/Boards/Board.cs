@@ -35,7 +35,7 @@ namespace RLEngine.Core.Boards
 
             if (!tiles[at.Y][at.X].Add(entity)) return false;
             entities.Add(entity);
-            entity.OnMove(at);
+            entity.OnSpawn(at);
 
             return true;
         }
@@ -47,7 +47,7 @@ namespace RLEngine.Core.Boards
 
             var from = entity.Position;
 
-            if (to == from) return true;
+            if (to == from) return false;
 
             if (!tiles[to.Y][to.X].Add(entity)) return false;
             tiles[from.Y][from.X].Remove(entity);
@@ -64,6 +64,7 @@ namespace RLEngine.Core.Boards
 
             tiles[at.Y][at.X].Remove(entity);
             entities.Remove(entity);
+            entity.OnDestroy();
 
             return true;
         }

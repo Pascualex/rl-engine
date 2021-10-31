@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace RLEngine.Core.Turns
 {
-    internal class TurnManager
+    internal class TurnManager : ITurnManager
     {
         private readonly SortedSet<Turn> turns = new();
         private readonly Dictionary<IEntity, Turn> entities = new();

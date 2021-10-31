@@ -34,7 +34,8 @@ namespace RLEngine.Core.Controllers
 
             if (selectedDirection == Coords.Zero) return null;
 
-            return ctx.ActionExecutor.Move(entity, selectedDirection, true);
+            var position = entity.Position + selectedDirection;
+            return ctx.ActionExecutor.Move(entity, position);
         }
     }
 }

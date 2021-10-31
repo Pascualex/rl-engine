@@ -2,61 +2,77 @@ using RLEngine.Core.Actions;
 using RLEngine.Core.Turns;
 using RLEngine.Core.Boards;
 using RLEngine.Core.Entities;
-using RLEngine.Core.Utils;
-using RLEngine.Tests.Utils;
 
-using NUnit.Framework;
+using Xunit;
+using FluentAssertions;
+using NSubstitute;
 
 namespace RLEngine.Tests.Actions
 {
-    [TestFixture]
     public class DestructionActionTests
     {
-        [Test]
-        public void DestroyPasses()
+        [Fact]
+        public void DestructionActionPasses()
         {
             // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var entity = Substitute.For<IEntity>();
+            entity.IsActive.Returns(true);
+            var board = Substitute.For<IBoard>();
+            board.Remove(entity).Returns(true);
+            var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(1, 1);
-            executor.Spawn(f.AgentType, position, out var entity);
-            entity = entity.FailIfNull();
 
             // Act
-            var log = executor.Destroy(entity);
+            var log = executor.Destroy(entity)!;
 
             // Assert
-            log = log.FailIfNull();
-            Assert.That(log.Entity, Is.SameAs(entity));
-            var currentEntity = turnManager.Current;
-            Assert.That(currentEntity, Is.Null);
-            var found = !board.CanAdd(entity, position);
-            Assert.That(found, Is.False);
-            Assert.That(entity.IsDestroyed, Is.True);
+            log.Should().NotBeNull();
+            log.Entity.Should().Be(entity);
+            entity.DidNotReceive().OnDestroy();
+            board.Received().Remove(entity);
+            turnManager.Received().Remove(entity);
         }
 
-        [Test]
-        public void DestroyFailsWhenEntityIsNotAdded()
+        [Fact]
+        public void DestructionActionFailsWithNotActiveEntity()
         {
             // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var entity = Substitute.For<IEntity>();
+            entity.IsActive.Returns(false);
+            var board = Substitute.For<IBoard>();
+            board.Remove(entity).Returns(true);
+            var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
-            var entity = new Entity(f.AgentType);
 
             // Act
             var log = executor.Destroy(entity);
 
             // Assert
-            Assert.That(log, Is.Null);
-            var currentEntity = turnManager.Current;
-            Assert.That(currentEntity, Is.Null);
-            var found = !board.CanAdd(entity, new Coords(1, 1));
-            Assert.That(found, Is.False);
-            Assert.That(entity.IsDestroyed, Is.False);
+            log.Should().BeNull();
+            entity.DidNotReceive().OnDestroy();
+            board.DidNotReceive().Remove(Arg.Any<Entity>());
+            turnManager.DidNotReceive().Remove(Arg.Any<Entity>());
+        }
+
+        [Fact]
+        public void DestructionActionFailsWhenBoardCanNotRemove()
+        {
+            // Arrange
+            var entity = Substitute.For<IEntity>();
+            entity.IsActive.Returns(true);
+            var board = Substitute.For<IBoard>();
+            board.Remove(entity).Returns(false);
+            var turnManager = Substitute.For<ITurnManager>();
+            var executor = new ActionExecutor(turnManager, board);
+
+            // Act
+            var log = executor.Destroy(entity);
+
+            // Assert
+            log.Should().BeNull();
+            entity.DidNotReceive().OnDestroy();
+            board.Received().Remove(entity);
+            turnManager.DidNotReceive().Remove(Arg.Any<Entity>());
         }
     }
 }

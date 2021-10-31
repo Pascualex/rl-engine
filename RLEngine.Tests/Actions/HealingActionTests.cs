@@ -1,48 +1,112 @@
 using RLEngine.Core.Actions;
-using RLEngine.Core.Logs;
 using RLEngine.Core.Turns;
 using RLEngine.Core.Boards;
 using RLEngine.Core.Entities;
-using RLEngine.Core.Utils;
-using RLEngine.Tests.Utils;
 
-using NUnit.Framework;
-using System;
+using Xunit;
+using FluentAssertions;
+using NSubstitute;
 
 namespace RLEngine.Tests.Actions
 {
-    [TestFixture]
     public class HealingActionTests
     {
-        [Test]
-        [TestCase(40, -20)]
-        [TestCase(40, 30)]
-        [TestCase(40, 50)]
-        public void HealPasses(int damage, int healing)
+        [Fact]
+        public void HealingActionPassesWithoutAttacker()
         {
+            const int healing = 20;
+            const int actualHealing = 10;
+
             // Arrange
-            var f = new ContentFixture();
-            var turnManager = new TurnManager();
-            var board = new Board(new Size(3, 3), f.FloorTileType);
+            var target = Substitute.For<IEntity>();
+            target.IsActive.Returns(true);
+            target.Heal(healing).Returns(actualHealing);
+            var amount = Substitute.For<IAmount>();
+            amount.Calculate(target, null).Returns(healing);
+            var board = Substitute.For<IBoard>();
+            var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
-            var position = new Coords(1, 1);
-            executor.Spawn(f.UnparentedEntityType, position, out var entity);
-            entity = entity.FailIfNull();
-            var damageAmount = new Amount { Base = damage };
-            executor.Damage(entity, damageAmount);
-            var healingAmount = new Amount { Base = healing };
 
             // Act
-            var log = executor.Heal(entity, healingAmount);
+            var log = executor.Heal(target, amount)!;
 
             // Assert
-            var expectedHealing = healing.Clamp(0, damage);
-            log = log.FailIfNull();
-            Assert.That(log.Target, Is.SameAs(entity));
-            Assert.That(log.Healer, Is.Null);
-            Assert.That(log.Healing, Is.EqualTo(Math.Max(0, healing)));
-            Assert.That(log.ActualHealing, Is.EqualTo(expectedHealing));
-            Assert.That(entity.Health, Is.EqualTo(entity.MaxHealth - damage + expectedHealing));
+            log.Should().NotBeNull();
+            log.Target.Should().Be(target);
+            log.Healer.Should().BeNull();
+            log.Healing.Should().Be(healing);
+            log.ActualHealing.Should().Be(actualHealing);
+            target.Received().Heal(healing);
+        }
+
+        [Fact]
+        public void HealingActionPassesWithAttacker()
+        {
+            const int healing = 20;
+            const int actualHealing = 10;
+
+            // Arrange
+            var target = Substitute.For<IEntity>();
+            target.IsActive.Returns(true);
+            target.Heal(healing).Returns(actualHealing);
+            var healer = Substitute.For<IEntity>();
+            healer.IsActive.Returns(true);
+            var amount = Substitute.For<IAmount>();
+            amount.Calculate(target, healer).Returns(healing);
+            var board = Substitute.For<IBoard>();
+            var turnManager = Substitute.For<ITurnManager>();
+            var executor = new ActionExecutor(turnManager, board);
+
+            // Act
+            var log = executor.Heal(target, healer, amount)!;
+
+            // Assert
+            log.Should().NotBeNull();
+            log.Target.Should().Be(target);
+            log.Healer.Should().Be(healer);
+            log.Healing.Should().Be(healing);
+            log.ActualHealing.Should().Be(actualHealing);
+            target.Received().Heal(healing);
+        }
+
+        [Fact]
+        public void HealingActionFailsWithNotActiveTarget()
+        {
+            // Arrange
+            var target = Substitute.For<IEntity>();
+            target.IsActive.Returns(false);
+            var amount = Substitute.For<IAmount>();
+            var board = Substitute.For<IBoard>();
+            var turnManager = Substitute.For<ITurnManager>();
+            var executor = new ActionExecutor(turnManager, board);
+
+            // Act
+            var log = executor.Heal(target, amount);
+
+            // Assert
+            log.Should().BeNull();
+            target.DidNotReceive().Heal(Arg.Any<int>());
+        }
+
+        [Fact]
+        public void HealingActionFailsWithNotActiveAttacker()
+        {
+            // Arrange
+            var target = Substitute.For<IEntity>();
+            target.IsActive.Returns(true);
+            var healer = Substitute.For<IEntity>();
+            healer.IsActive.Returns(false);
+            var amount = Substitute.For<IAmount>();
+            var board = Substitute.For<IBoard>();
+            var turnManager = Substitute.For<ITurnManager>();
+            var executor = new ActionExecutor(turnManager, board);
+
+            // Act
+            var log = executor.Heal(target, healer, amount);
+
+            // Assert
+            log.Should().BeNull();
+            target.DidNotReceive().Heal(Arg.Any<int>());
         }
     }
 }

@@ -22,7 +22,7 @@ namespace RLEngine.Core.Events
             if (from == null)
             {
                 if (!targetDB.TryGetEntity(effect.Source, out var source)) throw new NRE();
-                if (source.IsDestroyed)
+                if (!source.IsActive)
                 {
                     targetDB.Add(effect.NewGroup, Array.Empty<Entity>());
                     return null;

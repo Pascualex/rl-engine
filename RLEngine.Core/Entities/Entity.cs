@@ -6,6 +6,8 @@ namespace RLEngine.Core.Entities
 {
     internal class Entity : IEntity
     {
+        private EntityState state = EntityState.New;
+
         public Entity(EntityType type)
         {
             // TODO: support inheritance in types and overridden attributes
@@ -21,6 +23,7 @@ namespace RLEngine.Core.Entities
             Type = type;
         }
 
+        public bool IsActive => state == EntityState.Active;
         public string Name { get; }
         public bool IsAgent { get; }
         public bool IsPlayer { get; set; } = false;
@@ -34,7 +37,6 @@ namespace RLEngine.Core.Entities
         public bool IsRoamer { get; }
         public EntityType Type { get; }
         public Coords Position { get; private set; } = Coords.MinusOne;
-        public bool IsDestroyed { get; private set; } = false;
 
         public int Damage(int damage)
         {
@@ -50,6 +52,12 @@ namespace RLEngine.Core.Entities
             return heal;
         }
 
+        public void OnSpawn(Coords to)
+        {
+            state = EntityState.Active;
+            Position = to;
+        }
+
         public void OnMove(Coords to)
         {
             Position = to;
@@ -57,7 +65,7 @@ namespace RLEngine.Core.Entities
 
         public void OnDestroy()
         {
-            IsDestroyed = true;
+            state = EntityState.Destroyed;
         }
     }
 }

@@ -19,13 +19,14 @@ namespace RLEngine.Core.Games
         private readonly EventTriggerer eventTriggerer;
         private readonly EventStack eventStack;
         private readonly ActionExecutor actionExecutor;
-        private readonly TurnManager turnManager = new();
+        private readonly ITurnManager turnManager;
 
         public Game(GameContent content)
         {
             Content = content;
 
             Board = new Board(content.BoardSize, Content.FloorType);
+            turnManager = new TurnManager();
             actionExecutor = new(turnManager, Board);
             eventStack = new(actionExecutor, turnManager, Board);
             eventTriggerer = new(eventStack);
@@ -53,8 +54,9 @@ namespace RLEngine.Core.Games
             yield return exc.Modify(Content.WallType, new Coords(4, 5))!;
             yield return exc.Modify(Content.WallType, new Coords(5, 5))!;
 
-            yield return exc.Spawn(Content.PlayerType, new Coords(1, 0), out var player)!;
-            if (player != null) player.IsPlayer = true;
+            var spawnLog = exc.Spawn(Content.PlayerType, new Coords(1, 0))!;
+            spawnLog.Entity.IsPlayer = true;
+            yield return spawnLog;
 
             yield return actionExecutor.Spawn(Content.GoblinType, new Coords(3, 0))!;
             yield return actionExecutor.Spawn(Content.GoblinType, new Coords(5, 0))!;

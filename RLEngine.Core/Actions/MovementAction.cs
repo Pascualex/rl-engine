@@ -6,9 +6,9 @@ namespace RLEngine.Core.Actions
 {
     internal partial class ActionExecutor
     {
-        public MovementLog? Move(IEntity entity, Coords to, bool relative)
+        public MovementLog? Move(IEntity entity, Coords to)
         {
-            if (relative) to += entity.Position;
+            if (!entity.IsActive) return null;
             if (!board.Move(entity, to)) return null;
             return new(entity, to);
         }
