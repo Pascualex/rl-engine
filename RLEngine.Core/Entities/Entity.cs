@@ -6,8 +6,6 @@ namespace RLEngine.Core.Entities
 {
     internal class Entity : IEntity
     {
-        private EntityState state = EntityState.New;
-
         public Entity(EntityType type)
         {
             // TODO: support inheritance in types and overridden attributes
@@ -23,7 +21,7 @@ namespace RLEngine.Core.Entities
             Type = type;
         }
 
-        public bool IsActive => state == EntityState.Active;
+        public bool IsActive { get; private set; } = false;
         public string Name { get; }
         public bool IsAgent { get; }
         public bool IsPlayer { get; set; } = false;
@@ -54,7 +52,7 @@ namespace RLEngine.Core.Entities
 
         public void OnSpawn(Coords to)
         {
-            state = EntityState.Active;
+            IsActive = true;
             Position = to;
         }
 
@@ -65,7 +63,7 @@ namespace RLEngine.Core.Entities
 
         public void OnDestroy()
         {
-            state = EntityState.Destroyed;
+            IsActive = false;
         }
     }
 }

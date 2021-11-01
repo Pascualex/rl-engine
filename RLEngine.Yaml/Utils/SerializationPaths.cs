@@ -6,7 +6,7 @@ using System;
 
 namespace RLEngine.Yaml.Utils
 {
-    public static class SerializationPaths
+    internal static class SerializationPaths
     {
         public static string Get(Type type)
         {

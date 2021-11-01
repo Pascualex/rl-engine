@@ -9,7 +9,8 @@ namespace RLEngine.Core.Actions
         public MovementLog? Move(IEntity entity, Coords to)
         {
             if (!entity.IsActive) return null;
-            if (!board.Move(entity, to)) return null;
+            if (!board.CanMove(entity, to)) return null;
+            board.Move(entity, to);
             return new(entity, to);
         }
     }

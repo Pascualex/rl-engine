@@ -3,7 +3,7 @@ using YamlDotNet.Core.Events;
 
 namespace RLEngine.Yaml.Utils
 {
-    public static class ParserExtensions
+    internal static class ParserExtensions
     {
         public static string Formatted(this IParser parser, ParseStyle style = ParseStyle.Standard)
         {

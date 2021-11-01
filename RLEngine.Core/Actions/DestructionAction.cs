@@ -8,7 +8,7 @@ namespace RLEngine.Core.Actions
         public DestructionLog? Destroy(IEntity entity)
         {
             if (!entity.IsActive) return null;
-            if (!board.Remove(entity)) return null;
+            board.Remove(entity);
             turnManager.Remove(entity);
             return new(entity);
         }

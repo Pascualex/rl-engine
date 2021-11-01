@@ -27,7 +27,7 @@ namespace RLEngine.Yaml.Serialization
             return gameContent;
         }
 
-        public static void Deserialize(GenericReader reader,
+        private static void Deserialize(GenericReader reader,
         string path, IIdentifiable target, Type type)
         {
             if (target.ID.Length == 0) throw new ArgumentNullException();

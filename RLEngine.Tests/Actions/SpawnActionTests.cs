@@ -22,7 +22,7 @@ namespace RLEngine.Tests.Actions
             // Arrange
             var entityType = new EntityType { IsAgent = isAgent };
             var board = Substitute.For<IBoard>();
-            board.Add(Arg.Is<Entity>(x => x.Type == entityType), position).Returns(true);
+            board.CanAdd(Arg.Is<Entity>(x => x.Type == entityType), position).Returns(true);
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
 
@@ -47,7 +47,7 @@ namespace RLEngine.Tests.Actions
             // Arrange
             var entityType = new EntityType();
             var board = Substitute.For<IBoard>();
-            board.Add(Arg.Is<Entity>(x => x.Type == entityType), position).Returns(false);
+            board.CanAdd(Arg.Is<Entity>(x => x.Type == entityType), position).Returns(false);
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
 
@@ -56,7 +56,7 @@ namespace RLEngine.Tests.Actions
 
             // Assert
             log.Should().BeNull();
-            board.Received().Add(Arg.Is<Entity>(x => x.Type == entityType), position);
+            board.DidNotReceive().Add(Arg.Any<Entity>(), position);
             turnManager.DidNotReceive().Add(Arg.Any<Entity>());
         }
     }

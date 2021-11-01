@@ -21,7 +21,7 @@ namespace RLEngine.Tests.Actions
             var entity = Substitute.For<IEntity>();
             entity.IsActive.Returns(true);
             var board = Substitute.For<IBoard>();
-            board.Move(entity, position).Returns(true);
+            board.CanMove(entity, position).Returns(true);
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
 
@@ -45,7 +45,7 @@ namespace RLEngine.Tests.Actions
             var entity = Substitute.For<IEntity>();
             entity.IsActive.Returns(false);
             var board = Substitute.For<IBoard>();
-            board.Move(entity, position).Returns(true);
+            board.CanMove(entity, position).Returns(true);
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
 
@@ -67,7 +67,7 @@ namespace RLEngine.Tests.Actions
             var entity = Substitute.For<IEntity>();
             entity.IsActive.Returns(true);
             var board = Substitute.For<IBoard>();
-            board.Move(entity, position).Returns(false);
+            board.CanMove(entity, position).Returns(false);
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
 
@@ -77,7 +77,7 @@ namespace RLEngine.Tests.Actions
             // Assert
             log.Should().BeNull();
             entity.DidNotReceive().OnMove(Arg.Any<Coords>());
-            board.Received().Move(entity, position);
+            board.DidNotReceive().Move(Arg.Any<Entity>(), Arg.Any<Coords>());
         }
     }
 }

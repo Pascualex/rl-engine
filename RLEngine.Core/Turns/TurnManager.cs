@@ -13,28 +13,24 @@ namespace RLEngine.Core.Turns
 
         public IEntity? Current => turns.Count > 0 ? turns.Min.Entity : null;
 
-        public bool Add(IEntity entity)
+        public void Add(IEntity entity)
         {
-            if (!entity.IsAgent) return false;
-            if (entities.ContainsKey(entity)) return false;
+            if (!entity.IsAgent) return;
+            if (entities.ContainsKey(entity)) return;
 
             var currentTick = turns.Count > 0 ? turns.Min.Tick : 0;
             var turn = new Turn(currentTick, nextEntityId, entity);
             nextEntityId++;
             turns.Add(turn);
             entities.Add(entity, turn);
-
-            return true;
         }
 
-        public bool Remove(IEntity entity)
+        public void Remove(IEntity entity)
         {
-            if (!entities.TryGetValue(entity, out var turn)) return false;
+            if (!entities.TryGetValue(entity, out var turn)) return;
 
             turns.Remove(turn);
             entities.Remove(entity);
-
-            return true;
         }
 
         public void Next(int actionCost)

@@ -1,6 +1,6 @@
 ﻿namespace RLEngine.Yaml.Utils
 {
-    public enum ParseStyle
+    internal enum ParseStyle
     {
         Standard,
         String,

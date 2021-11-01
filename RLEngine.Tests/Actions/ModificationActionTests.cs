@@ -21,7 +21,7 @@ namespace RLEngine.Tests.Actions
             var tileTypeB = new TileType();
             var board = Substitute.For<IBoard>();
             board.GetTileType(position).Returns(tileTypeA);
-            board.Modify(tileTypeB, position).Returns(true);
+            board.CanModify(tileTypeB, position).Returns(true);
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
 
@@ -46,7 +46,7 @@ namespace RLEngine.Tests.Actions
             var tileTypeB = new TileType();
             var board = Substitute.For<IBoard>();
             board.GetTileType(position).Returns(tileTypeA);
-            board.Modify(tileTypeB, position).Returns(false);
+            board.CanModify(tileTypeB, position).Returns(false);
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
 
@@ -55,7 +55,7 @@ namespace RLEngine.Tests.Actions
 
             // Assert
             log.Should().BeNull();
-            board.Received().Modify(tileTypeB, position);
+            board.DidNotReceive().Modify(Arg.Any<TileType>(), Arg.Any<Coords>());
         }
     }
 }

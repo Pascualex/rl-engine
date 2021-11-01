@@ -18,10 +18,9 @@ namespace RLEngine.Tests.Turns
             var turnManager = new TurnManager();
 
             // Act
-            var added = turnManager.Add(entity);
+            turnManager.Add(entity);
 
             // Assert
-            added.Should().BeTrue();
             turnManager.Current.Should().Be(entity);
         }
 
@@ -34,10 +33,9 @@ namespace RLEngine.Tests.Turns
             var turnManager = new TurnManager();
 
             // Act
-            var added = turnManager.Add(entity);
+            turnManager.Add(entity);
 
             // Assert
-            added.Should().BeFalse();
             turnManager.Current.Should().BeNull();
         }
 
@@ -55,10 +53,9 @@ namespace RLEngine.Tests.Turns
             turnManager.Add(entityA);
 
             // Act
-            var added = turnManager.Add(entityB);
+            turnManager.Add(entityB);
 
             // Assert
-            added.Should().BeTrue();
             turnManager.Current.Should().Be(entityA);
         }
 
@@ -76,10 +73,9 @@ namespace RLEngine.Tests.Turns
             turnManager.Add(entityA);
 
             // Act
-            var added = turnManager.Add(entityB);
+            turnManager.Add(entityB);
 
             // Assert
-            added.Should().BeTrue();
             turnManager.Current.Should().Be(entityA);
         }
 
@@ -97,10 +93,9 @@ namespace RLEngine.Tests.Turns
             turnManager.Add(entityA);
 
             // Act
-            var added = turnManager.Add(entityB);
+            turnManager.Add(entityB);
 
             // Assert
-            added.Should().BeTrue();
             turnManager.Current.Should().Be(entityB);
         }
 
@@ -210,10 +205,9 @@ namespace RLEngine.Tests.Turns
             turnManager.Add(entity);
 
             // Act
-            var removed = turnManager.Remove(entity);
+            turnManager.Remove(entity);
 
             // Assert
-            removed.Should().BeTrue();
             turnManager.Current.Should().BeNull();
         }
 
@@ -226,10 +220,9 @@ namespace RLEngine.Tests.Turns
             var turnManager = new TurnManager();
 
             // Act
-            var removed = turnManager.Remove(entity);
+            turnManager.Remove(entity);
 
             // Assert
-            removed.Should().BeFalse();
             turnManager.Current.Should().BeNull();
         }
     }

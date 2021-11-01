@@ -9,7 +9,8 @@ namespace RLEngine.Core.Actions
         public SpawnLog? Spawn(EntityType entityType, Coords at)
         {
             var entity = new Entity(entityType);
-            if (!board.Add(entity, at)) return null;
+            if (!board.CanAdd(entity, at)) return null;
+            board.Add(entity, at);
             if (entity.IsAgent) turnManager.Add(entity);
             return new(entity, at);
         }

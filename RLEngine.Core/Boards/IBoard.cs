@@ -9,10 +9,10 @@ namespace RLEngine.Core.Boards
     {
         Size Size { get; }
 
-        bool Add(IEntity entity, Coords at);
-        bool Move(IEntity entity, Coords to);
-        bool Remove(IEntity entity);
-        bool Modify(TileType tileType, Coords at);
+        void Add(IEntity entity, Coords at);
+        void Move(IEntity entity, Coords to);
+        void Remove(IEntity entity);
+        void Modify(TileType tileType, Coords at);
         bool CanAdd(IEntity entity, Coords at);
         bool CanMove(IEntity entity, Coords to);
         bool CanModify(TileType tileType, Coords at);

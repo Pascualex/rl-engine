@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace RLEngine.Yaml.Utils
 {
-    public static class TypeExtensions
+    internal static class TypeExtensions
     {
         private const BindingFlags flags = BindingFlags.Instance
                                          | BindingFlags.Public

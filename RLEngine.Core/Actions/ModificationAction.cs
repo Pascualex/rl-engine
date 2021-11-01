@@ -10,7 +10,8 @@ namespace RLEngine.Core.Actions
         {
             var previousType = board.GetTileType(at);
             if (previousType == null) return null;
-            if (!board.Modify(tileType, at)) return null;
+            if (!board.CanModify(tileType, at)) return null;
+            board.Modify(tileType, at);
             return new(tileType, previousType, at);
         }
     }

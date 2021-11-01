@@ -13,7 +13,7 @@ using YamlDotNet.Core.Events;
 
 namespace RLEngine.Yaml.Serialization
 {
-    public class GenericWritter
+    internal class GenericWritter
     {
         private readonly SerializationQueue serializationQueue;
         private readonly EffectWritter effectWritter;

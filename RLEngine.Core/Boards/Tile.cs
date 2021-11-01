@@ -1,4 +1,5 @@
 using RLEngine.Core.Entities;
+using RLEngine.Core.Utils;
 
 using System.Collections.Generic;
 
@@ -8,31 +9,32 @@ namespace RLEngine.Core.Boards
     {
         private readonly HashSet<IEntity> entities = new();
 
-        public Tile(TileType type)
+        public Tile(Coords position, TileType type)
         {
+            Position = position;
             Type = type;
         }
 
+        public Coords Position { get; }
         public IReadOnlyCollection<IEntity> Entities => entities;
         public TileType Type { get; private set; }
 
-        public bool Add(IEntity entity)
+        public void Add(IEntity entity)
         {
-            if (!CanAdd(entity)) return false;
+            if (!CanAdd(entity)) throw new IncompatibleTileException(entity, Position);
             entities.Add(entity);
-            return true;
         }
 
         public void Remove(IEntity entity)
         {
+            if (!entities.Contains(entity)) throw new SynchronizationException(entity, Position);
             entities.Remove(entity);
         }
 
-        public bool Modify(TileType type)
+        public void Modify(TileType type)
         {
-            if (!CanModify(type)) return false;
+            if (!CanModify(type)) throw new IncompatibleTileException(type, Position);
             Type = type;
-            return true;
         }
 
         public bool CanAdd(IEntity entity)

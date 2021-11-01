@@ -4,7 +4,7 @@ using RLEngine.Core.Utils;
 
 using Xunit;
 using FluentAssertions;
-using NSubstitute;
+using System;
 
 namespace RLEngine.Tests.Boards
 {
@@ -44,18 +44,20 @@ namespace RLEngine.Tests.Boards
             var position = new Coords(x, y);
 
             // Arrange
-            var entity = Substitute.For<IEntity>();
-            entity.BlocksGround.Returns(true);
+            var entityType = new EntityType { BlocksGround = true };
+            var entity = new Entity(entityType);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
 
             // Act
-            var added = board.Add(entity, position);
+            var canAdd = board.CanAdd(entity, position);
+            board.Add(entity, position);
 
             // Assert
-            added.Should().BeTrue();
+            canAdd.Should().BeTrue();
+            entity.IsActive.Should().BeTrue();
+            entity.Position.Should().Be(position);
             board.GetEntities(position).Should().Equal(entity);
-            entity.Received().OnSpawn(position);
         }
 
         [Theory]
@@ -68,17 +70,21 @@ namespace RLEngine.Tests.Boards
             var position = new Coords(x, y);
 
             // Arrange
-            var entity = Substitute.For<IEntity>();
+            var entityType = new EntityType { BlocksGround = true };
+            var entity = new Entity(entityType);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
 
             // Act
-            var added = board.Add(entity, position);
+            var canAdd = board.CanAdd(entity, position);
+            Action action = () => board.Add(entity, position);
 
             // Assert
-            added.Should().BeFalse();
+            canAdd.Should().BeFalse();
+            action.Should().Throw<CoordsOutOfRangeException>();
+            entity.IsActive.Should().BeFalse();
+            entity.Position.Should().Be(Coords.MinusOne);
             board.GetEntities(position).Should().BeEmpty();
-            entity.DidNotReceive().OnSpawn(position);
         }
 
         [Fact]
@@ -88,27 +94,35 @@ namespace RLEngine.Tests.Boards
             var position = new Coords(1, 1);
 
             // Arrange
-            var entityA = Substitute.For<IEntity>();
-            entityA.BlocksGround.Returns(true);
-            entityA.IsAgent.Returns(false);
-            entityA.IsGhost.Returns(false);
-            var entityB = Substitute.For<IEntity>();
-            entityB.BlocksGround.Returns(true);
-            entityB.IsAgent.Returns(true);
-            entityB.IsGhost.Returns(true);
+            var entityTypeA = new EntityType
+            {
+                BlocksGround = true,
+                IsAgent = false,
+                IsGhost = false,
+            };
+            var entityTypeB = new EntityType
+            {
+                BlocksGround = true,
+                IsAgent = true,
+                IsGhost = true,
+            };
+            var entityA = new Entity(entityTypeA);
+            var entityB = new Entity(entityTypeB);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
             board.Add(entityA, position);
-            entityA.ClearReceivedCalls();
 
             // Act
-            var added = board.Add(entityB, position);
+            var canAdd = board.CanAdd(entityB, position);
+            board.Add(entityB, position);
 
             // Assert
-            added.Should().BeTrue();
+            canAdd.Should().BeTrue();
+            entityA.IsActive.Should().BeTrue();
+            entityA.Position.Should().Be(position);
+            entityB.IsActive.Should().BeTrue();
+            entityB.Position.Should().Be(position);
             board.GetEntities(position).Should().Equal(entityA, entityB);
-            entityA.DidNotReceive().OnSpawn(Arg.Any<Coords>());
-            entityB.Received().OnSpawn(position);
         }
 
         [Fact]
@@ -118,22 +132,25 @@ namespace RLEngine.Tests.Boards
             var position = new Coords(1, 1);
 
             // Arrange
-            var entityA = Substitute.For<IEntity>();
-            entityA.BlocksGround.Returns(true);
-            var entityB = Substitute.For<IEntity>();
-            entityB.BlocksGround.Returns(true);
+            var entityType = new EntityType { BlocksGround = true };
+            var entityA = new Entity(entityType);
+            var entityB = new Entity(entityType);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
             board.Add(entityA, position);
 
             // Act
-            var added = board.Add(entityB, position);
+            var canAdd = board.CanAdd(entityB, position);
+            Action action = () => board.Add(entityB, position);
 
             // Assert
-            added.Should().BeFalse();
+            canAdd.Should().BeFalse();
+            action.Should().Throw<IncompatibleTileException>();
+            entityA.IsActive.Should().BeTrue();
+            entityA.Position.Should().Be(position);
+            entityB.IsActive.Should().BeFalse();
+            entityB.Position.Should().Be(Coords.MinusOne);
             board.GetEntities(position).Should().Equal(entityA);
-            entityA.Received().OnSpawn(position);
-            entityB.DidNotReceive().OnSpawn(position);
         }
 
         [Fact]
@@ -143,18 +160,21 @@ namespace RLEngine.Tests.Boards
             var position = new Coords(1, 1);
 
             // Arrange
-            var entity = Substitute.For<IEntity>();
-            entity.BlocksGround.Returns(true);
+            var entityType = new EntityType { BlocksGround = true };
+            var entity = new Entity(entityType);
             var defaultTileType = new TileType { BlocksGround = true };
             var board = new Board(size, defaultTileType);
 
             // Act
-            var added = board.Add(entity, position);
+            var canAdd = board.CanAdd(entity, position);
+            Action action = () => board.Add(entity, position);
 
             // Assert
-            added.Should().BeFalse();
+            canAdd.Should().BeFalse();
+            action.Should().Throw<IncompatibleTileException>();
+            entity.IsActive.Should().BeFalse();
+            entity.Position.Should().Be(Coords.MinusOne);
             board.GetEntities(position).Should().BeEmpty();
-            entity.DidNotReceive().OnSpawn(position);
         }
 
         [Theory]
@@ -167,22 +187,22 @@ namespace RLEngine.Tests.Boards
             var finalPosition = new Coords(fx, fy);
 
             // Arrange
-            var entity = Substitute.For<IEntity>();
-            entity.BlocksGround.Returns(true);
+            var entityType = new EntityType { BlocksGround = true };
+            var entity = new Entity(entityType);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
             board.Add(entity, initialPosition);
-            entity.Position.Returns(initialPosition);
-            entity.ClearReceivedCalls();
 
             // Act
-            var moved = board.Move(entity, finalPosition);
+            var canMove = board.CanMove(entity, finalPosition);
+            board.Move(entity, finalPosition);
 
             // Assert
-            moved.Should().BeTrue();
+            canMove.Should().BeTrue();
+            entity.IsActive.Should().BeTrue();
+            entity.Position.Should().Be(finalPosition);
             board.GetEntities(initialPosition).Should().BeEmpty();
             board.GetEntities(finalPosition).Should().Equal(entity);
-            entity.Received().OnMove(finalPosition);
         }
 
         [Theory]
@@ -196,22 +216,23 @@ namespace RLEngine.Tests.Boards
             var finalPosition = new Coords(fx, fy);
 
             // Arrange
-            var entity = Substitute.For<IEntity>();
-            entity.BlocksGround.Returns(true);
+            var entityType = new EntityType { BlocksGround = true };
+            var entity = new Entity(entityType);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
             board.Add(entity, initialPosition);
-            entity.Position.Returns(initialPosition);
-            entity.ClearReceivedCalls();
 
             // Act
-            var moved = board.Move(entity, finalPosition);
+            var canMove = board.CanMove(entity, finalPosition);
+            Action action = () => board.Move(entity, finalPosition);
 
             // Assert
-            moved.Should().BeFalse();
+            canMove.Should().BeFalse();
+            action.Should().Throw<CoordsOutOfRangeException>();
+            entity.IsActive.Should().BeTrue();
+            entity.Position.Should().Be(initialPosition);
             board.GetEntities(initialPosition).Should().Equal(entity);
             board.GetEntities(finalPosition).Should().BeEmpty();
-            entity.DidNotReceive().OnMove(Arg.Any<Coords>());
         }
 
         [Fact]
@@ -221,17 +242,21 @@ namespace RLEngine.Tests.Boards
             var finalPosition = new Coords(1, 1);
 
             // Arrange
-            var entity = Substitute.For<IEntity>();
+            var entityType = new EntityType { BlocksGround = true };
+            var entity = new Entity(entityType);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
 
             // Act
-            var moved = board.Move(entity, finalPosition);
+            var canMove = board.CanMove(entity, finalPosition);
+            Action action = () => board.Move(entity, finalPosition);
 
             // Assert
-            moved.Should().BeFalse();
+            canMove.Should().BeFalse();
+            action.Should().Throw<EntityInactiveException>();
+            entity.IsActive.Should().BeFalse();
+            entity.Position.Should().Be(Coords.MinusOne);
             board.GetEntities(finalPosition).Should().BeEmpty();
-            entity.DidNotReceive().OnMove(Arg.Any<Coords>());
         }
 
         [Fact]
@@ -242,31 +267,37 @@ namespace RLEngine.Tests.Boards
             var finalPosition = new Coords(2, 1);
 
             // Arrange
-            var entityA = Substitute.For<IEntity>();
-            entityA.BlocksGround.Returns(true);
-            entityA.IsGhost.Returns(false);
-            entityA.IsAgent.Returns(false);
-            var entityB = Substitute.For<IEntity>();
-            entityB.BlocksGround.Returns(true);
-            entityB.IsGhost.Returns(true);
-            entityB.IsAgent.Returns(true);
+            var entityTypeA = new EntityType
+            {
+                BlocksGround = true,
+                IsAgent = false,
+                IsGhost = false,
+            };
+            var entityTypeB = new EntityType
+            {
+                BlocksGround = true,
+                IsAgent = true,
+                IsGhost = true,
+            };
+            var entityA = new Entity(entityTypeA);
+            var entityB = new Entity(entityTypeB);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
             board.Add(entityA, finalPosition);
             board.Add(entityB, initialPosition);
-            entityB.Position.Returns(initialPosition);
-            entityA.ClearReceivedCalls();
-            entityB.ClearReceivedCalls();
 
             // Act
-            var moved = board.Move(entityB, finalPosition);
+            var canMove = board.CanMove(entityB, finalPosition);
+            board.Move(entityB, finalPosition);
 
             // Assert
-            moved.Should().BeTrue();
+            canMove.Should().BeTrue();
+            entityA.IsActive.Should().BeTrue();
+            entityA.Position.Should().Be(finalPosition);
+            entityB.IsActive.Should().BeTrue();
+            entityB.Position.Should().Be(finalPosition);
             board.GetEntities(initialPosition).Should().BeEmpty();
             board.GetEntities(finalPosition).Should().Equal(entityA, entityB);
-            entityA.DidNotReceive().OnMove(Arg.Any<Coords>());
-            entityB.Received().OnMove(finalPosition);
         }
 
         [Fact]
@@ -277,27 +308,27 @@ namespace RLEngine.Tests.Boards
             var finalPosition = new Coords(2, 1);
 
             // Arrange
-            var entityA = Substitute.For<IEntity>();
-            entityA.BlocksGround.Returns(true);
-            var entityB = Substitute.For<IEntity>();
-            entityB.BlocksGround.Returns(true);
+            var entityType = new EntityType { BlocksGround = true };
+            var entityA = new Entity(entityType);
+            var entityB = new Entity(entityType);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
             board.Add(entityA, finalPosition);
             board.Add(entityB, initialPosition);
-            entityB.Position.Returns(initialPosition);
-            entityA.ClearReceivedCalls();
-            entityB.ClearReceivedCalls();
 
             // Act
-            var moved = board.Move(entityB, finalPosition);
+            var canMove = board.CanMove(entityB, finalPosition);
+            Action action = () => board.Move(entityB, finalPosition);
 
             // Assert
-            moved.Should().BeFalse();
+            canMove.Should().BeFalse();
+            action.Should().Throw<IncompatibleTileException>();
+            entityA.IsActive.Should().BeTrue();
+            entityA.Position.Should().Be(finalPosition);
+            entityB.IsActive.Should().BeTrue();
+            entityB.Position.Should().Be(initialPosition);
             board.GetEntities(initialPosition).Should().Equal(entityB);
             board.GetEntities(finalPosition).Should().Equal(entityA);
-            entityA.DidNotReceive().OnMove(Arg.Any<Coords>());
-            entityB.DidNotReceive().OnMove(Arg.Any<Coords>());
         }
 
         [Fact]
@@ -308,24 +339,25 @@ namespace RLEngine.Tests.Boards
             var finalPosition = new Coords(2, 1);
 
             // Arrange
-            var entity = Substitute.For<IEntity>();
-            entity.BlocksGround.Returns(true);
+            var entityType = new EntityType { BlocksGround = true };
+            var entity = new Entity(entityType);
             var floorTileType = new TileType { BlocksGround = false };
             var wallTileType = new TileType { BlocksGround = true };
             var board = new Board(size, floorTileType);
             board.Add(entity, initialPosition);
-            entity.Position.Returns(initialPosition);
             board.Modify(wallTileType, finalPosition);
-            entity.ClearReceivedCalls();
 
             // Act
-            var moved = board.Move(entity, finalPosition);
+            var canMove = board.CanMove(entity, finalPosition);
+            Action action = () => board.Move(entity, finalPosition);
 
             // Assert
-            moved.Should().BeFalse();
+            canMove.Should().BeFalse();
+            action.Should().Throw<IncompatibleTileException>();
+            entity.IsActive.Should().BeTrue();
+            entity.Position.Should().Be(initialPosition);
             board.GetEntities(initialPosition).Should().Equal(entity);
             board.GetEntities(finalPosition).Should().BeEmpty();
-            entity.DidNotReceive().OnMove(Arg.Any<Coords>());
         }
 
         [Fact]
@@ -335,20 +367,19 @@ namespace RLEngine.Tests.Boards
             var position = new Coords(1, 1);
 
             // Arrange
-            var entity = Substitute.For<IEntity>();
+            var entityType = new EntityType { BlocksGround = true };
+            var entity = new Entity(entityType);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
             board.Add(entity, position);
-            entity.Position.Returns(position);
-            entity.ClearReceivedCalls();
 
             // Act
-            var removed = board.Remove(entity);
+            board.Remove(entity);
 
             // Assert
-            removed.Should().BeTrue();
             board.GetEntities(position).Should().BeEmpty();
-            entity.Received().OnDestroy();
+            entity.IsActive.Should().BeFalse();
+            entity.Position.Should().Be(position);
         }
 
         [Fact]
@@ -357,16 +388,18 @@ namespace RLEngine.Tests.Boards
             var size = new Size(3, 3);
 
             // Arrange
-            var entity = Substitute.For<IEntity>();
+            var entityType = new EntityType { BlocksGround = true };
+            var entity = new Entity(entityType);
             var defaultTileType = new TileType { BlocksGround = false };
             var board = new Board(size, defaultTileType);
 
             // Act
-            var removed = board.Remove(entity);
+            Action action = () => board.Remove(entity);
 
             // Assert
-            removed.Should().BeFalse();
-            entity.DidNotReceive().OnDestroy();
+            action.Should().Throw<EntityInactiveException>();
+            entity.IsActive.Should().BeFalse();
+            entity.Position.Should().Be(Coords.MinusOne);
         }
 
         [Theory]
@@ -384,10 +417,11 @@ namespace RLEngine.Tests.Boards
             var board = new Board(size, floorTileType);
 
             // Act
-            var changed = board.Modify(wallTileType, position);
+            var canModify = board.CanModify(wallTileType, position);
+            board.Modify(wallTileType, position);
 
             // Assert
-            changed.Should().BeTrue();
+            canModify.Should().BeTrue();
             board.GetTileType(position).Should().Be(wallTileType);
         }
 
@@ -407,10 +441,12 @@ namespace RLEngine.Tests.Boards
             var board = new Board(size, floorTileType);
 
             // Act
-            var changed = board.Modify(wallTileType, position);
+            var canModify = board.CanModify(wallTileType, position);
+            Action action = () => board.Modify(wallTileType, position);
 
             // Assert
-            changed.Should().BeFalse();
+            canModify.Should().BeFalse();
+            action.Should().Throw<CoordsOutOfRangeException>();
             board.GetTileType(position).Should().BeNull();
         }
 
@@ -421,18 +457,20 @@ namespace RLEngine.Tests.Boards
             var position = new Coords(1, 1);
 
             // Arrange
-            var entity = Substitute.For<IEntity>();
-            entity.BlocksGround.Returns(true);
+            var entityType = new EntityType { BlocksGround = true };
+            var entity = new Entity(entityType);
             var floorTileType = new TileType { BlocksGround = false };
             var wallTileType = new TileType { BlocksGround = true };
             var board = new Board(size, floorTileType);
             board.Add(entity, position);
 
             // Act
-            var changed = board.Modify(wallTileType, position);
+            var canModify = board.CanModify(wallTileType, position);
+            Action action = () => board.Modify(wallTileType, position);
 
             // Assert
-            changed.Should().BeFalse();
+            canModify.Should().BeFalse();
+            action.Should().Throw<IncompatibleTileException>();
             board.GetTileType(position).Should().Be(floorTileType);
             board.GetEntities(position).Should().Equal(entity);
         }

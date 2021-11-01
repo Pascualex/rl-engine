@@ -9,7 +9,6 @@ namespace RLEngine.Core.Boards
     internal class Board : IBoard
     {
         private readonly Tile[][] tiles;
-        private readonly HashSet<IEntity> entities = new();
 
         public Board(Size size, TileType defaultTileType)
         {
@@ -21,71 +20,62 @@ namespace RLEngine.Core.Boards
                 tiles[i] = new Tile[Size.X];
                 for (var j = 0; j < Size.X; j++)
                 {
-                    tiles[i][j] = new Tile(defaultTileType);
+                    tiles[i][j] = new Tile(new Coords(j, i), defaultTileType);
                 }
             }
         }
 
         public Size Size { get; }
 
-        public bool Add(IEntity entity, Coords at)
+        public void Add(IEntity entity, Coords at)
         {
-            if (entities.Contains(entity)) return false;
-            if (!Size.Contains(at)) return false;
+            if (entity.IsActive) throw new EntityActiveException(entity);
+            if (!Size.Contains(at)) throw new CoordsOutOfRangeException(at, Size);
 
-            if (!tiles[at.Y][at.X].Add(entity)) return false;
-            entities.Add(entity);
+            tiles[at.Y][at.X].Add(entity);
             entity.OnSpawn(at);
-
-            return true;
         }
 
-        public bool Move(IEntity entity, Coords to)
+        public void Move(IEntity entity, Coords to)
         {
-            if (!entities.Contains(entity)) return false;
-            if (!Size.Contains(to)) return false;
+            if (!entity.IsActive) throw new EntityInactiveException(entity);
+            if (!Size.Contains(to)) throw new CoordsOutOfRangeException(to, Size);
 
             var from = entity.Position;
+            if (to == from) return;
 
-            if (to == from) return false;
-
-            if (!tiles[to.Y][to.X].Add(entity)) return false;
+            tiles[to.Y][to.X].Add(entity);
             tiles[from.Y][from.X].Remove(entity);
             entity.OnMove(to);
-
-            return true;
         }
 
-        public bool Remove(IEntity entity)
+        public void Remove(IEntity entity)
         {
-            if (!entities.Contains(entity)) return false;
+            if (!entity.IsActive) throw new EntityInactiveException(entity);
 
             var at = entity.Position;
 
             tiles[at.Y][at.X].Remove(entity);
-            entities.Remove(entity);
             entity.OnDestroy();
-
-            return true;
         }
 
-        public bool Modify(TileType tileType, Coords at)
+        public void Modify(TileType tileType, Coords at)
         {
-            if (!Size.Contains(at)) return false;
+            if (!Size.Contains(at)) throw new CoordsOutOfRangeException(at, Size);
 
-            return tiles[at.Y][at.X].Modify(tileType);
+            tiles[at.Y][at.X].Modify(tileType);
         }
 
         public bool CanAdd(IEntity entity, Coords at)
         {
-            if (entities.Contains(entity)) return false;
+            if (entity.IsActive) return false;
             if (!Size.Contains(at)) return false;
             return tiles[at.Y][at.X].CanAdd(entity);
         }
 
         public bool CanMove(IEntity entity, Coords to)
         {
-            if (!entities.Contains(entity)) return false;
+            if (!entity.IsActive) return false;
             if (!Size.Contains(to)) return false;
             var from = entity.Position;
             if (to == from) return true;

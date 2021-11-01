@@ -9,8 +9,8 @@ namespace RLEngine.Core.Turns
     {
         IEntity? Current { get; }
 
-        bool Add(IEntity entity);
-        bool Remove(IEntity entity);
+        void Add(IEntity entity);
+        void Remove(IEntity entity);
         void Next(int actionCost);
     }
 }

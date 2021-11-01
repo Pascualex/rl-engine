@@ -10,7 +10,7 @@ using EFE = RLEngine.Yaml.Serialization.EffectSerializationException;
 
 namespace RLEngine.Yaml.Serialization
 {
-    public class EffectWritter
+    internal class EffectWritter
     {
         private readonly GenericWritter genericWritter;
 

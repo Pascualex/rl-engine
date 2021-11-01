@@ -14,7 +14,7 @@ using DE = RLEngine.Yaml.Serialization.DeserializationException;
 
 namespace RLEngine.Yaml.Serialization
 {
-    public class GenericReader
+    internal class GenericReader
     {
         private readonly SerializationQueue serializationQueue;
 

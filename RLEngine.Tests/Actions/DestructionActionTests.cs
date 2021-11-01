@@ -18,7 +18,6 @@ namespace RLEngine.Tests.Actions
             var entity = Substitute.For<IEntity>();
             entity.IsActive.Returns(true);
             var board = Substitute.For<IBoard>();
-            board.Remove(entity).Returns(true);
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
 
@@ -40,7 +39,6 @@ namespace RLEngine.Tests.Actions
             var entity = Substitute.For<IEntity>();
             entity.IsActive.Returns(false);
             var board = Substitute.For<IBoard>();
-            board.Remove(entity).Returns(true);
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
 
@@ -51,27 +49,6 @@ namespace RLEngine.Tests.Actions
             log.Should().BeNull();
             entity.DidNotReceive().OnDestroy();
             board.DidNotReceive().Remove(Arg.Any<Entity>());
-            turnManager.DidNotReceive().Remove(Arg.Any<Entity>());
-        }
-
-        [Fact]
-        public void DestructionActionFailsWhenBoardCanNotRemove()
-        {
-            // Arrange
-            var entity = Substitute.For<IEntity>();
-            entity.IsActive.Returns(true);
-            var board = Substitute.For<IBoard>();
-            board.Remove(entity).Returns(false);
-            var turnManager = Substitute.For<ITurnManager>();
-            var executor = new ActionExecutor(turnManager, board);
-
-            // Act
-            var log = executor.Destroy(entity);
-
-            // Assert
-            log.Should().BeNull();
-            entity.DidNotReceive().OnDestroy();
-            board.Received().Remove(entity);
             turnManager.DidNotReceive().Remove(Arg.Any<Entity>());
         }
     }

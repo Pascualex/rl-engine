@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace RLEngine.Yaml.Serialization
 {
-    public class SerializationQueue
+    internal class SerializationQueue
     {
         private readonly Queue<(IIdentifiable, Type)> queue = new();
         private readonly Dictionary<Type, Dictionary<string, IIdentifiable>> discovered = new();
