@@ -4,7 +4,7 @@ using System;
 
 namespace RLEngine.Core.Boards
 {
-    internal class CoordsOutOfRangeException : Exception
+    public class CoordsOutOfRangeException : Exception
     {
         public CoordsOutOfRangeException() : base()
         { }

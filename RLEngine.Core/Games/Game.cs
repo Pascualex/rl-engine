@@ -20,22 +20,23 @@ namespace RLEngine.Core.Games
         private readonly EventStack eventStack;
         private readonly ActionExecutor actionExecutor;
         private readonly ITurnManager turnManager;
+        private readonly IBoard board;
 
         public Game(GameContent content)
         {
             Content = content;
 
-            Board = new Board(content.BoardSize, Content.FloorType);
+            board = new Board(content.BoardSize, Content.FloorType);
             turnManager = new TurnManager();
-            actionExecutor = new(turnManager, Board);
-            eventStack = new(actionExecutor, turnManager, Board);
+            actionExecutor = new(turnManager, board);
+            eventStack = new(actionExecutor, turnManager, board);
             eventTriggerer = new(eventStack);
-            var eventContext = new EventContext(eventStack, actionExecutor, turnManager, Board);
+            var eventContext = new EventContext(eventStack, actionExecutor, turnManager, board);
             aiController = new(eventContext);
             playerController = new(eventContext);
         }
 
-        public IBoard Board { get; }
+        public IReadOnlyBoard Board => board;
         public GameContent Content { get; }
         public IEntity? CurrentAgent => turnManager.Current;
         public bool ExpectsInput => eventStack.Count == 0 && (CurrentAgent?.IsPlayer ?? false);
@@ -55,7 +56,7 @@ namespace RLEngine.Core.Games
             yield return exc.Modify(Content.WallType, new Coords(5, 5))!;
 
             var spawnLog = exc.Spawn(Content.PlayerType, new Coords(1, 0))!;
-            spawnLog.Entity.IsPlayer = true;
+            spawnLog.Entity.OnControlChange(true);
             yield return spawnLog;
 
             yield return actionExecutor.Spawn(Content.GoblinType, new Coords(3, 0))!;

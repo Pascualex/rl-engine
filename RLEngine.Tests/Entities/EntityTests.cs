@@ -61,7 +61,7 @@ namespace RLEngine.Tests.Entities
 
             // Arrange
             var entityType = new EntityType { MaxHealth = maxHealth };
-            var entity = new Entity(entityType);
+            IEntity entity = new Entity(entityType);
 
             // Act
             var actualDamage = entity.Damage(damage);
@@ -85,7 +85,7 @@ namespace RLEngine.Tests.Entities
 
             // Arrange
             var entityType = new EntityType { MaxHealth = maxHealth };
-            var entity = new Entity(entityType);
+            IEntity entity = new Entity(entityType);
             entity.Damage(missingHealth);
 
             // Act

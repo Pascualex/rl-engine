@@ -5,7 +5,7 @@ using System;
 
 namespace RLEngine.Core.Boards
 {
-    internal class IncompatibleTileException : Exception
+    public class IncompatibleTileException : Exception
     {
         public IncompatibleTileException() : base()
         { }

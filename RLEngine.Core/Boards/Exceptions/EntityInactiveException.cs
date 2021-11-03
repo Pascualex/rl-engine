@@ -4,7 +4,7 @@ using System;
 
 namespace RLEngine.Core.Boards
 {
-    internal class EntityInactiveException : Exception
+    public class EntityInactiveException : Exception
     {
         public EntityInactiveException() : base()
         { }

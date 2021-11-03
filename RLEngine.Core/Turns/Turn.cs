@@ -4,7 +4,7 @@ using System;
 
 namespace RLEngine.Core.Turns
 {
-    public class Turn : IComparable<Turn>
+    internal class Turn : IComparable<Turn>
     {
         public int Tick { get; }
         public int EntityId { get; }

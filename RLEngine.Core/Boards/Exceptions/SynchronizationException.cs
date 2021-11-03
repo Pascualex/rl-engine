@@ -5,7 +5,7 @@ using System;
 
 namespace RLEngine.Core.Boards
 {
-    internal class SynchronizationException : Exception
+    public class SynchronizationException : Exception
     {
         public SynchronizationException() : base()
         { }
