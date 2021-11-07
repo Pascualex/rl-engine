@@ -2,7 +2,7 @@ using System;
 
 namespace RLEngine.Core.Entities
 {
-    public class Amount : IAmount
+    public class Amount
     {
         public int Base { get; init; } = 0;
 

@@ -17,7 +17,7 @@ namespace RLEngine.Core.Abilities
         public string Target { get; init; } = string.Empty;
         public string Source { get; init; } = string.Empty;
         public string Group { get; init; } = string.Empty;
-        public IAmount Amount { get; init; } = new Amount();
+        public Amount Amount { get; init; } = new Amount();
         public int Radius { get; init; } = 0;
         public string NewGroup { get; init; } = string.Empty;
         public string NewTarget { get; init; } = string.Empty;

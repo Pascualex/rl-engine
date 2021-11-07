@@ -19,7 +19,7 @@ namespace RLEngine.Yaml.Serialization
         private readonly EffectWritter effectWritter;
         private readonly Type[] inlineTypes = new[]
         {
-            typeof(IAmount),
+            typeof(Amount),
             typeof(Coords),
             typeof(Size),
         };

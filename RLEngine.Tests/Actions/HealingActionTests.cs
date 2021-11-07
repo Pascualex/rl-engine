@@ -21,8 +21,7 @@ namespace RLEngine.Tests.Actions
             var target = Substitute.For<IEntity>();
             target.IsActive.Returns(true);
             target.Heal(healing).Returns(actualHealing);
-            var amount = Substitute.For<IAmount>();
-            amount.Calculate(target, null).Returns(healing);
+            var amount = new Amount { Base = healing };
             var board = Substitute.For<IBoard>();
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
@@ -51,8 +50,7 @@ namespace RLEngine.Tests.Actions
             target.Heal(healing).Returns(actualHealing);
             var healer = Substitute.For<IEntity>();
             healer.IsActive.Returns(true);
-            var amount = Substitute.For<IAmount>();
-            amount.Calculate(target, healer).Returns(healing);
+            var amount = new Amount { Base = healing };
             var board = Substitute.For<IBoard>();
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
@@ -75,7 +73,7 @@ namespace RLEngine.Tests.Actions
             // Arrange
             var target = Substitute.For<IEntity>();
             target.IsActive.Returns(false);
-            var amount = Substitute.For<IAmount>();
+            var amount = new Amount();
             var board = Substitute.For<IBoard>();
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
@@ -96,7 +94,7 @@ namespace RLEngine.Tests.Actions
             target.IsActive.Returns(true);
             var healer = Substitute.For<IEntity>();
             healer.IsActive.Returns(false);
-            var amount = Substitute.For<IAmount>();
+            var amount = new Amount();
             var board = Substitute.For<IBoard>();
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);

@@ -6,6 +6,6 @@ namespace RLEngine.Core.Abilities
     {
         string Source { get; }
         string Target { get; }
-        IAmount Amount { get; }
+        Amount Amount { get; }
     }
 }

@@ -21,8 +21,7 @@ namespace RLEngine.Tests.Actions
             var target = Substitute.For<IEntity>();
             target.IsActive.Returns(true);
             target.Damage(damage).Returns(actualDamage);
-            var amount = Substitute.For<IAmount>();
-            amount.Calculate(target, null).Returns(damage);
+            var amount = new Amount { Base = damage };
             var board = Substitute.For<IBoard>();
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
@@ -51,8 +50,7 @@ namespace RLEngine.Tests.Actions
             target.Damage(damage).Returns(actualDamage);
             var attacker = Substitute.For<IEntity>();
             attacker.IsActive.Returns(true);
-            var amount = Substitute.For<IAmount>();
-            amount.Calculate(target, attacker).Returns(damage);
+            var amount = new Amount { Base = damage };
             var board = Substitute.For<IBoard>();
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
@@ -75,7 +73,7 @@ namespace RLEngine.Tests.Actions
             // Arrange
             var target = Substitute.For<IEntity>();
             target.IsActive.Returns(false);
-            var amount = Substitute.For<IAmount>();
+            var amount = new Amount();
             var board = Substitute.For<IBoard>();
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);
@@ -96,7 +94,7 @@ namespace RLEngine.Tests.Actions
             target.IsActive.Returns(true);
             var attacker = Substitute.For<IEntity>();
             attacker.IsActive.Returns(false);
-            var amount = Substitute.For<IAmount>();
+            var amount = new Amount();
             var board = Substitute.For<IBoard>();
             var turnManager = Substitute.For<ITurnManager>();
             var executor = new ActionExecutor(turnManager, board);

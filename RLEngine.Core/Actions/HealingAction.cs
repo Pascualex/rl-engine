@@ -5,12 +5,12 @@ namespace RLEngine.Core.Actions
 {
     internal partial class ActionExecutor
     {
-        public HealingLog? Heal(IEntity target, IAmount amount)
+        public HealingLog? Heal(IEntity target, Amount amount)
         {
             return Heal(target, null, amount);
         }
 
-        public HealingLog? Heal(IEntity target, IEntity? healer, IAmount amount)
+        public HealingLog? Heal(IEntity target, IEntity? healer, Amount amount)
         {
             if (!target.IsActive) return null;
             if (!healer?.IsActive ?? false) return null;

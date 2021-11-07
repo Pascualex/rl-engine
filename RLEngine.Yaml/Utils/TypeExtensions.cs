@@ -27,8 +27,8 @@ namespace RLEngine.Yaml.Utils
 
             return (new Type[] { type })
                 .Concat(type.GetInterfaces())
-                .Single(i => i.GetProperty(name) != null)
-                .GetProperty(name);
+                .Select(i => i.GetProperty(name))
+                .SingleOrDefault(p => p != null);
         }
     }
 }

@@ -5,12 +5,12 @@ namespace RLEngine.Core.Actions
 {
     internal partial class ActionExecutor
     {
-        public DamageLog? Damage(IEntity target, IAmount amount)
+        public DamageLog? Damage(IEntity target, Amount amount)
         {
             return Damage(target, null, amount);
         }
 
-        public DamageLog? Damage(IEntity target, IEntity? attacker, IAmount amount)
+        public DamageLog? Damage(IEntity target, IEntity? attacker, Amount amount)
         {
             if (!target.IsActive) return null;
             if (!attacker?.IsActive ?? false) return null;
