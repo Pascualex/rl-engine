@@ -16,12 +16,7 @@ namespace RLEngine.CLI
             var game = new Game(gameContent);
             var gameView = new GameView(50);
 
-            var setupLogs = game.SetupExample();
-            foreach (var log in setupLogs)
-            {
-                gameView.Process(log);
-            }
-
+            game.SetupExample();
             while (true)
             {
                 if (game.ExpectsInput)

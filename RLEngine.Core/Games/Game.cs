@@ -46,23 +46,20 @@ namespace RLEngine.Core.Games
             set { playerController.Input = value; }
         }
 
-        public IEnumerable<ILog> SetupExample()
+        public void SetupExample()
         {
-            var exc = actionExecutor;
+            actionExecutor.Modify(Content.WallType, new Coords(4, 4));
+            actionExecutor.Modify(Content.WallType, new Coords(5, 4));
+            actionExecutor.Modify(Content.WallType, new Coords(4, 5));
+            actionExecutor.Modify(Content.WallType, new Coords(5, 5));
 
-            yield return exc.Modify(Content.WallType, new Coords(4, 4))!;
-            yield return exc.Modify(Content.WallType, new Coords(5, 4))!;
-            yield return exc.Modify(Content.WallType, new Coords(4, 5))!;
-            yield return exc.Modify(Content.WallType, new Coords(5, 5))!;
-
-            var spawnLog = exc.Spawn(Content.PlayerType, new Coords(1, 0))!;
+            var spawnLog = actionExecutor.Spawn(Content.PlayerType, new Coords(1, 0))!;
             spawnLog.Entity.OnControlChange(true);
-            yield return spawnLog;
 
-            yield return actionExecutor.Spawn(Content.GoblinType, new Coords(3, 0))!;
-            yield return actionExecutor.Spawn(Content.GoblinType, new Coords(5, 0))!;
-            yield return actionExecutor.Spawn(Content.GoblinType, new Coords(3, 2))!;
-            yield return actionExecutor.Spawn(Content.GoblinType, new Coords(5, 2))!;
+            actionExecutor.Spawn(Content.GoblinType, new Coords(3, 0));
+            actionExecutor.Spawn(Content.GoblinType, new Coords(5, 0));
+            actionExecutor.Spawn(Content.GoblinType, new Coords(3, 2));
+            actionExecutor.Spawn(Content.GoblinType, new Coords(5, 2));
         }
 
         public ILog? ProcessStep()
